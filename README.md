@@ -86,9 +86,13 @@ git push origin feature/your-name
 ```
 
 2.Go to the GitHub repo: [Depi-Project](https://github.com/medo910/Depi-Project.git)
+
 3.Click on **"Compare & pull request"**
+
 4.Write a short description of what you added or changed
+
 5.Click **"Create pull request"**
+
 6.Another team member reviews and clicks **"Merge pull request"** into `main`
 
 > Make sure you pulled the latest `main` before starting to avoid conflicts:
