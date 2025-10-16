@@ -28,7 +28,7 @@ class OnboardingSlideWidget extends StatelessWidget {
             Align(
               alignment: Alignment.topRight,
               child: TextButton(
-                onPressed: () => AppRouter.router.go('/'),
+                onPressed: () => AppRouter.router.go(AppRouter.kLogin),
                 child: const Text('Skip', style: AppStyles.styleMedium16Dark),
               ),
             ),

@@ -1,9 +1,9 @@
+import 'package:depi_app/core/utils/app_router.dart';
 import 'package:depi_app/core/utils/app_styles.dart';
 import 'package:depi_app/features/onboarding/presentation/widgets/custom_elevated_button.dart';
 import 'package:depi_app/features/onboarding/presentation/widgets/onboarding_slide_widget.dart';
 import 'package:depi_app/features/onboarding/presentation/widgets/page_indicator_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:depi_app/core/utils/app_colors.dart';
 
 class OnboardingView extends StatefulWidget {
@@ -58,7 +58,7 @@ class _OnboardingViewState extends State<OnboardingView> {
     }
   }
 
-  void _skip() => context.go('/auth');
+  void _skip() => AppRouter.router.go(AppRouter.kLogin);
 
   @override
   Widget build(BuildContext context) {
