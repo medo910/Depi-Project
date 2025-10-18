@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'features/cart/presentation/cart_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -18,7 +19,8 @@ class DepiApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const Scaffold(body: Center(child: Text("Hello World"))),
+      // home: const Scaffold(body: Center(child: Text("Hello World"))),
+      home: CartScreen(),
     );
   }
 }
