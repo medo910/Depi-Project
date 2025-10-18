@@ -12,7 +12,12 @@
           "package_name": "com.example.depi_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1017137401151-p77jmdnnuide1bach6fi8vno0635r5jr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCu51Q14ZpV97QR3RP8VkK_sTrzHW3qZ0w"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1017137401151-p77jmdnnuide1bach6fi8vno0635r5jr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1017137401151-igojsf6oh49r1oi5ng6cbfdbum2kipf0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.depiApp"
+              }
+            }
+          ]
         }
       }
     }
