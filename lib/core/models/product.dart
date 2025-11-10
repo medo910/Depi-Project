@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_app/core/models/review.dart';
 
-enum ProductAttributeType { color, size }
+enum ProductAttributeType { color, size, both }
 
 class Product {
   final String id;
