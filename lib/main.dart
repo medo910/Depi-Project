@@ -23,7 +23,6 @@ class DepiApp extends StatelessWidget {
         BlocProvider(
           create: (context) => AuthCubit(AuthRepositoryImpl(AuthService())),
         ),
-        
       ],
       child: MaterialApp.router(
         routerConfig: AppRouter.router,

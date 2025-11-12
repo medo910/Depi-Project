@@ -9,7 +9,7 @@ class Product {
   final double price;
   final String photoUrl;
   final List<Review> comments;
-  final double rate;
+  double rate;
   final int reviews;
   final int quantity;
   final String brand;
@@ -26,7 +26,6 @@ class Product {
     required this.price,
     required this.photoUrl,
     required this.comments,
-    required this.rate,
     required this.reviews,
     required this.quantity,
     required this.brand,
@@ -36,6 +35,7 @@ class Product {
     required this.productAttributeType,
     required this.stock,
     required this.date,
+    required this.rate,
   });
 
   Map<String, dynamic> toMap() {
