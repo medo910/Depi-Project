@@ -4,8 +4,11 @@ import 'package:depi_app/features/auth/data/repos/auth_repository_impl.dart';
 import 'package:depi_app/features/auth/presentation/manager/auth_cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'firebase_options.dart';
+import 'features/cart/presentation/cart_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +33,8 @@ class DepiApp extends StatelessWidget {
         title: 'Kite Shopping',
         theme: ThemeData(primarySwatch: Colors.green),
       ),
+
+
     );
   }
 }
