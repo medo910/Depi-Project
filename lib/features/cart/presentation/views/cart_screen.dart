@@ -1,111 +1,144 @@
 import 'package:depi_app/core/utils/app_styles.dart';
+import 'package:depi_app/features/checkout/presentation/views/checkout_screen.dart';
 import 'package:flutter/material.dart';
 
-class CartScreen extends StatelessWidget {
+import '../../../../core/utils/app_router.dart';
+import '../../../../core/widgets/custom_button.dart';
+
+class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> items = [
-      {
-        'name': 'Wireless Headphones',
-        'company': 'TechSound',
-        'color': 'Silver',
-        'price': 159,
-        'quantity': 2,
-        'icon': Icons.headphones,
-      },
-      {
-        'name': 'Comfort Running Shoes',
-        'company': 'SportMax',
-        'color': 'White',
-        'size': 40,
-        'price': 89,
-        'quantity': 1,
-        'icon': Icons.directions_run,
-      },
-      // {
-      //   'name': 'Wireless Headphones',
-      //   'company': 'TechSound',
-      //   'color': 'Silver',
-      //   'price': 159,
-      //   'quantity': 2,
-      //   'icon': Icons.headphones,
-      // },
-      // {
-      //   'name': 'Comfort Running Shoes',
-      //   'company': 'SportMax',
-      //   'color': 'White',
-      //   'size': 40,
-      //   'price': 89,
-      //   'quantity': 1,
-      //   'icon': Icons.directions_run,
-      // },
-      // {
-      //   'name': 'Wireless Headphones',
-      //   'company': 'TechSound',
-      //   'color': 'Silver',
-      //   'price': 159,
-      //   'quantity': 2,
-      //   'icon': Icons.headphones,
-      // },
-      // {
-      //   'name': 'Comfort Running Shoes',
-      //   'company': 'SportMax',
-      //   'color': 'White',
-      //   'size': 40,
-      //   'price': 89,
-      //   'quantity': 1,
-      //   'icon': Icons.directions_run,
-      // },
-      // {
-      //   'name': 'Wireless Headphones',
-      //   'company': 'TechSound',
-      //   'color': 'Silver',
-      //   'price': 159,
-      //   'quantity': 2,
-      //   'icon': Icons.headphones,
-      // },
-      // {
-      //   'name': 'Comfort Running Shoes',
-      //   'company': 'SportMax',
-      //   'color': 'White',
-      //   'size': 40,
-      //   'price': 89,
-      //   'quantity': 1,
-      //   'icon': Icons.directions_run,
-      // },
-      // {
-      //   'name': 'Wireless Headphones',
-      //   'company': 'TechSound',
-      //   'color': 'Silver',
-      //   'price': 159,
-      //   'quantity': 2,
-      //   'icon': Icons.headphones,
-      // },
-      // {
-      //   'name': 'Comfort Running Shoes',
-      //   'company': 'SportMax',
-      //   'color': 'White',
-      //   'size': 40,
-      //   'price': 89,
-      //   'quantity': 1,
-      //   'icon': Icons.directions_run,
-      // },
-    ];
+  State<CartScreen> createState() => _CartScreenState();
+}
 
-    double total = 0;
-    double withoutTax = 0;
-    double tax = 0;
+class _CartScreenState extends State<CartScreen> {
+
+  double total = 0;
+  double withoutTax = 0;
+  double tax = 0;
+
+  final List<Map<String, dynamic>> items = [
+    {
+      'name': 'Wireless Headphones',
+      'company': 'TechSound',
+      'color': 'Silver',
+      'price': 159,
+      'quantity': 2,
+      'icon': Icons.headphones,
+    },
+    {
+      'name': 'Comfort Running Shoes',
+      'company': 'SportMax',
+      'color': 'White',
+      'size': 40,
+      'price': 89,
+      'quantity': 1,
+      'icon': Icons.directions_run,
+    },
+    // {
+    //   'name': 'Wireless Headphones',
+    //   'company': 'TechSound',
+    //   'color': 'Silver',
+    //   'price': 159,
+    //   'quantity': 2,
+    //   'icon': Icons.headphones,
+    // },
+    // {
+    //   'name': 'Comfort Running Shoes',
+    //   'company': 'SportMax',
+    //   'color': 'White',
+    //   'size': 40,
+    //   'price': 89,
+    //   'quantity': 1,
+    //   'icon': Icons.directions_run,
+    // },
+    // {
+    //   'name': 'Wireless Headphones',
+    //   'company': 'TechSound',
+    //   'color': 'Silver',
+    //   'price': 159,
+    //   'quantity': 2,
+    //   'icon': Icons.headphones,
+    // },
+    // {
+    //   'name': 'Comfort Running Shoes',
+    //   'company': 'SportMax',
+    //   'color': 'White',
+    //   'size': 40,
+    //   'price': 89,
+    //   'quantity': 1,
+    //   'icon': Icons.directions_run,
+    // },
+    // {
+    //   'name': 'Wireless Headphones',
+    //   'company': 'TechSound',
+    //   'color': 'Silver',
+    //   'price': 159,
+    //   'quantity': 2,
+    //   'icon': Icons.headphones,
+    // },
+    // {
+    //   'name': 'Comfort Running Shoes',
+    //   'company': 'SportMax',
+    //   'color': 'White',
+    //   'size': 40,
+    //   'price': 89,
+    //   'quantity': 1,
+    //   'icon': Icons.directions_run,
+    // },
+    // {
+    //   'name': 'Wireless Headphones',
+    //   'company': 'TechSound',
+    //   'color': 'Silver',
+    //   'price': 159,
+    //   'quantity': 2,
+    //   'icon': Icons.headphones,
+    // },
+    // {
+    //   'name': 'Comfort Running Shoes',
+    //   'company': 'SportMax',
+    //   'color': 'White',
+    //   'size': 40,
+    //   'price': 89,
+    //   'quantity': 1,
+    //   'icon': Icons.directions_run,
+    // },
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    calculateTotals();
+  }
+
+  void calculateTotals() {
+    double newWithoutTax = 0;
     for (var item in items) {
-      withoutTax += item['price'] * item['quantity'];
+      newWithoutTax += item['price'] * item['quantity'];
+    }
+    setState(() {
+      withoutTax = newWithoutTax;
       tax = withoutTax * 0.08;
       total = withoutTax + tax;
-    }
+    });
+  }
+
+  void removeItem(int index) {
+    setState(() {
+      items.removeAt(index);
+      calculateTotals();
+    });
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
 
     return Scaffold(
       backgroundColor: const Color(0xFFD6EFD8),
       appBar: AppBar(
+        backgroundColor: Colors.white,
         centerTitle: true,
         title: const Text(
           'Shopping Cart',
@@ -265,14 +298,26 @@ class CartScreen extends StatelessWidget {
                                             IconButton(
                                               icon: const Icon(
                                                   Icons.remove),
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                setState(() {
+                                                  if (item['quantity'] > 1) {
+                                                    item['quantity']--;
+                                                    calculateTotals();
+                                                  }
+                                                });
+                                              },
                                               iconSize: 18,
                                             ),
                                             Text(item['quantity']
                                                 .toString()),
                                             IconButton(
                                               icon: const Icon(Icons.add),
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                setState(() {
+                                                  item['quantity']++;
+                                                  calculateTotals();
+                                                });
+                                              },
                                               iconSize: 18,
                                             ),
                                           ],
@@ -283,7 +328,9 @@ class CartScreen extends StatelessWidget {
                                         icon: const Icon(
                                             Icons.delete_outline,
                                             color: Colors.redAccent),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          removeItem(index);
+                                        },
                                       ),
                                     ],
                                   ),
@@ -297,8 +344,9 @@ class CartScreen extends StatelessWidget {
                   );
                 },
               ),
-          
+
               Card(
+                color: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
                 child: Padding(
@@ -328,7 +376,7 @@ class CartScreen extends StatelessWidget {
                                 hintStyle: const TextStyle(
                                     color: Colors.grey, fontSize: 13),
                                 filled: true,
-                                fillColor: const Color(0xFFF3F3F3),
+                                fillColor: Colors.white,
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide.none,
                                   borderRadius: BorderRadius.circular(8),
@@ -343,23 +391,16 @@ class CartScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 8),
-                          ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
+                          Flexible(
+                            flex: 0,
+                            child: CustomButton(
+                              onPressed: () {},
+                              text: "Apply",
                               backgroundColor: const Color(0xFFD6EFD8),
-                              foregroundColor: const Color(0xFF80AF81),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 5),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: const Text(
-                              "Apply",
-                              style:
-                              TextStyle(fontWeight: FontWeight.w600),
+                              textColor: const Color(0xFF80AF81),
                             ),
                           ),
+
                         ],
                       ),
                     ],
@@ -367,8 +408,9 @@ class CartScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10,),
-          
+
               Card(
+                color: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
                 child: Padding(
@@ -444,22 +486,15 @@ class CartScreen extends StatelessWidget {
       floatingActionButton: items.isNotEmpty?
          Padding(
            padding: const EdgeInsets.all(8.0),
-           child: ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF80AF81),
-              foregroundColor: Colors.white,
-              minimumSize: const Size(double.infinity, 50),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: Text(
-              'Checkout • \$${total.toStringAsFixed(2)}',
-              style: const TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.w600),
-            ),
-                   ),
+           child: CustomButton(
+                  onPressed: () {
+                    AppRouter.router.go(AppRouter.kCheckout);
+                    },
+                 text: 'Checkout • \$${total.toStringAsFixed(2)}',
+                   backgroundColor:const Color(0xFF80AF81),
+                 textColor: Colors.white,
+               ),
+
          )
       : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
