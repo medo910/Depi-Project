@@ -43,7 +43,6 @@ final List<Product> fakeProducts = [
     ],
     rate: 3.7,
     reviews: 3,
-    quantity: 10,
     brand: 'Nike',
     category: 'Shoes',
     description:
@@ -71,7 +70,6 @@ final List<Product> fakeProducts = [
       ),
     ],
     reviews: 1,
-    quantity: 7,
     brand: 'Adidas',
     category: 'Shoes',
     description:
@@ -110,7 +108,6 @@ final List<Product> fakeProducts = [
     ],
     rate: 4.5,
     reviews: 2,
-    quantity: 15,
     brand: 'Puma',
     category: 'Clothing',
     description:
@@ -159,7 +156,6 @@ final List<Product> fakeProducts = [
     ],
     rate: 4.7,
     reviews: 3,
-    quantity: 12,
     brand: 'Reebok',
     category: 'Shoes',
     description:
@@ -197,7 +193,6 @@ final List<Product> fakeProducts = [
     ],
     rate: 4.5,
     reviews: 2,
-    quantity: 8,
     brand: 'Under Armour',
     category: 'Clothing',
     description:
@@ -255,7 +250,6 @@ final List<Product> fakeProducts = [
     ],
     rate: 4.3,
     reviews: 4,
-    quantity: 14,
     brand: 'New Balance',
     category: 'Shoes',
     description:
@@ -315,7 +309,6 @@ final List<Product> fakeProducts = [
     ],
     rate: 4.5,
     reviews: 4,
-    quantity: 20,
     brand: 'Apple',
     category: 'Electronics',
     description:

@@ -39,7 +39,10 @@ abstract class AppRouter {
       //   builder: (context, state) => const SplashView(),
       // ),
       GoRoute(path: kHome, builder: (context, state) => const HomeScreen()),
-      GoRoute(path: kFavoriteScreen, builder: (context, state) => const FavoriteScreen()),
+      GoRoute(
+        path: kFavoriteScreen,
+        builder: (context, state) => const FavoriteScreen(),
+      ),
     ],
   );
 }

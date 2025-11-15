@@ -141,7 +141,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                       child: QuantitySelector(
                         initialQuantity: 1,
                         min: 1,
-                        max: widget.product.quantity,
                         onChanged: (qty) {
                           // يمكن إضافة وظيفة تحديث الكمية هنا
                         },

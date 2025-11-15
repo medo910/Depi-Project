@@ -11,7 +11,7 @@ class Product {
   final List<Review> comments;
   double rate;
   final int reviews;
-  final int quantity;
+  // final int quantity;//
   final String brand;
   final String category;
   final String description;
@@ -27,7 +27,6 @@ class Product {
     required this.photoUrl,
     required this.comments,
     required this.reviews,
-    required this.quantity,
     required this.brand,
     required this.category,
     required this.description,
@@ -47,7 +46,6 @@ class Product {
       'comments': comments.map((x) => x.toMap()).toList(),
       'rate': rate,
       'reviews': reviews,
-      'quantity': quantity,
       'brand': brand,
       'category': category,
       'description': description,
@@ -71,7 +69,6 @@ class Product {
           [],
       rate: (map['rate'] ?? 0).toDouble(),
       reviews: map['reviews'] ?? 0,
-      quantity: map['quantity'] ?? 0,
       brand: map['brand'] ?? '',
       category: map['category'] ?? '',
       description: map['description'] ?? '',
@@ -86,7 +83,8 @@ class Product {
     switch (value) {
       case 'size':
         return ProductAttributeType.size;
-      case 'color':
+      case 'both':
+        return ProductAttributeType.both;
       default:
         return ProductAttributeType.color;
     }
