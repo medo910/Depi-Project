@@ -7,9 +7,9 @@ class FavoriteService {
   /// إضافة منتج للمفضلة
   Future<void> addToFavorite(String userId, String productId) async {
     final userRef = _firestore.collection('users').doc(userId);
-    await userRef.update({
+    await userRef.set({
       'favorite': FieldValue.arrayUnion([productId]),
-    });
+    }, SetOptions(merge: true)); // merge: true عشان ميمسحش باقي البيانات
   }
 
   /// إزالة منتج من المفضلة
@@ -30,69 +30,54 @@ class FavoriteService {
     return favoriteList.contains(productId);
   }
 
-  /// toggle (إضافة أو إزالة حسب الحالة الحالية)
-  Future<void> toggleFavorite(String userId, String productId) async {
-    final isFav = await isFavorite(userId, productId);
-    if (isFav) {
-      await removeFromFavorite(userId, productId);
-    } else {
-      await addToFavorite(userId, productId);
-    }
-  }
-
-  // Stream للاستماع للتغييرات في الـ favorites
-  Stream<bool> favoriteStream(String userId, String productId) {
-    return _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('favorites')
-        .doc(productId)
-        .snapshots()
-        .map((snapshot) => snapshot.exists);
-  }
-
+  /// جلب كل الـ favorites
   Future<List<String>> getAllFavorites(String userId) async {
     try {
-      final snapshot =
-          await _firestore
-              .collection("users")
-              .doc(userId)
-              .collection("favorites")
-              .get();
+      final snapshot = await _firestore.collection("users").doc(userId).get();
 
-      // هنرجع الـ productId (الـ document ID)
-      return snapshot.docs.map((doc) => doc.id).toList();
+      if (!snapshot.exists) return [];
+
+      final data = snapshot.data();
+      final favoriteList = data?['favorite'] as List<dynamic>? ?? [];
+
+      return favoriteList.map((e) => e.toString()).toList();
     } catch (e) {
       print("Error in getAllFavorites: $e");
       return [];
     }
   }
 
-  Stream<List<Product>> favoriteProductsStream(String userId) {
-    return FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .snapshots()
-        .asyncMap((snapshot) async {
-          final favoriteIds = List<String>.from(snapshot['favorite'] ?? []);
-          if (favoriteIds.isEmpty) return [];
-          final productSnapshots =
-              await FirebaseFirestore.instance
-                  .collection('products')
-                  .where(FieldPath.documentId, whereIn: favoriteIds)
-                  .get();
-          return productSnapshots.docs
-              .map((doc) => Product.fromMap(doc.data()))
-              .toList();
-        });
+  /// Stream للـ favorites IDs
+  Stream<List<String>> favoriteIdsStream(String userId) {
+    return _firestore.collection('users').doc(userId).snapshots().map((
+      snapshot,
+    ) {
+      if (!snapshot.exists) return <String>[];
+      final data = snapshot.data();
+      final favoriteList = data?['favorite'] as List<dynamic>? ?? [];
+      return favoriteList.map((e) => e.toString()).toList();
+    });
   }
 
-  Stream<List<String>> favoriteIdsStream(String userId) {
-    return _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('favorites')
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map((d) => d.id).toList());
+  /// Stream للـ favorite products
+  Stream<List<Product>> favoriteProductsStream(String userId) {
+    return _firestore.collection('users').doc(userId).snapshots().asyncMap((
+      snapshot,
+    ) async {
+      if (!snapshot.exists) return [];
+
+      final favoriteIds = List<String>.from(snapshot.data()?['favorite'] ?? []);
+      if (favoriteIds.isEmpty) return [];
+
+      final productSnapshots =
+          await _firestore
+              .collection('products')
+              .where(FieldPath.documentId, whereIn: favoriteIds)
+              .get();
+
+      return productSnapshots.docs
+          .map((doc) => Product.fromMap(doc.data()))
+          .toList();
+    });
   }
 }

@@ -1,6 +1,7 @@
 import 'package:depi_app/core/models/product.dart';
 import 'package:depi_app/core/models/selectedProduct.dart';
 import 'package:depi_app/core/utils/app_colors.dart';
+import 'package:depi_app/core/utils/app_router.dart';
 import 'package:depi_app/core/utils/app_styles.dart';
 import 'package:depi_app/features/productDetails/data/FavoriteService.dart';
 import 'package:depi_app/features/productDetails/data/ReviewService.dart';
@@ -44,7 +45,7 @@ class _ProductDetailsState extends State<ProductDetails> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            AppRouter.router.go(AppRouter.kHome);
           },
         ),
         backgroundColor: Colors.white,
