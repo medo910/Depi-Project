@@ -1,3 +1,4 @@
+import 'package:depi_app/core/models/product.dart';
 import 'package:depi_app/features/HomeScreen/presentation/home_screen.dart';
 import 'package:depi_app/features/auth/presentation/views/login_view.dart';
 import 'package:depi_app/features/auth/presentation/views/register_view.dart';
@@ -21,10 +22,7 @@ abstract class AppRouter {
   static const kFavoriteScreen = '/favoriteScreen';
   static final router = GoRouter(
     routes: [
-      GoRoute(
-        path: kSplash,
-        builder: (context, state) => const SplashView(),
-      ),
+      GoRoute(path: kSplash, builder: (context, state) => const SplashView()),
       GoRoute(
         path: kOnboardingView,
         builder: (context, state) => const OnboardingView(),
@@ -46,6 +44,13 @@ abstract class AppRouter {
       GoRoute(
         path: kFavoriteScreen,
         builder: (context, state) => const FavoriteScreen(),
+      ),
+      GoRoute(
+        path: AppRouter.kProductDetails,
+        builder: (context, state) {
+          final product = state.extra as Product;
+          return ProductDetails(product: product);
+        },
       ),
     ],
   );

@@ -60,11 +60,11 @@ class _FavoriteButtonState extends State<FavoriteButton>
     setState(() {
       isFavorite = !isFavorite!;
     });
-
-    _controller.forward().then((_) => _controller.reverse());
-
+    
     // تحديث Firebase
     await FavoriteService().toggleFavorite(widget.userId, widget.productId);
+
+    // _controller.forward().then((_) => _controller.reverse());
   }
 
   @override

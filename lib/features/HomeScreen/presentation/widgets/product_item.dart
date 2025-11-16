@@ -56,9 +56,7 @@ class _ProductItemState extends State<ProductItem> {
     });
     // تحديث Firebase
     await FavoriteService().toggleFavorite(widget.userId, widget.productId);
-
   }
-
 
   @override
   Widget build(BuildContext context) {

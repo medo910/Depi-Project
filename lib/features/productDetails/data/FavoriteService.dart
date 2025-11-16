@@ -40,17 +40,21 @@ class FavoriteService {
       await addToFavorite(userId, productId);
     }
   }
+
+
+   // Stream للاستماع للتغييرات في الـ favorites
+  Stream<bool> favoriteStream(String userId, String productId) {
+    return _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('favorites')
+        .doc(productId)
+        .snapshots()
+        .map((snapshot) => snapshot.exists);
+  }
+
+  
+
+
 }
 
-
-  /// جلب قائمة المفضلة
-
-
-  // Future<List<String>> getFavorites(String userId) async {
-  //   final snapshot = await _firestore.collection('users').doc(userId).get();
-  //   if (!snapshot.exists) return [];
-
-  //   final data = snapshot.data();
-  //   final favoriteList = data?['favorite'] as List<dynamic>? ?? [];
-  //   return favoriteList.map((e) => e.toString()).toList();
-  // }

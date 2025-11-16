@@ -1,3 +1,5 @@
+import 'package:depi_app/core/utils/app_router.dart';
+import 'package:depi_app/features/favorite_screen/FavoriteScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:depi_app/core/utils/app_colors.dart';
@@ -7,6 +9,7 @@ import 'package:depi_app/features/HomeScreen/presentation/widgets/product_item.d
 import 'package:depi_app/features/productDetails/presentation/product_details.dart';
 import 'package:depi_app/features/HomeScreen/data/repos/ProductService.dart';
 import 'package:depi_app/core/models/product.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,6 +22,10 @@ class _HomeScreenState extends State<HomeScreen> {
   String selectedCategory = 'All';
   List<Product> allProducts = [];
   final user = FirebaseAuth.instance.currentUser;
+
+  // void _refreshProducts() {
+  //   setState(() {});
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +72,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Row(
                       children: [
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FavoriteScreen(),
+                              ),
+                            );
+                          },
                           icon: const Icon(Icons.search),
                         ),
                         Expanded(
@@ -128,10 +142,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     }
 
-                    // خزّن كل المنتجات مرة واحدة
                     allProducts = snapshot.data!;
 
-                    // فلترة حسب الكاتيجوري
                     List<Product> filteredProducts =
                         selectedCategory == 'All'
                             ? allProducts
@@ -168,15 +180,20 @@ class _HomeScreenState extends State<HomeScreen> {
                           productReviews: product.reviews,
                           productPrice: product.price,
                           productType: product.category,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) =>
-                                        ProductDetails(product: product),
-                              ),
+                          onTap: () async {
+                            context.push(
+                              AppRouter.kProductDetails,
+                              extra: product,
                             );
+                            // await Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) =>
+                            //         ProductDetails(product: product),
+                            //   ),
+                            // );
+                            // بعد الرجوع، حدّث الشاشة
+                            // _refreshProducts();
                           },
                         );
                       },
