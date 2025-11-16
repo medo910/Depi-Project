@@ -17,9 +17,9 @@ class HorizontalCategoryButtons extends StatefulWidget {
 class _HorizontalCategoryButtonsState extends State<HorizontalCategoryButtons> {
   final List<String> categories = [
     "All",
-    "Shoes",
+    "Grocery",
     "Electronics",
-    "Clothing",
+    "Apparel",
     "Sports",
     "Books",
     "Toys",

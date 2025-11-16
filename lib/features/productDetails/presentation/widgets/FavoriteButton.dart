@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:depi_app/features/productDetails/data/FavoriteService.dart';
 
 class FavoriteButton extends StatefulWidget {
+  final String userId;
   final String productId;
-  final bool initialIsFavorite;
   final Function(String productId)? onFavoritePressed;
   final Color? activeColor;
   final Color? inactiveColor;
@@ -11,7 +12,7 @@ class FavoriteButton extends StatefulWidget {
   const FavoriteButton({
     super.key,
     required this.productId,
-    this.initialIsFavorite = false,
+    required this.userId,
     this.onFavoritePressed,
     this.activeColor,
     this.inactiveColor,
@@ -24,14 +25,14 @@ class FavoriteButton extends StatefulWidget {
 
 class _FavoriteButtonState extends State<FavoriteButton>
     with SingleTickerProviderStateMixin {
-  late bool isFavorite;
+  bool? isFavorite;
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
-    isFavorite = widget.initialIsFavorite;
+    _loadFavoriteStatus();
 
     _controller = AnimationController(
       duration: const Duration(milliseconds: 200),
@@ -44,41 +45,56 @@ class _FavoriteButtonState extends State<FavoriteButton>
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
+  void _loadFavoriteStatus() async {
+    bool fav = await FavoriteService().isFavorite(
+      widget.userId,
+      widget.productId,
+    );
+    setState(() {
+      isFavorite = fav;
+    });
+  }
+
+  void _toggleFavorite() async {
+    if (isFavorite == null) return; // لو البيانات لسه محملة
+    setState(() {
+      isFavorite = !isFavorite!;
+    });
+
+    _controller.forward().then((_) => _controller.reverse());
+
+    // تحديث Firebase
+    await FavoriteService().toggleFavorite(widget.userId, widget.productId);
+  }
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
 
-  void _toggleFavorite() {
-    setState(() {
-      isFavorite = !isFavorite;
-    });
-
-    // تشغيل الانيميشن
-    _controller.forward().then((_) => _controller.reverse());
-
-    // استدعاء الـ callback
-    if (widget.onFavoritePressed != null) {
-      widget.onFavoritePressed!(widget.productId);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: _toggleFavorite,
-      child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: Icon(
-          isFavorite ? Icons.favorite : Icons.favorite_border,
-          color:
-              isFavorite
-                  ? (widget.activeColor ?? Colors.red)
-                  : (widget.inactiveColor ?? Colors.grey),
-          size: widget.size ?? 24,
-        ),
-      ),
+      child:
+          isFavorite == null
+              ? SizedBox(
+                width: widget.size ?? 24,
+                height: widget.size ?? 24,
+                child: const CircularProgressIndicator(strokeWidth: 2),
+              )
+              : ScaleTransition(
+                scale: _scaleAnimation,
+                child: Icon(
+                  isFavorite! ? Icons.favorite : Icons.favorite_border,
+                  color:
+                      isFavorite!
+                          ? (widget.activeColor ?? Colors.red)
+                          : (widget.inactiveColor ?? Colors.grey),
+                  size: widget.size ?? 24,
+                ),
+              ),
     );
   }
 }

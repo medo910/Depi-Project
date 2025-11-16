@@ -1,7 +1,10 @@
+import 'package:depi_app/features/productDetails/data/FavoriteService.dart';
 import 'package:flutter/material.dart';
 
 class ProductItem extends StatefulWidget {
-  bool isFavorite = false;
+  // bool isFavorite = false;
+  String userId;
+  String productId;
   String productName;
   String productImage;
   double productPrice;
@@ -18,6 +21,8 @@ class ProductItem extends StatefulWidget {
     required this.productType,
     required this.productRating,
     required this.productReviews,
+    required this.userId,
+    required this.productId,
     this.onTap,
   });
 
@@ -26,6 +31,35 @@ class ProductItem extends StatefulWidget {
 }
 
 class _ProductItemState extends State<ProductItem> {
+  bool? _isFavorite;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFavoriteStatus();
+  }
+
+  void _loadFavoriteStatus() async {
+    bool fav = await FavoriteService().isFavorite(
+      widget.userId,
+      widget.productId,
+    );
+    setState(() {
+      _isFavorite = fav;
+    });
+  }
+
+  void _toggleFavorite() async {
+    if (_isFavorite == null) return; // لو البيانات لسه محملة
+    setState(() {
+      _isFavorite = !_isFavorite!;
+    });
+    // تحديث Firebase
+    await FavoriteService().toggleFavorite(widget.userId, widget.productId);
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -65,21 +99,26 @@ class _ProductItemState extends State<ProductItem> {
                   top: 8,
                   right: 8,
                   child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        widget.isFavorite = !widget.isFavorite;
-                      });
-                    },
+                    onTap: _toggleFavorite,
                     child: CircleAvatar(
                       backgroundColor: Colors.white.withOpacity(0.2),
                       radius: 16,
-                      child: Icon(
-                        widget.isFavorite
-                            ? Icons.favorite
-                            : Icons.favorite_border,
-                        color: Colors.green,
-                        size: 18,
-                      ),
+                      child:
+                          _isFavorite == null
+                              ? SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                              : Icon(
+                                _isFavorite!
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: Colors.red,
+                                size: 18,
+                              ),
                     ),
                   ),
                 ),

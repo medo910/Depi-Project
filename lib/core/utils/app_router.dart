@@ -6,6 +6,7 @@ import 'package:depi_app/features/favorite_screen/FavoriteScreen.dart';
 import 'package:depi_app/features/onboarding/presentation/onboarding_view.dart';
 import 'package:depi_app/features/productDetails/presentation/product_details.dart';
 import 'package:depi_app/features/splash/presentation/splash_view.dart';
+import 'package:depi_app/mosab_test.dart';
 import 'package:go_router/go_router.dart';
 
 abstract class AppRouter {
@@ -20,7 +21,10 @@ abstract class AppRouter {
   static const kFavoriteScreen = '/favoriteScreen';
   static final router = GoRouter(
     routes: [
-      GoRoute(path: kSplash, builder: (context, state) => const HomeScreen()),
+      GoRoute(
+        path: kSplash,
+        builder: (context, state) => const SplashView(),
+      ),
       GoRoute(
         path: kOnboardingView,
         builder: (context, state) => const OnboardingView(),

@@ -8,7 +8,7 @@ class Product {
   final String name;
   final double price;
   final String photoUrl;
-  final List<Review> comments;
+  List<Review> comments;
   double rate;
   final int reviews;
   // final int quantity;//
