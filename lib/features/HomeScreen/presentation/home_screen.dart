@@ -6,7 +6,6 @@ import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:depi_app/core/utils/app_styles.dart';
 import 'package:depi_app/features/HomeScreen/presentation/widgets/HorizontalCategoryButtons.dart';
 import 'package:depi_app/features/HomeScreen/presentation/widgets/product_item.dart';
-import 'package:depi_app/features/productDetails/presentation/product_details.dart';
 import 'package:depi_app/features/HomeScreen/data/repos/ProductService.dart';
 import 'package:depi_app/core/models/product.dart';
 import 'package:go_router/go_router.dart';
@@ -22,10 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
   String selectedCategory = 'All';
   List<Product> allProducts = [];
   final user = FirebaseAuth.instance.currentUser;
-
-  // void _refreshProducts() {
-  //   setState(() {});
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +71,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => FavoriteScreen(),
+                                builder:
+                                    (context) =>
+                                        FavoritesScreen(userId: user!.uid),
                               ),
                             );
                           },
@@ -185,15 +182,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               AppRouter.kProductDetails,
                               extra: product,
                             );
-                            // await Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) =>
-                            //         ProductDetails(product: product),
-                            //   ),
-                            // );
-                            // بعد الرجوع، حدّث الشاشة
-                            // _refreshProducts();
                           },
                         );
                       },

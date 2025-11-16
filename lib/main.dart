@@ -1,7 +1,9 @@
+import 'package:depi_app/core/cubit/FavoritesCubit/favorites_cubit.dart';
 import 'package:depi_app/core/utils/app_router.dart';
 import 'package:depi_app/core/utils/auth_service.dart';
 import 'package:depi_app/features/auth/data/repos/auth_repository_impl.dart';
 import 'package:depi_app/features/auth/presentation/manager/auth_cubit/auth_cubit.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +24,17 @@ class DepiApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => AuthCubit(AuthRepositoryImpl(AuthService())),
+        ),
+        BlocProvider<FavoritesCubit>(
+          create: (context) {
+            final user = FirebaseAuth.instance.currentUser;
+            if (user != null) {
+              return FavoritesCubit(user.uid)..loadFavorites();
+            } else {
+              // ممكن ترجع Cubit فاضي أو handle الحالة
+              return FavoritesCubit('');
+            }
+          },
         ),
       ],
       child: MaterialApp.router(

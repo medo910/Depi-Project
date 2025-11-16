@@ -11,7 +11,7 @@ class MyUser {
   final List<String> favorite;
   final List<ProductSelected> cart;
   final Timestamp date;
-  final List<MyOrder> ordersId;
+  final List<String> ordersId;
 
   MyUser({
     required this.id,
@@ -35,7 +35,7 @@ class MyUser {
       'favorite': favorite,
       'cart': cart.map((x) => x.toMap()).toList(),
       'date': date,
-      'ordersId': ordersId.map((x) => x.toMap()).toList(),
+      'ordersId': ordersId,
     };
   }
 
@@ -46,16 +46,19 @@ class MyUser {
       email: map['email'] as String,
       photoUrl: map['photoUrl'] as String?,
       address: map['address'] != null ? List<String>.from(map['address']) : [],
-      favorite: map['favorite'] != null ? List<String>.from(map['favorite']) : [],
-      cart: map['cart'] != null
-          ? List<ProductSelected>.from(
-              (map['cart'] as List).map((x) => ProductSelected.fromMap(x as Map<String, dynamic>)))
-          : [],
+      favorite:
+          map['favorite'] != null ? List<String>.from(map['favorite']) : [],
+      cart:
+          map['cart'] != null
+              ? List<ProductSelected>.from(
+                (map['cart'] as List).map(
+                  (x) => ProductSelected.fromMap(x as Map<String, dynamic>),
+                ),
+              )
+              : [],
       date: map['date'] as Timestamp? ?? Timestamp.now(),
-      ordersId: map['ordersId'] != null
-          ? List<MyOrder>.from(
-              (map['ordersId'] as List).map((x) => MyOrder.fromMap(x as Map<String, dynamic>)))
-          : [],
+      ordersId:
+          map['ordersId'] != null ? List<String>.from(map['ordersId']) : [],
     );
   }
 }

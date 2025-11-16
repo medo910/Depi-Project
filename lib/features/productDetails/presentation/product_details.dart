@@ -52,7 +52,6 @@ class _ProductDetailsState extends State<ProductDetails> {
         iconTheme: const IconThemeData(color: Colors.black),
         actions: [
           FavoriteButton(
-            userId: FirebaseAuth.instance.currentUser!.uid,
             productId: widget.product.id,
             activeColor: Colors.pink,
             inactiveColor: Colors.grey[400],

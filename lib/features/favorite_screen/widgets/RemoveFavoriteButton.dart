@@ -1,19 +1,15 @@
-import 'package:depi_app/core/cubit/FavoritesCubit/favorites_cubit.dart';
-import 'package:depi_app/core/cubit/FavoritesCubit/favorites_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:depi_app/core/cubit/FavoritesCubit/favorites_cubit.dart';
+import 'package:depi_app/core/cubit/FavoritesCubit/favorites_state.dart';
 
-class FavoriteButton extends StatelessWidget {
+class RemoveFavoriteButton extends StatelessWidget {
   final String productId;
-  final Color? activeColor;
-  final Color? inactiveColor;
   final double? size;
 
-  const FavoriteButton({
+  const RemoveFavoriteButton({
     super.key,
     required this.productId,
-    this.activeColor,
-    this.inactiveColor,
     this.size,
   });
 
@@ -30,18 +26,15 @@ class FavoriteButton extends StatelessWidget {
           );
         }
 
-        // هل المنتج في الفيفوريت؟
-        bool isFavorite = state.favorites.contains(productId);
-
+        // دايمًا أحمر لأن ده زر إزالة
         return GestureDetector(
           onTap: () {
-            context.read<FavoritesCubit>().toggleFavorite(productId);
+            // إزالة المنتج من الفيفوريت وتحديث Cubit
+            context.read<FavoritesCubit>().removeFavorite(productId);
           },
           child: Icon(
-            isFavorite ? Icons.favorite : Icons.favorite_border,
-            color: isFavorite
-                ? (activeColor ?? Colors.red)
-                : (inactiveColor ?? Colors.grey),
+            Icons.favorite,
+            color: Colors.red,
             size: size ?? 24,
           ),
         );

@@ -19,23 +19,21 @@ class GetFavoriteService {
     try {
       // جلب معرفات المنتجات المفضلة
       final favoriteIds = await getFavoriteIds(userId);
-      
+
       if (favoriteIds.isEmpty) return [];
 
       // جلب المنتجات من Firestore
       List<Product> products = [];
-      
+
       for (String productId in favoriteIds) {
-        final productDoc = await _firestore
-            .collection('products')
-            .doc(productId)
-            .get();
-        
+        final productDoc =
+            await _firestore.collection('products').doc(productId).get();
+
         if (productDoc.exists) {
           products.add(Product.fromMap(productDoc.data()!));
         }
       }
-      
+
       return products;
     } catch (e) {
       print('Error fetching favorite products: $e');
@@ -47,7 +45,7 @@ class GetFavoriteService {
   Future<void> removeFromFavorites(String userId, String productId) async {
     try {
       await _firestore.collection('users').doc(userId).update({
-        'favorite': FieldValue.arrayRemove([productId])
+        'favorite': FieldValue.arrayRemove([productId]),
       });
     } catch (e) {
       print('Error removing from favorites: $e');
@@ -59,7 +57,7 @@ class GetFavoriteService {
   Future<void> addToFavorites(String userId, String productId) async {
     try {
       await _firestore.collection('users').doc(userId).update({
-        'favorite': FieldValue.arrayUnion([productId])
+        'favorite': FieldValue.arrayUnion([productId]),
       });
     } catch (e) {
       print('Error adding to favorites: $e');

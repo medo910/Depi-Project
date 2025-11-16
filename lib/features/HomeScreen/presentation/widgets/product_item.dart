@@ -1,19 +1,20 @@
-import 'package:depi_app/features/productDetails/data/FavoriteService.dart';
+import 'package:depi_app/core/cubit/FavoritesCubit/favorites_cubit.dart';
+import 'package:depi_app/core/cubit/FavoritesCubit/favorites_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ProductItem extends StatefulWidget {
-  // bool isFavorite = false;
-  String userId;
-  String productId;
-  String productName;
-  String productImage;
-  double productPrice;
-  String productType;
-  double productRating;
-  int productReviews;
-  VoidCallback? onTap;
+class ProductItem extends StatelessWidget {
+  final String userId;
+  final String productId;
+  final String productName;
+  final String productImage;
+  final double productPrice;
+  final String productType;
+  final double productRating;
+  final int productReviews;
+  final VoidCallback? onTap;
 
-  ProductItem({
+  const ProductItem({
     super.key,
     required this.productName,
     required this.productImage,
@@ -27,47 +28,14 @@ class ProductItem extends StatefulWidget {
   });
 
   @override
-  State<ProductItem> createState() => _ProductItemState();
-}
-
-class _ProductItemState extends State<ProductItem> {
-  bool? _isFavorite;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadFavoriteStatus();
-  }
-
-  void _loadFavoriteStatus() async {
-    bool fav = await FavoriteService().isFavorite(
-      widget.userId,
-      widget.productId,
-    );
-    setState(() {
-      _isFavorite = fav;
-    });
-  }
-
-  void _toggleFavorite() async {
-    if (_isFavorite == null) return; // لو البيانات لسه محملة
-    setState(() {
-      _isFavorite = !_isFavorite!;
-    });
-    // تحديث Firebase
-    await FavoriteService().toggleFavorite(widget.userId, widget.productId);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onTap,
+      onTap: onTap,
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 3,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
           children: [
             Stack(
               children: [
@@ -76,113 +44,96 @@ class _ProductItemState extends State<ProductItem> {
                     top: Radius.circular(12),
                   ),
                   child: Image.network(
-                    widget.productImage,
+                    productImage,
                     fit: BoxFit.fill,
                     height: 140,
                     width: double.infinity,
-                    errorBuilder: (context, error, stackTrace) {
+                    errorBuilder: (context, error, _) {
                       return Container(
                         height: 140,
                         color: Colors.grey[200],
-                        child: const Icon(
-                          Icons.image,
-                          size: 50,
-                          color: Colors.grey,
+                        child: const Icon(Icons.image, size: 50),
+                      );
+                    },
+                  ),
+                ),
+
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: BlocBuilder<FavoritesCubit, FavoritesState>(
+                    builder: (context, state) {
+                      // افحص لو المنتج موجود في الـ favorites
+                      final isFav = state.favorites.contains(productId);
+                      print(isFav);
+
+                      return GestureDetector(
+                        onTap: () {
+                          // حدث الـ favorite عند الضغط
+                          context.read<FavoritesCubit>().toggleFavorite(
+                            productId,
+                          );
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white.withOpacity(0.2),
+                          radius: 16,
+                          child: Icon(
+                            isFav ? Icons.favorite : Icons.favorite_border,
+                            color: Colors.red,
+                            size: 18,
+                          ),
                         ),
                       );
                     },
                   ),
                 ),
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: GestureDetector(
-                    onTap: _toggleFavorite,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white.withOpacity(0.2),
-                      radius: 16,
-                      child:
-                          _isFavorite == null
-                              ? SizedBox(
-                                width: 18,
-                                height: 18,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              )
-                              : Icon(
-                                _isFavorite!
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: Colors.red,
-                                size: 18,
-                              ),
-                    ),
-                  ),
-                ),
               ],
             ),
 
-            // Details Section - flexible
-            Flexible(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Product Name
-                    Text(
-                      widget.productName,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
+            // ========= باقي تفاصيل المنتج ============
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    productName,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+
+                  Row(
+                    children: [
+                      const Icon(Icons.star, color: Colors.amber, size: 16),
+                      const SizedBox(width: 4),
+                      Text(
+                        "${productRating.toStringAsFixed(1)} ($productReviews reviews)",
+                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
 
-                    // Rating
-                    Row(
-                      children: [
-                        const Icon(Icons.star, color: Colors.amber, size: 16),
-                        const SizedBox(width: 4),
-                        Flexible(
-                          child: Text(
-                            "${widget.productRating.toStringAsFixed(1)} (${widget.productReviews} reviews)",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
+                  Text(
+                    "\$${productPrice.toStringAsFixed(2)}",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.green[700],
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(height: 4),
+                  ),
+                  const SizedBox(height: 2),
 
-                    // Price
-                    Text(
-                      "\$${widget.productPrice.toStringAsFixed(2)}",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.green[700],
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-
-                    // Product Type
-                    Text(
-                      widget.productType,
-                      style: TextStyle(fontSize: 12, color: Colors.grey[500]),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
+                  Text(
+                    productType,
+                    style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                  ),
+                ],
               ),
             ),
           ],
