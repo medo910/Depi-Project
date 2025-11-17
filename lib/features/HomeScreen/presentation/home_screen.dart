@@ -1,5 +1,4 @@
 import 'package:depi_app/core/utils/app_router.dart';
-import 'package:depi_app/features/favorite_screen/FavoriteScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:depi_app/core/utils/app_colors.dart';
@@ -68,14 +67,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         IconButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) =>
-                                        FavoritesScreen(userId: user!.uid),
-                              ),
-                            );
+                            // remove
+                            AppRouter.router.go(AppRouter.kFavoriteScreen);
+                            //
                           },
                           icon: const Icon(Icons.search),
                         ),

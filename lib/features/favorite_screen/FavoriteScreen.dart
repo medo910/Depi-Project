@@ -1,43 +1,27 @@
 import 'package:depi_app/core/cubit/FavoritesCubit/favorites_cubit.dart';
 import 'package:depi_app/core/cubit/FavoritesCubit/favorites_state.dart';
+import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:depi_app/core/utils/app_router.dart';
-import 'package:depi_app/features/productDetails/data/FavoriteService.dart';
+import 'package:depi_app/core/utils/FavoriteService.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:depi_app/core/models/product.dart';
 
 class FavoritesScreen extends StatefulWidget {
-  final String userId;
-
-  const FavoritesScreen({Key? key, required this.userId}) : super(key: key);
+  const FavoritesScreen({Key? key}) : super(key: key);
 
   @override
   State<FavoritesScreen> createState() => _FavoritesScreenState();
 }
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
-  @override
+  final user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE8F5E9),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFE8F5E9),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          'Favorites',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        centerTitle: true,
-      ),
+      backgroundColor: AppColors.backgroundGradientEnd.withOpacity(0.9),
       body: BlocBuilder<FavoritesCubit, FavoritesState>(
         builder: (context, state) {
           if (state.loading && state.favorites.isEmpty) {
@@ -45,7 +29,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           }
 
           return StreamBuilder<List<Product>>(
-            stream: FavoriteService().favoriteProductsStream(widget.userId),
+            stream: FavoriteService().favoriteProductsStream(user!.uid),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -81,19 +65,32 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.favorite, color: Colors.green),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Favorites (${products.length})',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
+                    padding: const EdgeInsets.only(bottom: 15),
+                    child: Container(
+                      decoration: BoxDecoration(color: Colors.white),
+                      height: 120,
+
+                      child: Padding(
+                        padding: const EdgeInsets.all(25.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            const Icon(
+                              Icons.favorite,
+                              color: Colors.green,
+                              size: 26,
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Favorites (${products.length})',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                   Expanded(
@@ -104,7 +101,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         final product = products[index];
                         return FavoriteProductCard(
                           product: product,
-                          userId: widget.userId,
+                          userId: user!.uid,
                         );
                       },
                     ),

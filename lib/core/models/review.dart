@@ -8,6 +8,7 @@ class Review {
   final String message;
   final int reactNum;
   final int rate;
+  final String name;
 
   Review({
     required this.reviewId,
@@ -17,6 +18,7 @@ class Review {
     required this.message,
     required this.reactNum,
     required this.rate,
+    required this.name,
   });
 
   Map<String, dynamic> toMap() {
@@ -28,11 +30,13 @@ class Review {
       'message': message,
       'reactNum': reactNum,
       'rate': rate,
+      'name': name,
     };
   }
 
   factory Review.fromMap(Map<String, dynamic> map) {
     return Review(
+      name: map['name'] ?? '',
       reviewId: map['reviewId'] ?? '',
       productId: map['productId'] ?? '',
       date: map['date'] ?? Timestamp.now(),

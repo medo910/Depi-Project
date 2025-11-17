@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:depi_app/features/productDetails/data/FavoriteService.dart';
+import 'package:depi_app/core/utils/FavoriteService.dart';
 import 'favorites_state.dart';
 
 class FavoritesCubit extends Cubit<FavoritesState> {

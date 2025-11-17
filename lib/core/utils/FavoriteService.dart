@@ -9,7 +9,7 @@ class FavoriteService {
     final userRef = _firestore.collection('users').doc(userId);
     await userRef.set({
       'favorite': FieldValue.arrayUnion([productId]),
-    }, SetOptions(merge: true)); // merge: true عشان ميمسحش باقي البيانات
+    }, SetOptions(merge: true));
   }
 
   /// إزالة منتج من المفضلة

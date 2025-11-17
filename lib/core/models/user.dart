@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:depi_app/core/models/order.dart';
 import 'package:depi_app/core/models/selectedProduct.dart';
 
 class MyUser {
   final String id;
-  final String name;
+  final String fallName;
   final String email;
   final String? photoUrl;
   final List<String> address;
@@ -15,7 +14,7 @@ class MyUser {
 
   MyUser({
     required this.id,
-    required this.name,
+    required this.fallName,
     required this.email,
     this.photoUrl,
     this.address = const [],
@@ -28,7 +27,7 @@ class MyUser {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'name': name,
+      'name': fallName,
       'email': email,
       'photoUrl': photoUrl,
       'address': address,
@@ -42,7 +41,7 @@ class MyUser {
   factory MyUser.fromMap(Map<String, dynamic> map) {
     return MyUser(
       id: map['id'] as String,
-      name: map['name'] as String,
+      fallName: map['name'] as String,
       email: map['email'] as String,
       photoUrl: map['photoUrl'] as String?,
       address: map['address'] != null ? List<String>.from(map['address']) : [],

@@ -3,7 +3,6 @@ import 'package:depi_app/core/models/selectedProduct.dart';
 import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:depi_app/core/utils/app_router.dart';
 import 'package:depi_app/core/utils/app_styles.dart';
-import 'package:depi_app/features/productDetails/data/FavoriteService.dart';
 import 'package:depi_app/features/productDetails/data/ReviewService.dart';
 import 'package:depi_app/features/productDetails/data/UserService.dart';
 import 'package:depi_app/features/productDetails/presentation/widgets/DetailsExpandable.dart';

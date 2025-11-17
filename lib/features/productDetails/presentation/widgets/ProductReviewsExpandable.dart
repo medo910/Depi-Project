@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:depi_app/features/productDetails/data/ReviewService.dart';
+import 'package:depi_app/features/productDetails/presentation/data/repos/UserService.dart';
 import 'package:depi_app/features/productDetails/presentation/widgets/LikeButton.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:depi_app/core/models/review.dart';
 import 'package:depi_app/core/models/product.dart';
@@ -19,10 +21,27 @@ class _ProductReviewsExpandableFullState
     extends State<ProductReviewsExpandableFull> {
   final TextEditingController _commentController = TextEditingController();
   double _selectedRate = 5;
+  final user = FirebaseAuth.instance.currentUser;
+  String? userName;
+  bool isLoading = true;
 
   String formatDate(Timestamp timestamp) {
-    final date = timestamp.toDate(); // يحوّل Timestamp لـ DateTime
+    final date = timestamp.toDate();
     return '${date.day}/${date.month}/${date.year}';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+
+  Future<void> _loadUserName() async {
+    final name = await UserService().getCurrentUserName();
+    setState(() {
+      userName = name;
+      isLoading = false;
+    });
   }
 
   Future<void> _showAddReviewDialog(List<Review> currentComments) async {
@@ -299,10 +318,11 @@ class _ProductReviewsExpandableFullState
                                 }
 
                                 final newReview = Review(
+                                  name: userName ?? "",
                                   reviewId:
                                       'temp_${DateTime.now().millisecondsSinceEpoch}',
                                   productId: widget.productId,
-                                  senderId: 'user1',
+                                  senderId: user!.uid,
                                   message: commentText,
                                   rate: _selectedRate.toInt(),
                                   date: Timestamp.now(),
@@ -593,7 +613,7 @@ class _ProductReviewsExpandableFullState
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              r.senderId,
+                              r.name,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
