@@ -77,7 +77,7 @@ class _LoginViewState extends State<LoginView> {
                   BlocConsumer<AuthCubit, AuthState>(
                     listener: (context, state) {
                       if (state is AuthError) {
-                        showSnackBar(context, "${state.message}", Colors.red);
+                        showSnackBar(context, state.message, Colors.red);
                       } else if (state is AuthSuccess) {
                         showSnackBar(context, "Login Successful", Colors.green);
                         AppRouter.router.go(AppRouter.kHome);

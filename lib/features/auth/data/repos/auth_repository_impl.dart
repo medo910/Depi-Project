@@ -1,10 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_app/core/utils/auth_service.dart';
 import 'package:depi_app/features/auth/data/repos/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthService _authService;
-
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   AuthRepositoryImpl(this._authService);
 
   @override
@@ -34,6 +35,27 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<User?> signInWithGoogle(context) async {
     return await _authService.signInWithGoogle(context);
+  }
+
+  @override
+  Future<void> updateUserData({
+    required String uid,
+    required String fullName,
+    required String email,
+    required String phone,
+    required List<String> addresses,
+  }) async {
+    if (_authService.currentUser?.email != email) {
+      await _authService.currentUser?.verifyBeforeUpdateEmail(email);
+    }
+    await _authService.currentUser?.updateDisplayName(fullName);
+
+    await _firestore.collection('users').doc(uid).update({
+      'fullName': fullName,
+      'email': email,
+      'phone': phone,
+      'address': addresses,
+    });
   }
 
   // @override
