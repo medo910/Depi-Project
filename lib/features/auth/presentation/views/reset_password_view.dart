@@ -88,7 +88,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
             BlocConsumer<AuthCubit, AuthState>(
               listener: (context, state) {
                 if (state is AuthError) {
-                  showSnackBar(context, "${state.message}", Colors.red);
+                  showSnackBar(context, state.message, Colors.red);
                 } else if (state is AuthPasswordReset) {
                   showCustomAlertDialog(context, _emailCtrl.text.trim());
                 }

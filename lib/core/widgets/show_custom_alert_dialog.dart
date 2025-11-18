@@ -8,7 +8,7 @@ Future<dynamic> showCustomAlertDialog(BuildContext context, String email) {
         (_) => AlertDialog(
           title: const Text('Email Sent'),
           content: Text(
-            'A password reset link has been sent to ${email}. '
+            'A password reset link has been sent to $email. '
             'Check your inbox and follow the link to reset your password.',
           ),
           actions: [

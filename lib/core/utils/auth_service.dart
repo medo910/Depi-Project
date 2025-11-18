@@ -26,6 +26,8 @@ class AuthService {
         'fullName': fullName,
         'email': email,
         'createdAt': FieldValue.serverTimestamp(),
+        'address': [],
+        'phone': '',
       });
       await user.updateDisplayName(fullName);
     }
@@ -43,13 +45,11 @@ class AuthService {
 
   Future<User?> signInWithGoogle(context) async {
     try {
-      await signOut();
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
       if (googleUser == null) {
         return null;
       }
-      print("Google user picked: ${googleUser.email}");
 
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
@@ -63,9 +63,27 @@ class AuthService {
         credential,
       );
 
-      return userCredential.user;
+      final user = userCredential.user;
+
+      if (user != null) {
+        final userDoc =
+            await _firestore.collection('users').doc(user.uid).get();
+
+        if (!userDoc.exists) {
+          await _firestore.collection('users').doc(user.uid).set({
+            'fullName': user.displayName ?? 'Unknown User',
+            'email': user.email,
+            'createdAt': FieldValue.serverTimestamp(),
+            'address': [],
+            'phone': '',
+
+            'photoUrl': user.photoURL,
+          });
+        }
+      }
+
+      return user;
     } on Exception catch (e) {
-      // TODO
       throw Exception('Google Sign-In failed: $e');
     }
   }
