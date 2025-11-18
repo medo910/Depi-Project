@@ -7,8 +7,6 @@ import 'package:depi_app/features/favorite_screen/FavoriteScreen.dart';
 import 'package:depi_app/features/onboarding/presentation/onboarding_view.dart';
 import 'package:depi_app/features/productDetails/presentation/product_details.dart';
 import 'package:depi_app/features/chat/presentation/view/chat_screen.dart';
-import 'package:depi_app/features/home/presentation/home_view.dart';
-import 'package:depi_app/features/onboarding/presentation/onboarding_view.dart';
 import 'package:depi_app/features/settings/presentation/edit_profile_view.dart';
 import 'package:depi_app/features/settings/presentation/settings_view.dart';
 import 'package:depi_app/features/splash/presentation/splash_view.dart';
@@ -21,10 +19,8 @@ abstract class AppRouter {
   static const kRegister = '/registerView';
   static const kForgotPassword = '/forgotPasswordView';
   static const kResetPassword = '/resetPasswordView';
-  static const kHome = '/homeScreen';
   static const kProductDetails = '/ProductDetails';
   static const kFavoriteScreen = '/favoriteScreen';
-  static const kResetPassword = '/forgotPasswordView';
   static const kHome = '/home';
   static const kSettings = '/settings';
   static const kEditProfile = '/editProfile';
@@ -64,7 +60,7 @@ abstract class AppRouter {
           final product = state.extra as Product;
           return ProductDetails(product: product);
         },
-      GoRoute(path: kHome, builder: (context, state) => const HomeView()),
+      ),
 
       GoRoute(
         path: kSettings,

@@ -36,13 +36,21 @@ class SettingsView extends StatelessWidget {
             ),
             const Divider(),
 
-            ListTile(
-              leading: const Icon(Iconsax.lock_copy, color: AppColors.primary),
-              title: const Text("Reset Password"),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-              onTap: () {
-                GoRouter.of(context).push(AppRouter.kResetPassword);
+            BlocListener<AuthCubit, AuthState>(
+              listener: (context, state) {
+                // TODO: implement listener
               },
+              child: ListTile(
+                leading: const Icon(
+                  Iconsax.lock_copy,
+                  color: AppColors.primary,
+                ),
+                title: const Text("Reset Password"),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  GoRouter.of(context).push(AppRouter.kResetPassword);
+                },
+              ),
             ),
             const Divider(),
 

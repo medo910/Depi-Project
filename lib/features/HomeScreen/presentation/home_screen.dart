@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_app/core/utils/app_router.dart';
+import 'package:depi_app/features/chat/repositories/chat_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:depi_app/core/utils/app_colors.dart';
@@ -8,6 +10,7 @@ import 'package:depi_app/features/HomeScreen/presentation/widgets/product_item.d
 import 'package:depi_app/features/HomeScreen/data/repos/ProductService.dart';
 import 'package:depi_app/core/models/product.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,6 +23,29 @@ class _HomeScreenState extends State<HomeScreen> {
   String selectedCategory = 'All';
   List<Product> allProducts = [];
   final user = FirebaseAuth.instance.currentUser;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    listenForIncomingMessages();
+  }
+
+  void listenForIncomingMessages() {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    FirebaseFirestore.instance
+        .collection('chats')
+        .doc(userId)
+        .collection('messages')
+        .where('receiverId', isEqualTo: userId)
+        .where('status', isEqualTo: 'sent')
+        .snapshots()
+        .listen((snapshot) {
+          for (var doc in snapshot.docs) {
+            doc.reference.update({'status': 'delivered'});
+          }
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +72,27 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Spacer(),
                   IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.chat_bubble_outline_rounded),
+                    icon: const Icon(Iconsax.setting_2_copy),
+                    onPressed: () {
+                      GoRouter.of(context).push(AppRouter.kSettings);
+                    },
+                  ),
+                  StreamBuilder<int>(
+                    stream: ChatRepository().getUnreadCountStream(),
+                    builder: (context, snapshot) {
+                      final count = snapshot.data ?? 0;
+                      return IconButton(
+                        onPressed: () {
+                          GoRouter.of(context).push(AppRouter.kUserChat);
+                        },
+                        icon: Badge(
+                          isLabelVisible: count > 0,
+                          label: Text('$count'),
+                          backgroundColor: Colors.red,
+                          child: const Icon(Iconsax.message_text_copy),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),

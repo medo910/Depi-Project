@@ -1,9 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:depi_app/core/utils/FavoriteService.dart';
+import 'package:depi_app/core/utils/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'favorites_state.dart';
 
 class FavoritesCubit extends Cubit<FavoritesState> {
-  final String userId;
+  String userId = FirebaseAuth.instance.currentUser!.uid;
 
   FavoritesCubit(this.userId) : super(FavoritesState(favorites: <String>{}));
 
@@ -40,4 +42,3 @@ class FavoritesCubit extends Cubit<FavoritesState> {
 
   bool isFavorite(String id) => state.favorites.contains(id);
 }
-
