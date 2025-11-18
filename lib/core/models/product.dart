@@ -1,17 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_app/core/models/review.dart';
 
-enum ProductAttributeType { color, size }
+enum ProductAttributeType { color, size, both }
 
 class Product {
   final String id;
   final String name;
   final double price;
   final String photoUrl;
-  final List<Review> comments;
-  final double rate;
+  List<Review> comments;
+  double rate;
   final int reviews;
-  final int quantity;
   final String brand;
   final String category;
   final String description;
@@ -26,9 +25,7 @@ class Product {
     required this.price,
     required this.photoUrl,
     required this.comments,
-    required this.rate,
     required this.reviews,
-    required this.quantity,
     required this.brand,
     required this.category,
     required this.description,
@@ -36,6 +33,7 @@ class Product {
     required this.productAttributeType,
     required this.stock,
     required this.date,
+    required this.rate,
   });
 
   Map<String, dynamic> toMap() {
@@ -47,7 +45,6 @@ class Product {
       'comments': comments.map((x) => x.toMap()).toList(),
       'rate': rate,
       'reviews': reviews,
-      'quantity': quantity,
       'brand': brand,
       'category': category,
       'description': description,
@@ -71,7 +68,6 @@ class Product {
           [],
       rate: (map['rate'] ?? 0).toDouble(),
       reviews: map['reviews'] ?? 0,
-      quantity: map['quantity'] ?? 0,
       brand: map['brand'] ?? '',
       category: map['category'] ?? '',
       description: map['description'] ?? '',
@@ -86,7 +82,8 @@ class Product {
     switch (value) {
       case 'size':
         return ProductAttributeType.size;
-      case 'color':
+      case 'both':
+        return ProductAttributeType.both;
       default:
         return ProductAttributeType.color;
     }
