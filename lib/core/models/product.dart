@@ -11,7 +11,6 @@ class Product {
   List<Review> comments;
   double rate;
   final int reviews;
-  // final int quantity;//
   final String brand;
   final String category;
   final String description;

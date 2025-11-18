@@ -28,12 +28,7 @@ class DepiApp extends StatelessWidget {
         BlocProvider<FavoritesCubit>(
           create: (context) {
             final user = FirebaseAuth.instance.currentUser;
-            if (user != null) {
-              return FavoritesCubit(user.uid)..loadFavorites();
-            } else {
-              // ممكن ترجع Cubit فاضي أو handle الحالة
-              return FavoritesCubit('');
-            }
+            return FavoritesCubit(user!.uid)..loadFavorites();
           },
         ),
       ],

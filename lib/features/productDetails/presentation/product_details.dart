@@ -66,12 +66,10 @@ class _ProductDetailsState extends State<ProductDetails> {
           padding: const EdgeInsets.symmetric(vertical: 15),
           child: Column(
             children: [
-              // صورة المنتج
               AspectRatio(
                 aspectRatio: 1,
                 child: Image.network(widget.product.photoUrl, fit: BoxFit.fill),
               ),
-              // التفاصيل
               Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Column(
@@ -85,7 +83,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                     Text(widget.product.name, style: AppStyles.styleBold24Dark),
                     const SizedBox(height: 8),
 
-                    // التقييم وعدد المراجعات - ديناميكي
                     StreamBuilder<Product>(
                       stream: ProductReviewService().getProductStream(
                         widget.product.id,
@@ -98,7 +95,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                         final product = snapshot.data!;
                         final comments = product.comments;
 
-                        // حساب متوسط التقييم
                         double avgRate = 0;
                         if (comments.isNotEmpty) {
                           avgRate =
@@ -108,7 +104,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                               comments.length;
                         }
 
-                        // عدد المراجعات
                         final reviewCount = comments.length;
 
                         return Row(
@@ -170,7 +165,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         initialQuantity: 1,
                         min: 1,
                         onChanged: (qty) {
-                          // يمكن إضافة وظيفة تحديث الكمية هنا
+                          // Handle quantity change if needed
                         },
                       ),
                     ),
@@ -212,7 +207,6 @@ class _ProductDetailsState extends State<ProductDetails> {
 
             Map<String, dynamic> productDetails = {"quantity": 1};
 
-            ///  لو المنتج فيه color
             if (widget.product.productAttributeType ==
                     ProductAttributeType.color ||
                 widget.product.productAttributeType ==
@@ -222,7 +216,6 @@ class _ProductDetailsState extends State<ProductDetails> {
               }
             }
 
-            ///  لو المنتج فيه size
             if (widget.product.productAttributeType ==
                     ProductAttributeType.size ||
                 widget.product.productAttributeType ==

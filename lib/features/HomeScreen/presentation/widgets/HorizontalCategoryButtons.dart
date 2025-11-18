@@ -25,8 +25,7 @@ class _HorizontalCategoryButtonsState extends State<HorizontalCategoryButtons> {
     "Toys",
   ];
 
-  int? selectedIndex = 0; // All هو الافتراضي
-
+  int? selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -47,7 +46,6 @@ class _HorizontalCategoryButtonsState extends State<HorizontalCategoryButtons> {
                 setState(() {
                   selectedIndex = index;
                 });
-                // بعت الكاتيجوري المختار للـ HomeScreen
                 widget.onCategorySelected(categories[index]);
               },
               child: AnimatedContainer(

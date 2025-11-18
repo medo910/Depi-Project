@@ -1,19 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:depi_app/core/models/user.dart'; // استبدل بالمسار الصحيح
+import 'package:depi_app/core/models/user.dart';
 
 class UserService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // فانكشن تجيب اسم اليوزر باستخدام userId
   Future<String?> getUserName(String userId) async {
     try {
       DocumentSnapshot userDoc =
           await _firestore
               .collection(
                 'users',
-              ) // غير اسم الـ collection حسب الـ database بتاعك
+              )
               .doc(userId)
               .get();
 
@@ -28,10 +27,8 @@ class UserService {
     }
   }
 
-  // فانكشن تجيب اسم اليوزر الحالي (المسجل دخول)
   Future<String?> getCurrentUserName() async {
     try {
-      // جلب الـ current user من Firebase Auth
       User? currentUser = _auth.currentUser;
 
       if (currentUser == null) {
@@ -39,7 +36,6 @@ class UserService {
         return null;
       }
 
-      // جلب اسم اليوزر من Firestore
       DocumentSnapshot userDoc =
           await _firestore.collection('users').doc(currentUser.uid).get();
 
@@ -54,7 +50,6 @@ class UserService {
     }
   }
 
-  // فانكشن تجيب الـ MyUser object للـ current user
   Future<MyUser?> getCurrentUser() async {
     try {
       User? currentUser = _auth.currentUser;
@@ -79,7 +74,6 @@ class UserService {
     }
   }
 
-  // فانكشن تجيب أي MyUser object باستخدام userId
   Future<MyUser?> getUser(String userId) async {
     try {
       DocumentSnapshot userDoc =
@@ -97,7 +91,6 @@ class UserService {
     }
   }
 
-  // فانكشن تجيب الـ current user ID
   String? getCurrentUserId() {
     return _auth.currentUser?.uid;
   }

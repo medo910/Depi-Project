@@ -7,7 +7,6 @@ class FavoritesCubit extends Cubit<FavoritesState> {
 
   FavoritesCubit(this.userId) : super(FavoritesState(favorites: <String>{}));
 
-  /// تحميل الفيفوريت لأول مرة
   Future<void> loadFavorites() async {
     emit(FavoritesState(favorites: <String>{}, loading: true));
 
@@ -16,7 +15,6 @@ class FavoritesCubit extends Cubit<FavoritesState> {
     emit(FavoritesState(favorites: favIds.toSet(), loading: false));
   }
 
-  /// عكس حالة الفيفوريت
   Future<void> toggleFavorite(String productId) async {
     final current = {...state.favorites};
 
@@ -31,7 +29,6 @@ class FavoritesCubit extends Cubit<FavoritesState> {
     emit(FavoritesState(favorites: current));
   }
 
-  /// حذف منتج من الفيفوريت
   Future<void> removeFavorite(String productId) async {
     final current = {...state.favorites};
 

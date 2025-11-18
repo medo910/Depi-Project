@@ -14,7 +14,7 @@ class ProductDetailsExpandable extends StatelessWidget {
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
-        dividerColor: Colors.transparent, // يخفي الخط الفاصل
+        dividerColor: Colors.transparent,
       ),
       child: Column(
         children: [

@@ -15,10 +15,10 @@ class ProductService {
   }
 
   ///  Future — fetch once
-  Future<List<Product>> getProductsOnce() async {
-    final snapshot = await productsRef.get();
-    return snapshot.docs.map((doc) {
-      return Product.fromMap(doc.data() as Map<String, dynamic>);
-    }).toList();
-  }
+  // Future<List<Product>> getProductsOnce() async {
+  //   final snapshot = await productsRef.get();
+  //   return snapshot.docs.map((doc) {
+  //     return Product.fromMap(doc.data() as Map<String, dynamic>);
+  //   }).toList();
+  // }
 }

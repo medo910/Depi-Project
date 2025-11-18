@@ -21,7 +21,6 @@ class FavoriteButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<FavoritesCubit, FavoritesState>(
       builder: (context, state) {
-        // لو لسه بيحمل الفيفوريت
         if (state.loading) {
           return SizedBox(
             width: size ?? 24,
@@ -30,7 +29,6 @@ class FavoriteButton extends StatelessWidget {
           );
         }
 
-        // هل المنتج في الفيفوريت؟
         bool isFavorite = state.favorites.contains(productId);
 
         return GestureDetector(

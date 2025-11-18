@@ -63,13 +63,10 @@ class ProductItem extends StatelessWidget {
                   right: 8,
                   child: BlocBuilder<FavoritesCubit, FavoritesState>(
                     builder: (context, state) {
-                      // افحص لو المنتج موجود في الـ favorites
                       final isFav = state.favorites.contains(productId);
-                      print(isFav);
 
                       return GestureDetector(
                         onTap: () {
-                          // حدث الـ favorite عند الضغط
                           context.read<FavoritesCubit>().toggleFavorite(
                             productId,
                           );
@@ -90,7 +87,6 @@ class ProductItem extends StatelessWidget {
               ],
             ),
 
-            // ========= باقي تفاصيل المنتج ============
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
