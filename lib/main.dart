@@ -96,6 +96,12 @@ class DepiApp extends StatelessWidget {
             cartCubit: context.read<CartCubit>(),
           ),
         ),
+        BlocProvider<FavoritesCubit>(
+          create: (context) {
+            final user = FirebaseAuth.instance.currentUser;
+            return FavoritesCubit(user!.uid)..loadFavorites();
+          },
+        ),
 
       ],
       child:BlocBuilder<AppSettingsCubit, AppSettingsState>(

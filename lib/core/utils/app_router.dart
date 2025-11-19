@@ -67,7 +67,6 @@ abstract class AppRouter {
       //   path: kResetPassword,
       //   builder: (context, state) => const SplashView(),
       // ),
-      GoRoute(path: kHome, builder: (context, state) => const SplashView()),
       GoRoute(path: kCart, builder: (context, state) => const CartScreen()),
       GoRoute(path: kCustomerSupport, builder: (context, state) => const CustomerSupportScreen()),
       GoRoute(path: kCheckout, builder: (context, state) =>  CheckoutScreen()),

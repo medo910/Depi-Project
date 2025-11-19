@@ -333,6 +333,9 @@ class ProfileScreen extends StatelessWidget {
                                 subtitle:
                                 Text("View all your past orders",style: Theme.of(context).textTheme.bodyMedium),
                                 trailing: Icon(Icons.chevron_right),
+                                 onTap: (){
+                                   AppRouter.router.push(AppRouter.kHome);
+                                 },
                               ),
 
                               const Divider(),
