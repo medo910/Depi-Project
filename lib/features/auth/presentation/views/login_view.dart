@@ -80,7 +80,7 @@ class _LoginViewState extends State<LoginView> {
                         showSnackBar(context, state.message, Colors.red);
                       } else if (state is AuthSuccess) {
                         showSnackBar(context, "Login Successful", Colors.green);
-                        AppRouter.router.go(AppRouter.kHome);
+                        AppRouter.router.go(AppRouter.kProfile);
                       }
                     },
                     builder: (context, state) {

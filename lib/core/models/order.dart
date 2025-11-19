@@ -13,7 +13,7 @@ class MyOrder {
   final Timestamp date;
   final PaymentMethod paymentMethod;
   final Status status;
-  final String address;
+  final List<String> address;
 
   static int orderNumber = 0;
 
@@ -30,32 +30,32 @@ class MyOrder {
     orderNumber++;
   }
 
-  factory MyOrder.fromMap(Map<String, dynamic> map) {
+  factory MyOrder.fromMap(Map<String, dynamic> map, {required String id}) {
     return MyOrder(
-      address: map['address'] as String,
-
-      id: map['id'] as String,
-      userId: map['userId'] as String,
-      productIds:
-          map['productIds'] != null
-              ? List<ProductSelected>.from(
-                (map['productIds'] as List).map(
-                  (e) => ProductSelected.fromMap(e as Map<String, dynamic>),
-                ),
-              )
-              : [],
+      id: id,
+      userId: map['userId'],
+      productIds: map['productIds'] != null
+          ? List<ProductSelected>.from(
+        map['productIds'].map((e) => ProductSelected.fromMap(e)),
+      )
+          : [],
       totalPrice: (map['totalPrice'] as num).toDouble(),
-      date: map['date'] as Timestamp? ?? Timestamp.now(),
+      date: map['date'] ?? Timestamp.now(),
       status: Status.values.firstWhere(
-        (e) => e.toString().split('.').last == map['status'],
+            (e) => e.name == map['status'],
         orElse: () => Status.processing,
       ),
       paymentMethod: PaymentMethod.values.firstWhere(
-        (e) => e.toString().split('.').last == map['paymentMethod'],
+            (e) => e.name == map['paymentMethod'],
         orElse: () => PaymentMethod.cash,
       ),
+      address: map['address'] != null
+          ? List<String>.from(map['address'])
+          : [],
     );
   }
+
+
 
   Map<String, dynamic> toMap() {
     return {
@@ -69,4 +69,5 @@ class MyOrder {
       'address': address,
     };
   }
+
 }
