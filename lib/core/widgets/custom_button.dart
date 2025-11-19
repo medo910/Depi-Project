@@ -23,6 +23,7 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String _fontFamily= 'Montserrat';
     return SizedBox(
       // width: double.infinity,
       height: 52,
@@ -60,6 +61,7 @@ class CustomButton extends StatelessWidget {
                         color: textColor ?? Colors.white,
                         fontSize: size ?? 16,
                         fontWeight: FontWeight.w600,
+                        fontFamily: _fontFamily,
                       ),
                     ),
                   ],

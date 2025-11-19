@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
 
-Widget buildTextField(String label, String hint, TextEditingController controller) {
+Widget buildTextField(
+    String label,
+    String hint,
+    TextEditingController? controller,
+    BuildContext context, {
+      required Function(String) onChanged,
+      // String fontFamily = 'Montserrat',
+    }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(label,style: TextStyle(fontWeight: FontWeight.w600),),
-      const SizedBox(height: 10,),
+      Text(label, style: Theme.of(context).textTheme.bodySmall),
+      const SizedBox(height: 10),
       TextFormField(
         controller: controller,
+        onChanged: onChanged,
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: TextStyle(color: Colors.grey),
+          hintStyle: Theme.of(context).textTheme.labelSmall,
           filled: true,
-          fillColor: Colors.white,
+          fillColor: Theme.of(context).cardColor,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.green),
+            borderSide: BorderSide(color: Theme.of(context).primaryColor),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
@@ -23,9 +31,10 @@ Widget buildTextField(String label, String hint, TextEditingController controlle
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.green, width: 1.5),
+            borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.5),
           ),
         ),
+        // style: TextStyle(fontFamily: fontFamily),
       ),
     ],
   );

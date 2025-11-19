@@ -1,315 +1,281 @@
-import 'package:depi_app/core/utils/app_styles.dart';
+import 'package:depi_app/core/utils/app_router.dart';
+import 'package:depi_app/features/checkout/presentation/widgets/mybutton.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../core/widgets/custom_button.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/widgets/custom_FAB_Location.dart';
+import '../../../cart/presentation/manager/cart_cubit.dart';
+import '../../../cart/presentation/manager/cart_state.dart';
+import '../manager/checkout_cubit.dart';
+import '../manager/checkout_state.dart';
 import '../widgets/buildtextfield.dart';
+import '../../../../core/models/order.dart'; // استخدمنا PaymentMethod من الموديل
 
-class CheckoutScreen extends StatefulWidget {
+class CheckoutScreen extends StatelessWidget {
   const CheckoutScreen({super.key});
 
   @override
-  State<CheckoutScreen> createState() => _CheckoutScreenState();
-}
-
-class _CheckoutScreenState extends State<CheckoutScreen> {
-  final _formKey = GlobalKey<FormState>();
-
-  final nameController = TextEditingController();
-  final phoneNumController = TextEditingController();
-  final addressController = TextEditingController();
-  final cityController = TextEditingController();
-  final cardNumberController = TextEditingController();
-  final expiryDateController = TextEditingController();
-  final cvvController = TextEditingController();
-  final cardholderNameController = TextEditingController();
-  bool isCardSelected = false;
-
-
-  @override
-  void dispose() {
-    nameController.dispose();
-    phoneNumController.dispose();
-    addressController.dispose();
-    cityController.dispose();
-    cardNumberController.dispose();
-    expiryDateController.dispose();
-    cvvController.dispose();
-    cardholderNameController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFD6EFD8),
-      appBar: AppBar(title: Text("Checkout"),centerTitle: true,backgroundColor: Colors.white,),
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Card(
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(14.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
+    final _fontFamily = 'Montserrat';
+
+    return  BlocBuilder<CheckoutCubit, CheckoutState>(
+        builder: (context, state) {
+          final cubit = context.read<CheckoutCubit>();
+          final cartCubit = context.read<CartCubit>();
+
+          return Scaffold(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            appBar: AppBar(
+              title: Text("Checkout", style: TextStyle(fontFamily: _fontFamily)),
+              centerTitle: true,
+              leading: IconButton(
+                onPressed: () {
+                  AppRouter.router.go(AppRouter.kCart);
+                },
+                icon: const Icon(Icons.arrow_back),
+              ),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Card(
+                      color: Theme.of(context).cardColor,
+                      child: Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(Icons.location_on_outlined,color: Color(0xFF80AF81),),
-                            Text(" Shipping Address",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500,fontSize: 17),)
+                            Row(
+                              children: [
+                                Icon(Icons.location_on_outlined, color: Theme.of(context).primaryColor),
+                                Text(" Shipping Address", style: Theme.of(context).textTheme.headlineSmall),
+                              ],
+                            ),
+                            const SizedBox(height: 15),
+                            buildTextField('Full Name', 'Full Name', null, context, onChanged: cubit.updateName),
+                            const SizedBox(height: 12),
+                            buildTextField('Phone Number', '+20 1234567890', null, context, onChanged: cubit.updatePhone),
+                            const SizedBox(height: 12),
+                            buildTextField('Address', 'Floor, Apartment, Building, Street.', null, context, onChanged: cubit.updateAddress),
+                            const SizedBox(height: 12),
+                            buildTextField('City', 'City/Area', null, context, onChanged: cubit.updateCity),
                           ],
                         ),
-                        const SizedBox(height: 15,),
-                        buildTextField('Full Name','Full Name',nameController),
-                        const SizedBox(height: 12,),
-                        buildTextField('Phone Number','+20 1234567890',phoneNumController),
-                        const SizedBox(height: 12,),
-                        buildTextField('Address','Floor, Apartment, Building, Street.',addressController),
-                        const SizedBox(height: 12,),
-                        buildTextField('City','City/Area',cityController),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 20,),
-                Card(
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(14.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Header
-                        Row(
+                    const SizedBox(height: 20),
+                    Card(
+                      color: Theme.of(context).cardColor,
+                      child: Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(Icons.credit_card,color: Color(0xFF80AF81),),
-                            Text(
-                              ' Payment Method',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 12),
-
-                        InkWell(
-                          onTap: () => setState(() => isCardSelected = false),
-                          child: Container(
-                            padding: EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: !isCardSelected ? Colors.green : Colors.grey[300]!,
-                                width: 1.5,
-                              ),
-                            ),
-                            child: Row(
+                            Row(
                               children: [
-                                !isCardSelected
-                                    ? Icon(Icons.circle, color: Color(0xFF80AF81),size: 10,)
-                                    : SizedBox.shrink(),
-                                Text('  💵',style: TextStyle(fontSize: 20),),
-                                SizedBox(width: 15),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text('Cash on Delivery',
-                                          style: TextStyle(fontWeight: FontWeight.w600)),
-                                      const Text('Pay when your order is delivered'),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(width: 15),
-                                 Expanded(
-                                   child: Text(
-                                    '• Delivery in 3-5 business days',
-                                    style: TextStyle(
-                                      color: Colors.green[700],
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600
-                                    ),
-                                                                   ),
-                                 ),
+                                Icon(Icons.credit_card, color: Theme.of(context).primaryColor),
+                                Text(' Payment Method', style: Theme.of(context).textTheme.titleMedium),
                               ],
                             ),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-
-                        InkWell(
-                          onTap: () => setState(() => isCardSelected = true),
-                          child: Container(
-                            padding: EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: isCardSelected ? Colors.green : Colors.grey[300]!,
-                                width: 1.5,
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                isCardSelected
-                                    ? Icon(Icons.circle, color: Color(0xFF80AF81),size: 10,)
-                                    : SizedBox.shrink(),
-                                Text('  💳',style: TextStyle(fontSize: 20),),
-                                SizedBox(width: 15),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text('Credit/Debit Card',
-                                          style: TextStyle(fontWeight: FontWeight.w600)),
-                                      const Text('Visa, MasterCard, American Express'),
-                                    ],
+                            const SizedBox(height: 12),
+                            InkWell(
+                              onTap: () => cubit.updatePaymentMethod(PaymentMethod.cash),
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).cardColor,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: state.paymentMethod == PaymentMethod.cash ? Theme.of(context).primaryColor : Colors.grey[300]!,
+                                    width: 1.5,
                                   ),
                                 ),
-                                SizedBox(width: 15),
-                                Expanded(
-                                  child: Text(
-                                    '• Fast delivery in 1-2 business days',
-                                    style: TextStyle(
-                                        color: Colors.blue,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-            
-                        SizedBox(height: 20),
-
-                        if (isCardSelected) ...[
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFEFF8EF),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              children: [
-                                buildTextField('Card Number', '1234 5678 9012 3456', cardNumberController),
-                                const SizedBox(height: 12),
-                                Row(
+                                child: Row(
                                   children: [
-                                    Expanded(child: buildTextField('Expiry Date', 'MM/YY', expiryDateController)),
-                                    const SizedBox(width: 10),
-                                    Expanded(child: buildTextField('CVV', '123', cvvController)),
+                                    if (state.paymentMethod == PaymentMethod.cash)
+                                      Icon(Icons.circle, color: Theme.of(context).primaryColor, size: 10),
+                                    const Text('  💵', style: TextStyle(fontSize: 20)),
+                                    const SizedBox(width: 15),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text('Cash on Delivery', style: Theme.of(context).textTheme.titleMedium),
+                                          Text('Pay when your order is delivered', style: Theme.of(context).textTheme.bodyMedium),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 15),
+                                    Expanded(
+                                      child: Text('• Delivery in 3-5 business days', style: Theme.of(context).textTheme.labelLarge),
+                                    ),
                                   ],
                                 ),
-                                const SizedBox(height: 12),
-                                buildTextField('Cardholder Name', 'Name as on card', cardholderNameController),
-                              ],
+                              ),
                             ),
+                            const SizedBox(height: 10),
+                            InkWell(
+                              onTap: () => cubit.updatePaymentMethod(PaymentMethod.visa),
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).cardColor,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: state.paymentMethod == PaymentMethod.visa ? Theme.of(context).primaryColor : Colors.grey[300]!,
+                                    width: 1.5,
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    if (state.paymentMethod == PaymentMethod.visa)
+                                      Icon(Icons.circle, color: Theme.of(context).primaryColor, size: 10),
+                                    const Text('  💳', style: TextStyle(fontSize: 20)),
+                                    const SizedBox(width: 15),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text('Credit/Debit Card', style: Theme.of(context).textTheme.titleMedium),
+                                          Text('Visa, MasterCard, American Express', style: Theme.of(context).textTheme.bodyMedium),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 15),
+                                    Expanded(
+                                      child: Text(
+                                        '• Fast delivery in 1-2 business days',
+                                        style: TextStyle(color: Colors.blue, fontSize: 12, fontWeight: FontWeight.w600, fontFamily: _fontFamily),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            if (state.paymentMethod == PaymentMethod.visa) ...[
+                              const SizedBox(height: 20),
+                              buildTextField('Card Number', '1234 5678 9012 3456', null, context, onChanged: cubit.updateCardNumber),
+                              const SizedBox(height: 12),
+                              buildTextField('Expiry Date', 'MM/YY', null, context, onChanged: cubit.updateExpiryDate),
+                              const SizedBox(width: 10),
+                              buildTextField('CVV', '123', null, context, onChanged: cubit.updateCvv),
+                              const SizedBox(height: 12),
+                              buildTextField('Cardholder Name', 'Name as on card', null, context, onChanged: cubit.updateCardholderName),
+                            ],
+
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20,),
+
+                     Card(
+                          color: Theme.of(context).cardColor,
+                          child: Padding(
+                          padding: const EdgeInsets.all(14.0),
+                          child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                         Text("Order Summary",style: Theme.of(context).textTheme.titleMedium),
+                          const SizedBox(height: 12,),
+                          ListView.builder(
+                         shrinkWrap: true,
+                         physics: NeverScrollableScrollPhysics(),
+                         itemCount: cartCubit.state.products.length,
+                         itemBuilder: (context, index){
+                         final item = cartCubit.state.products[index];
+                         final qty = (item.productDetails['quantity'] ?? 1);
+                         final size = item.productDetails['size'];
+                         final color = item.productDetails['color'];
+                         return ListTile(
+                          title: Text(item.name,style: Theme.of(context).textTheme.bodySmall,),
+                          subtitle: Row(
+                          children: [
+                         Text("Qty: $qty ",style: Theme.of(context).textTheme.labelMedium,),
+                          color!=null
+                          ? Text(' • Color: $color ',style: Theme.of(context).textTheme.labelMedium,)
+                         :const Text(''),
+                          size!=null
+                          ? Text(' Size: $size',style: Theme.of(context).textTheme.labelMedium,)
+                         :const Text(''), ], ),
+                          trailing: Text('\$ ${item.price}',style: Theme.of(context).textTheme.bodySmall,),
+                          );
+                          }
                           ),
-                        ],
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20,),
-                Card(
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(14.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Order Summary",style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 12,),
-                        // لسه هنا هضيف تفاصيل الاوردر
-                        Text('''order 
-                        details
-                        is
-                        here'''),
-                        Divider(color: Colors.grey[300],),
-                        const SizedBox(height: 8,),
-                        Row(
+                          Divider(),
+                          const SizedBox(height: 8,),
+                          Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Subtotal'),
-                            Text('\$ ')
+                Text("Subtotal", style: Theme.of(context).textTheme.bodySmall),
+                          Text("\$${cartCubit.withoutTax.toStringAsFixed(2)}",
+                          style: Theme.of(context).textTheme.bodySmall),
                           ],
-                        ),
-                        const SizedBox(height: 8,),
-                        Row(
+                          ),
+                          const SizedBox(height: 10),
+                          Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                Text("Shipping" , style: Theme.of(context).textTheme.bodySmall),
+                          (cartCubit.withoutTax > 1000)
+                          ? Text("Free", style: Theme.of(context).textTheme.labelLarge)
+                  : Text("\$${cartCubit.shipping}", style: Theme.of(context).textTheme.bodySmall),
+                          ],
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Shipping'),
-                            // لسه هعمل لو التوتال اكبر من رقم معين يبقى مجاني غير كده بسعر
-                            Text('\$ ')
+                Text("Tax", style: Theme.of(context).textTheme.bodySmall),
+                          Text("\$${cartCubit.tax.toStringAsFixed(2)}", style: Theme.of(context).textTheme.bodySmall),
                           ],
-                        ),
-                        const SizedBox(height: 8,),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Tax'),
-                            //tax = withoutTax * 0.08;
-                            Text('\$ ')
+                          ),
+                          Divider(), //color: Colors.grey[300],
+                          const SizedBox(height: 8,),
+                           Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                 children: [
+                   Text("Total", style: Theme.of(context).textTheme.bodyLarge),
+                   Text("\$${cartCubit.total.toStringAsFixed(2)}", style: Theme.of(context).textTheme.bodyLarge ),
+                 ],
+                           ),
                           ],
-                        ),
-                        Divider(color: Colors.grey[300],),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Total',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
-                            Text('\$ ',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16))
-                          ],
-                        ),
+                          ),
+                          ),
 
-
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 120,),
-              ],
             ),
-          ),
-        ),
-      ),
-      // لسه هقول لو حاطت عنوانه والفيزا صح يبقى لونه غامق وينفع يتداس عليه غير كده لا
-      floatingActionButton: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(0),
+                    const SizedBox(height:50,),
+                  ],
+                ),
+              ),
+            ),
+            bottomNavigationBar: Container(
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+              ),
+              child: SafeArea(
+                child: MyButton(
+                  text: 'Confirm Payment • \$${cartCubit.total.toStringAsFixed(2)}',
+                  onPressed: state.isCheckoutValid
+                      ? () async {
+                    final order = await cubit.confirmOrder();
+                    AppRouter.router.go(AppRouter.kOrderSummary, extra: order);
+                  }
+                      : null,
+                  backgroundColor: state.isCheckoutValid
+                      ? Theme.of(context).primaryColor
+                      : const Color(0xFFBFD7C0),
+                  size: 18,
+                  textColor: Colors.white,
+                  isLoading: state.isSubmitting,
+                ),
+              ),
+            ),
 
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: CustomButton(
-            onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>CheckoutScreen())); },
-            text: 'Confirm Payment • \$',
-            backgroundColor:const Color(0xFFBFD7C0),
-            size: 18,
-            textColor: Colors.white,
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: _CustomFABLocation(),
-    );
-  }
-}
 
-class _CustomFABLocation extends FloatingActionButtonLocation {
-  @override
-  Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
-
-    double x = scaffoldGeometry.scaffoldSize.width -
-        scaffoldGeometry.floatingActionButtonSize.width;
-    double y = scaffoldGeometry.scaffoldSize.height -
-        scaffoldGeometry.floatingActionButtonSize.height;
-
-    return Offset(x, y);
+          );
+        },
+      );
   }
 }

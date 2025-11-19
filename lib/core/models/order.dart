@@ -1,18 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:depi_app/core/models/selectedProduct.dart';
 
-enum PaymentMethod {cash, visa}
-enum Status {delivered,canceled,shipped,processing}
+enum PaymentMethod { cash, visa }
+enum Status { delivered, canceled, shipped, processing }
 
-class Order{
+class MyOrder {
   final String id;
   final String userId;
-  final List<String> productIds;
+  final List<ProductSelected> productIds;
   final double totalPrice;
-  final DateTime date;
+  final Timestamp date;
   final PaymentMethod paymentMethod;
   final Status status;
+  final List<String> address;
+
   static int orderNumber = 0;
 
-  Order({
+  MyOrder({
     required this.id,
     required this.userId,
     required this.productIds,
@@ -20,35 +24,48 @@ class Order{
     required this.date,
     required this.status,
     required this.paymentMethod,
+    required this.address,
   }) {
     orderNumber++;
   }
 
-  factory Order.fromJson(Map<String, dynamic> json) {
-    return Order(
-      id: json['id'],
-      userId: json['userId'],
-      productIds: List<String>.from(json['productIds']),
-      totalPrice: json['totalPrice'].toDouble(),
-      date: DateTime.parse(json['date']),
+  factory MyOrder.fromMap(Map<String, dynamic> map, {required String id}) {
+    return MyOrder(
+      id: id,
+      userId: map['userId'],
+      productIds: map['productIds'] != null
+          ? List<ProductSelected>.from(
+        map['productIds'].map((e) => ProductSelected.fromMap(e)),
+      )
+          : [],
+      totalPrice: (map['totalPrice'] as num).toDouble(),
+      date: map['date'] ?? Timestamp.now(),
       status: Status.values.firstWhere(
-            (e) => e.toString().split('.').last == json['status'],
+            (e) => e.name == map['status'],
+        orElse: () => Status.processing,
       ),
       paymentMethod: PaymentMethod.values.firstWhere(
-            (e) => e.toString().split('.').last == json['paymentMethod'],
+            (e) => e.name == map['paymentMethod'],
+        orElse: () => PaymentMethod.cash,
       ),
+      address: map['address'] != null
+          ? List<String>.from(map['address'])
+          : [],
     );
   }
 
-  Map<String, dynamic> toJson() {
+
+
+  Map<String, dynamic> toMap() {
     return {
       'id': id,
       'userId': userId,
-      'productIds': productIds,
+      'productIds': productIds.map((e) => e.toMap()).toList(),
       'totalPrice': totalPrice,
-      'date': date.toIso8601String(),
+      'date': date,
       'status': status.toString().split('.').last,
       'paymentMethod': paymentMethod.toString().split('.').last,
+      'address': address,
     };
   }
 
