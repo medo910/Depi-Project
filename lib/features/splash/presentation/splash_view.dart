@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:depi_app/core/utils/app_router.dart';
 import 'package:depi_app/features/splash/presentation/widgets/dots_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SplashView extends StatefulWidget {
@@ -68,7 +69,13 @@ class _SplashViewState extends State<SplashView>
 
   void navigateToOnboarding() {
     Future.delayed(const Duration(seconds: 3), () {
-      AppRouter.router.go(AppRouter.kOnboardingView);
+      final user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        AppRouter.router.go(AppRouter.kHome);
+      } else {
+        AppRouter.router.go(AppRouter.kOnboardingView);
+      }
     });
   }
 

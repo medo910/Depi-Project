@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 class ProductSelected {
@@ -39,15 +38,15 @@ class ProductSelected {
 
   factory ProductSelected.fromMap(Map<String, dynamic> map) {
     return ProductSelected(
-        id: map['id'] as String,
-        productId: map['productId'] as String,
-        name: map['name'] as String,
-        price: map['price'] as double,
-        photoURL: map['photoURL'] as String,
-        brand: map['brand'] as String,
-        category: map['category'] as String,
-        productDetails: Map<String, dynamic>.from((map['productDetails'] as Map<String, dynamic>),
-        ));
+      id: map['id'] as String,
+      productId: map['productId'] as String,
+      name: map['name'] as String,
+      price: map['price'] as double,
+      photoURL: map['photoURL'] as String,
+      brand: map['brand'] as String,
+      category: map['category'] as String,
+      productDetails: Map<String, dynamic>.from((map['productDetails'] as Map<String, dynamic>),
+    ));
   }
 
   String toJson() => json.encode(toMap());

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_app/core/models/selectedProduct.dart';
 
 enum PaymentMethod { cash, visa }
+
 enum Status { delivered, canceled, shipped, processing }
 
 class MyOrder {

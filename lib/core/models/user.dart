@@ -3,7 +3,7 @@ import 'package:depi_app/core/models/selectedProduct.dart';
 
 class MyUser {
   final String id;
-  final String fallName;
+  final String fullName;
   final String email;
   final String? photoUrl;
   final List<String> address;
@@ -14,7 +14,7 @@ class MyUser {
 
   MyUser({
     required this.id,
-    required this.fallName,
+    required this.fullName,
     required this.email,
     this.photoUrl,
     this.address = const [],
@@ -27,7 +27,7 @@ class MyUser {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'name': fallName,
+      'name': fullName,
       'email': email,
       'photoUrl': photoUrl,
       'address': address,
@@ -41,23 +41,23 @@ class MyUser {
   factory MyUser.fromMap(Map<String, dynamic> map) {
     return MyUser(
       id: map['id'] as String,
-      fallName: map['name'] as String,
+      fullName: map['name'] as String,
       email: map['email'] as String,
       photoUrl: map['photoUrl'] as String?,
       address: map['address'] != null ? List<String>.from(map['address']) : [],
       favorite:
-      map['favorite'] != null ? List<String>.from(map['favorite']) : [],
+          map['favorite'] != null ? List<String>.from(map['favorite']) : [],
       cart:
-      map['cart'] != null
-          ? List<ProductSelected>.from(
-        (map['cart'] as List).map(
-              (x) => ProductSelected.fromMap(x as Map<String, dynamic>),
-        ),
-      )
-          : [],
+          map['cart'] != null
+              ? List<ProductSelected>.from(
+                (map['cart'] as List).map(
+                  (x) => ProductSelected.fromMap(x as Map<String, dynamic>),
+                ),
+              )
+              : [],
       date: map['date'] as Timestamp? ?? Timestamp.now(),
       ordersId:
-      map['ordersId'] != null ? List<String>.from(map['ordersId']) : [],
+          map['ordersId'] != null ? List<String>.from(map['ordersId']) : [],
     );
   }
 }

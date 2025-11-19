@@ -79,9 +79,6 @@ class _CustomFormTextFieldState extends State<CustomFormTextField> {
           return 'Enter a valid phone number';
         }
         break;
-
-      default:
-        break;
     }
 
     if (widget.fieldType == FieldType.password &&
