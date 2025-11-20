@@ -5,14 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'favorites_state.dart';
 
 class FavoritesCubit extends Cubit<FavoritesState> {
-  String userId = FirebaseAuth.instance.currentUser!.uid;
 
-  FavoritesCubit(this.userId) : super(FavoritesState(favorites: <String>{}));
+  FavoritesCubit() : super(FavoritesState(favorites: <String>{}));
 
   Future<void> loadFavorites() async {
     emit(FavoritesState(favorites: <String>{}, loading: true));
 
-    final favIds = await FavoriteService().getAllFavorites(userId);
+    final favIds = await FavoriteService().getAllFavorites();
 
     emit(FavoritesState(favorites: favIds.toSet(), loading: false));
   }
@@ -22,10 +21,10 @@ class FavoritesCubit extends Cubit<FavoritesState> {
 
     if (current.contains(productId)) {
       current.remove(productId);
-      await FavoriteService().removeFromFavorite(userId, productId);
+      await FavoriteService().removeFromFavorite( productId);
     } else {
       current.add(productId);
-      await FavoriteService().addToFavorite(userId, productId);
+      await FavoriteService().addToFavorite(productId);
     }
 
     emit(FavoritesState(favorites: current));
@@ -35,7 +34,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
     final current = {...state.favorites};
 
     current.remove(productId);
-    await FavoriteService().removeFromFavorite(userId, productId);
+    await FavoriteService().removeFromFavorite(productId);
 
     emit(FavoritesState(favorites: current, loading: false));
   }
