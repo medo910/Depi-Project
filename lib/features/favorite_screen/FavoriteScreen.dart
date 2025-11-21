@@ -29,7 +29,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           }
 
           return StreamBuilder<List<Product>>(
-            stream: FavoriteService().favoriteProductsStream(user!.uid),
+            stream: FavoriteService().favoriteProductsStream(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());

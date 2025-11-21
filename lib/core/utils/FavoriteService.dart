@@ -1,17 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_app/core/models/product.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FavoriteService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final userId = FirebaseAuth.instance.currentUser!.uid;
 
-  Future<void> addToFavorite(String userId, String productId) async {
+  Future<void> addToFavorite(String productId) async {
     final userRef = _firestore.collection('users').doc(userId);
     await userRef.set({
       'favorite': FieldValue.arrayUnion([productId]),
     }, SetOptions(merge: true));
   }
 
-  Future<void> removeFromFavorite(String userId, String productId) async {
+  Future<void> removeFromFavorite(String productId) async {
     final userRef = _firestore.collection('users').doc(userId);
     await userRef.update({
       'favorite': FieldValue.arrayRemove([productId]),
@@ -27,7 +29,7 @@ class FavoriteService {
   //   return favoriteList.contains(productId);
   // }
 
-  Future<List<String>> getAllFavorites(String userId) async {
+  Future<List<String>> getAllFavorites() async {
     try {
       final snapshot = await _firestore.collection("users").doc(userId).get();
 
@@ -54,7 +56,7 @@ class FavoriteService {
   //   });
   // }
 
-  Stream<List<Product>> favoriteProductsStream(String userId) {
+  Stream<List<Product>> favoriteProductsStream() {
     return _firestore.collection('users').doc(userId).snapshots().asyncMap((
       snapshot,
     ) async {
