@@ -29,6 +29,7 @@ class _MainNavigationState extends State<MainNavigation> {
     return Scaffold(
       body: widget.child,
       bottomNavigationBar: ConvexAppBar(
+        key: ValueKey(_currentIndex),
         style: TabStyle.reactCircle,
         backgroundColor: Colors.white,
         activeColor: AppColors.accent,
@@ -46,7 +47,6 @@ class _MainNavigationState extends State<MainNavigation> {
           TabItem(icon: Icons.home_filled, title: 'Home'),
           TabItem(icon: Icons.favorite, title: 'Favorites'),
         ],
-        // cornerRadius: 16,
         onTap: (index) {
           if (index != _currentIndex) {
             context.go(_tabs[index]);

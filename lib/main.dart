@@ -3,6 +3,7 @@ import 'package:depi_app/core/utils/app_router.dart';
 import 'package:depi_app/core/utils/auth_service.dart';
 import 'package:depi_app/features/auth/data/repos/auth_repository_impl.dart';
 import 'package:depi_app/features/auth/presentation/manager/auth_cubit/auth_cubit.dart';
+import 'package:depi_app/test.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';

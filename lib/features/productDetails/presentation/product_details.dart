@@ -29,6 +29,8 @@ class _ProductDetailsState extends State<ProductDetails> {
   String? selectedColor;
   String? selectedSize;
   int get reviewCount => widget.product.comments.length;
+  int quantity = 1;
+  bool canAddToCart = false;
 
   @override
   void initState() {
@@ -38,6 +40,20 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.product.productAttributeType == ProductAttributeType.none) {
+      canAddToCart = true;
+    } else if ((widget.product.productAttributeType ==
+                ProductAttributeType.color &&
+            selectedColor != null) ||
+        (widget.product.productAttributeType == ProductAttributeType.size &&
+            selectedSize != null)) {
+      canAddToCart = true;
+    } else if (widget.product.productAttributeType ==
+            ProductAttributeType.both &&
+        selectedColor != null &&
+        selectedSize != null) {
+      canAddToCart = true;
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -153,9 +169,18 @@ class _ProductDetailsState extends State<ProductDetails> {
 
                     ProductOptionsSelector(
                       sizeColorBoth: sizeColorBoth!,
+
                       stock: widget.product.stock,
-                      onColorSelected: (color) => selectedColor = color,
-                      onSizeSelected: (size) => selectedSize = size,
+                      onColorSelected: (color) {
+                        setState(() {
+                          selectedColor = color;
+                        });
+                      },
+                      onSizeSelected: (size) {
+                        setState(() {
+                          selectedSize = size;
+                        });
+                      },
                     ),
                     const SizedBox(height: 25),
                     Text("Quantity", style: AppStyles.styleSemiBold18Dark),
@@ -165,7 +190,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         initialQuantity: 1,
                         min: 1,
                         onChanged: (qty) {
-                          // Handle quantity change if needed
+                          quantity = qty;
                         },
                       ),
                     ),
@@ -192,56 +217,61 @@ class _ProductDetailsState extends State<ProductDetails> {
         width: double.infinity,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.accent,
+            backgroundColor: canAddToCart ? AppColors.accent : Colors.grey,
             padding: const EdgeInsets.symmetric(vertical: 14),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
           ),
-          onPressed: () async {
-            final user = FirebaseAuth.instance.currentUser;
-            if (user == null) {
-              print("User not logged in");
-              return;
-            }
+          onPressed:
+              canAddToCart
+                  ? () async {
+                    final user = FirebaseAuth.instance.currentUser;
+                    if (user == null) {
+                      print("User not logged in");
+                      return;
+                    }
 
-            Map<String, dynamic> productDetails = {"quantity": 1};
+                    Map<String, dynamic> productDetails = {
+                      "quantity": quantity,
+                    };
 
-            if (widget.product.productAttributeType ==
-                    ProductAttributeType.color ||
-                widget.product.productAttributeType ==
-                    ProductAttributeType.both) {
-              if (selectedColor != null) {
-                productDetails["color"] = selectedColor;
-              }
-            }
+                    if (widget.product.productAttributeType ==
+                            ProductAttributeType.color ||
+                        widget.product.productAttributeType ==
+                            ProductAttributeType.both) {
+                      if (selectedColor != null) {
+                        productDetails["color"] = selectedColor;
+                      }
+                    }
 
-            if (widget.product.productAttributeType ==
-                    ProductAttributeType.size ||
-                widget.product.productAttributeType ==
-                    ProductAttributeType.both) {
-              if (selectedSize != null) {
-                productDetails["size"] = selectedSize;
-              }
-            }
+                    if (widget.product.productAttributeType ==
+                            ProductAttributeType.size ||
+                        widget.product.productAttributeType ==
+                            ProductAttributeType.both) {
+                      if (selectedSize != null) {
+                        productDetails["size"] = selectedSize;
+                      }
+                    }
 
-            final productToAdd = ProductSelected(
-              id: DateTime.now().millisecondsSinceEpoch.toString(),
-              productId: widget.product.id,
-              name: widget.product.name,
-              price: widget.product.price,
-              photoURL: widget.product.photoUrl,
-              brand: widget.product.brand,
-              category: widget.product.category,
-              productDetails: productDetails,
-            );
+                    final productToAdd = ProductSelected(
+                      id: DateTime.now().millisecondsSinceEpoch.toString(),
+                      productId: widget.product.id,
+                      name: widget.product.name,
+                      price: widget.product.price,
+                      photoURL: widget.product.photoUrl,
+                      brand: widget.product.brand,
+                      category: widget.product.category,
+                      productDetails: productDetails,
+                    );
 
-            await CartService().addToCart(user.uid, productToAdd);
+                    await CartService().addToCart(user.uid, productToAdd);
 
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(const SnackBar(content: Text("Added to cart")));
-          },
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Added to cart")),
+                    );
+                  }
+                  : null,
 
           child: const Text(
             'Add to Cart',

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_app/core/models/review.dart';
 
-enum ProductAttributeType { color, size, both }
+enum ProductAttributeType { color, size, both, none }
 
 class Product {
   final String id;
@@ -84,8 +84,10 @@ class Product {
         return ProductAttributeType.size;
       case 'both':
         return ProductAttributeType.both;
-      default:
+      case 'color':
         return ProductAttributeType.color;
+      default:
+        return ProductAttributeType.none;
     }
   }
 }

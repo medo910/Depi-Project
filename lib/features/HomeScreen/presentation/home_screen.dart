@@ -23,12 +23,15 @@ class _HomeScreenState extends State<HomeScreen> {
   String selectedCategory = 'All';
   List<Product> allProducts = [];
   final user = FirebaseAuth.instance.currentUser;
+  final double maxPrice = 2000;
+  RangeValues _currentRangeValues = const RangeValues(0, 2000);
+  String? selectedValue;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     listenForIncomingMessages();
+    selectedValue ??= "Newest";
   }
 
   void listenForIncomingMessages() {
@@ -111,18 +114,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Row(
                       children: [
                         IconButton(
-                          onPressed: () {
-                            // remove
-                            AppRouter.router.go(AppRouter.kFavoriteScreen);
-                            //
-                          },
+                          onPressed: () {},
                           icon: const Icon(Icons.search),
                         ),
                         Expanded(
                           child: GestureDetector(
                             child: const Text(
                               'Search for products...',
-                              style: AppStyles.styleBold20Primary,
+                              style: AppStyles.styleMedium18Muted,
                             ),
                             onTap: () {},
                           ),
@@ -135,13 +134,25 @@ class _HomeScreenState extends State<HomeScreen> {
                           onPressed: () {},
                           icon: const Icon(Icons.camera_alt_outlined),
                         ),
+                        Builder(
+                          builder: (innerContext) {
+                            return IconButton(
+                              onPressed: () {
+                                Scaffold.of(innerContext).openEndDrawer();
+                              },
+                              icon: const Icon(
+                                Iconsax.filter_edit_copy,
+                                color: Colors.black,
+                              ),
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(width: 8),
 
             const SizedBox(height: 16),
 
@@ -207,6 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemCount: filteredProducts.length,
                       itemBuilder: (context, index) {
                         final product = filteredProducts[index];
+
                         return ProductItem(
                           productId: product.id,
                           userId: user!.uid,
@@ -229,6 +241,150 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+          ],
+        ),
+      ),
+      endDrawer: Drawer(
+        backgroundColor: Colors.white,
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [AppColors.accent, AppColors.accent.withOpacity(0.7)],
+                ),
+              ),
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: Text(
+                  'Filter',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            // ------- Price Range Section -------
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    'Price Range: \$${_currentRangeValues.start.round()} - \$${_currentRangeValues.end.round()}',
+                    style: const TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+
+                  RangeSlider(
+                    values: _currentRangeValues,
+                    min: 0,
+                    max: maxPrice,
+                    divisions: 200,
+                    activeColor: AppColors.primary,
+                    inactiveColor: AppColors.primary.withOpacity(0.3),
+                    onChanged: (RangeValues values) {
+                      setState(() {
+                        _currentRangeValues = values;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 16.0),
+                ],
+              ),
+            ),
+
+            // ------- Stylish Dropdown Section -------
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: StatefulBuilder(
+                builder: (context, setState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Sort",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black87,
+                        ),
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 4,
+                        ),
+                        child: DropdownButtonFormField<String>(
+                          value: selectedValue,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: BorderSide(
+                                color: AppColors.accent,
+                                width: 1.5,
+                              ),
+                            ),
+                          ),
+                          dropdownColor: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          icon: Icon(
+                            Icons.keyboard_arrow_down_rounded,
+                            size: 28,
+                            color: Colors.black,
+                          ),
+                          menuMaxHeight: 250,
+                          items: [
+                            DropdownMenuItem(
+                              value: "Newest",
+                              child: Text("Newest"),
+                            ),
+                            DropdownMenuItem(
+                              value: "Price: Low to High",
+                              child: Text("Price: Low to High"),
+                            ),
+                            DropdownMenuItem(
+                              value: "Price: High to Low",
+                              child: Text("Price: High to Low"),
+                            ),
+                            DropdownMenuItem(
+                              value: "Rating",
+                              child: Text("Rating"),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              selectedValue = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+            // ----------------------------------------
           ],
         ),
       ),
