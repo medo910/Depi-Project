@@ -11,6 +11,7 @@ import 'package:depi_app/features/HomeScreen/data/repos/ProductService.dart';
 import 'package:depi_app/core/models/product.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,12 +27,15 @@ class _HomeScreenState extends State<HomeScreen> {
   final double maxPrice = 2000;
   RangeValues _currentRangeValues = const RangeValues(0, 2000);
   String? selectedValue;
+  static const String _sortKey = 'selected_sort_value';
+  static const String _minPriceKey = 'min_price_value';
+  static const String _maxPriceKey = 'max_price_value';
 
   @override
   void initState() {
     super.initState();
     listenForIncomingMessages();
-    selectedValue ??= "Newest";
+    _loadFilterState();
   }
 
   void listenForIncomingMessages() {
@@ -48,6 +52,32 @@ class _HomeScreenState extends State<HomeScreen> {
             doc.reference.update({'status': 'delivered'});
           }
         });
+  }
+
+  Future<void> _saveFilterState() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.setString(_sortKey, selectedValue ?? "Newest");
+
+    await prefs.setDouble(_minPriceKey, _currentRangeValues.start);
+    await prefs.setDouble(_maxPriceKey, _currentRangeValues.end);
+  }
+
+  Future<void> _loadFilterState() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final sort = prefs.getString(_sortKey);
+    final minPrice = prefs.getDouble(_minPriceKey);
+    final maxPriceFromPrefs = prefs.getDouble(_maxPriceKey);
+
+    setState(() {
+      selectedValue = sort ?? "Newest";
+
+      _currentRangeValues = RangeValues(
+        minPrice ?? 0.0,
+        maxPriceFromPrefs ?? maxPrice,
+      );
+    });
   }
 
   @override
@@ -142,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                               icon: const Icon(
                                 Iconsax.filter_edit_copy,
-                                color: Colors.black,
+                                color: AppColors.primary,
                               ),
                             );
                           },
@@ -205,6 +235,25 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: AppStyles.styleRegular12Muted,
                         ),
                       );
+                    }
+                    filteredProducts =
+                        filteredProducts
+                            .where(
+                              (p) =>
+                                  p.price >= _currentRangeValues.start &&
+                                  p.price <= _currentRangeValues.end,
+                            )
+                            .toList();
+                    if (selectedValue == "Price: Low to High") {
+                      filteredProducts.sort(
+                        (a, b) => a.price.compareTo(b.price),
+                      );
+                    } else if (selectedValue == "Price: High to Low") {
+                      filteredProducts.sort(
+                        (a, b) => b.price.compareTo(a.price),
+                      );
+                    } else if (selectedValue == "Rating") {
+                      filteredProducts.sort((a, b) => b.rate.compareTo(a.rate));
                     }
 
                     return GridView.builder(
@@ -291,6 +340,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onChanged: (RangeValues values) {
                       setState(() {
                         _currentRangeValues = values;
+                        _saveFilterState();
                       });
                     },
                   ),
@@ -302,86 +352,81 @@ class _HomeScreenState extends State<HomeScreen> {
             // ------- Stylish Dropdown Section -------
             Padding(
               padding: const EdgeInsets.all(16),
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Sort",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black87,
-                        ),
-                      ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Sort",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black87,
+                    ),
+                  ),
 
-                      const SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 4,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
+                    child: DropdownButtonFormField<String>(
+                      value: selectedValue,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
                         ),
-                        child: DropdownButtonFormField<String>(
-                          value: selectedValue,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 12,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(
-                                color: Colors.grey.shade300,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(
-                                color: AppColors.accent,
-                                width: 1.5,
-                              ),
-                            ),
-                          ),
-                          dropdownColor: Colors.white,
+                        enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
-                          icon: Icon(
-                            Icons.keyboard_arrow_down_rounded,
-                            size: 28,
-                            color: Colors.black,
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: BorderSide(
+                            color: AppColors.accent,
+                            width: 1.5,
                           ),
-                          menuMaxHeight: 250,
-                          items: [
-                            DropdownMenuItem(
-                              value: "Newest",
-                              child: Text("Newest"),
-                            ),
-                            DropdownMenuItem(
-                              value: "Price: Low to High",
-                              child: Text("Price: Low to High"),
-                            ),
-                            DropdownMenuItem(
-                              value: "Price: High to Low",
-                              child: Text("Price: High to Low"),
-                            ),
-                            DropdownMenuItem(
-                              value: "Rating",
-                              child: Text("Rating"),
-                            ),
-                          ],
-                          onChanged: (value) {
-                            setState(() {
-                              selectedValue = value;
-                            });
-                          },
                         ),
                       ),
-                    ],
-                  );
-                },
+                      dropdownColor: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      icon: Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        size: 28,
+                        color: Colors.black,
+                      ),
+                      menuMaxHeight: 250,
+                      items: [
+                        DropdownMenuItem(
+                          value: "Newest",
+                          child: Text("Newest"),
+                        ),
+                        DropdownMenuItem(
+                          value: "Price: Low to High",
+                          child: Text("Price: Low to High"),
+                        ),
+                        DropdownMenuItem(
+                          value: "Price: High to Low",
+                          child: Text("Price: High to Low"),
+                        ),
+                        DropdownMenuItem(
+                          value: "Rating",
+                          child: Text("Rating"),
+                        ),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          selectedValue = value;
+                          _saveFilterState();
+                        });
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
             // ----------------------------------------

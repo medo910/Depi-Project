@@ -24,7 +24,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundGradientEnd.withOpacity(0.9),
+      backgroundColor: AppColors.accent.withOpacity(0.5),
       body: BlocBuilder<FavoritesCubit, FavoritesState>(
         builder: (context, state) {
           if (state.loading && state.favorites.isEmpty) {
