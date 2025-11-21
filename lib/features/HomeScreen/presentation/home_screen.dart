@@ -157,7 +157,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            AppRouter.router.go(AppRouter.kProfile);
+                          },
                           icon: const Icon(Icons.mic_none_rounded),
                         ),
                         IconButton(

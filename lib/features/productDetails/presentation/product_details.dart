@@ -12,6 +12,9 @@ import 'package:depi_app/features/productDetails/presentation/widgets/ProductRev
 import 'package:depi_app/features/productDetails/presentation/widgets/QuantitySelector.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../cart/presentation/manager/cart_cubit.dart';
 
 class ProductDetails extends StatefulWidget {
   final Product product;
@@ -223,6 +226,52 @@ class _ProductDetailsState extends State<ProductDetails> {
               borderRadius: BorderRadius.circular(10),
             ),
           ),
+          onPressed: () async {
+            final user = FirebaseAuth.instance.currentUser;
+            if (user == null) {
+              print("User not logged in");
+              return;
+            }
+
+            Map<String, dynamic> productDetails = {"quantity": 1};
+
+            if (widget.product.productAttributeType ==
+                    ProductAttributeType.color ||
+                widget.product.productAttributeType ==
+                    ProductAttributeType.both) {
+              if (selectedColor != null) {
+                productDetails["color"] = selectedColor;
+              }
+            }
+
+            if (widget.product.productAttributeType ==
+                    ProductAttributeType.size ||
+                widget.product.productAttributeType ==
+                    ProductAttributeType.both) {
+              if (selectedSize != null) {
+                productDetails["size"] = selectedSize;
+              }
+            }
+
+            final productToAdd = ProductSelected(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              productId: widget.product.id,
+              name: widget.product.name,
+              price: widget.product.price,
+              photoURL: widget.product.photoUrl,
+              brand: widget.product.brand,
+              category: widget.product.category,
+              productDetails: productDetails,
+            );
+
+            await CartService().addToCart(user.uid, productToAdd);
+            context.read<CartCubit>().loadCart();
+
+
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(const SnackBar(content: Text("Added to cart")));
+          },
           onPressed:
               canAddToCart
                   ? () async {
