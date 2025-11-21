@@ -12,7 +12,6 @@ class CheckoutCubit extends Cubit<CheckoutState> {
 
   CheckoutCubit({required this.cartCubit}) : super(const CheckoutState());
 
-  // تحديث الحقول
   void updateName(String value) => _updateState(name: value);
   void updatePhone(String value) => _updateState(phone: value);
   void updateAddress(String value) => _updateState(address: value);
@@ -59,7 +58,6 @@ class CheckoutCubit extends Cubit<CheckoutState> {
     }
   }
 
-  // تأكيد الطلب
   Future<MyOrder?> confirmOrder() async {
     if (!state.isCheckoutValid) return null;
 
@@ -80,16 +78,23 @@ class CheckoutCubit extends Cubit<CheckoutState> {
       'status': 'processing',
       'address': [state.name, state.phone, state.address, state.city],
     };
+    // final orderx= MyOrder(
+    //     id: user.uid,
+    //     userId: user.uid,
+    //     products: cartCubit.state.products.map((e) => e.toMap()).toList(),
+    //     totalPrice: cartCubit.total,
+    //     date: Timestamp.now(),
+    //     status: MyOrder.Status,
+    //     paymentMethod: state.paymentMethod!,
+    //     address:  [state.name, state.phone, state.address, state.city])
 
     try {
       final docRef = await FirebaseFirestore.instance.collection('orders').add(orderData);
 
-      // ابني MyOrder من ال data + id اللي اتولد
       final myOrder = MyOrder.fromMap({
         ...orderData,
       }, id: docRef.id);
 
-      // افرغ الكارت
       await cartCubit.clearCart();
 
       emit(state.copyWith(isSubmitting: false));
@@ -101,7 +106,6 @@ class CheckoutCubit extends Cubit<CheckoutState> {
   }
 
 
-  // عدد الأوردرز للمستخدم الحالي
   Stream<int> getUserOrdersCountStream() {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return Stream.value(0);
@@ -113,15 +117,14 @@ class CheckoutCubit extends Cubit<CheckoutState> {
         .map((snapshot) => snapshot.docs.length);
   }
 
-  // Stream الأوردرز للمستخدم الحالي
   Stream<List<MyOrder>> getUserOrdersStream() {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      print("No user logged in");
+      // print("No user logged in");
       return Stream.value([]);
     }
 
-    print("Fetching orders for user: ${user.uid}");
+    // print("Fetching orders for user: ${user.uid}");
 
     return FirebaseFirestore.instance
         .collection('orders')
@@ -129,18 +132,18 @@ class CheckoutCubit extends Cubit<CheckoutState> {
         .orderBy('date', descending: true)
         .snapshots()
         .map((snapshot) {
-      print("Orders snapshot received: ${snapshot.docs.length} documents");
+      // print("Orders snapshot received: ${snapshot.docs.length} documents");
 
       final orders = snapshot.docs.map((doc) {
         final data = doc.data();
-        print("Order data: ${doc.id} -> $data");
+        // print("Order data: ${doc.id} -> $data");
 
         try {
           return MyOrder(
             id: doc.id,
             userId: data['userId'] ?? '',
-            productIds: data['productIds'] != null
-                ? List.from(data['productIds']).map((e) =>
+            products: data['products'] != null
+                ? List.from(data['products']).map((e) =>
                 ProductSelected.fromMap(Map<String, dynamic>.from(e))).toList()
                 : [],
 
@@ -159,7 +162,56 @@ class CheckoutCubit extends Cubit<CheckoutState> {
             address: data['address'] != null ? List<String>.from(data['address']) : [],
           );
         } catch (e) {
-          print("Error parsing order ${doc.id}: $e");
+          // print("Error parsing order ${doc.id}: $e");
+          rethrow;
+        }
+      }).toList();
+      return orders;
+    }).handleError((error) {
+      return <MyOrder>[];
+    });
+  }
+
+  Stream<List<MyOrder>>? getLastThreeOrdersStream() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return Stream.value([]);
+    }
+
+    return FirebaseFirestore.instance
+        .collection('orders')
+        .where('userId', isEqualTo: user.uid)
+        .orderBy('date', descending: true)
+        .limit(3)
+        .snapshots()
+        .map((snapshot) {
+      final orders = snapshot.docs.map((doc) {
+        final data = doc.data();
+
+        try {
+          return MyOrder(
+            id: doc.id,
+            userId: data['userId'] ?? '',
+            products: data['products'] != null
+                ? List.from(data['products']).map((e) =>
+                ProductSelected.fromMap(Map<String, dynamic>.from(e))).toList()
+                : [],
+
+            totalPrice: (data['totalPrice'] ?? 0).toDouble(),
+            date: data['date'] ?? Timestamp.now(),
+            status: Status.values.firstWhere(
+                  (s) => s.toString().split('.').last.toLowerCase() ==
+                  ((data['status'] ?? 'processing').toString().toLowerCase()),
+              orElse: () => Status.processing,
+            ),
+            paymentMethod: PaymentMethod.values.firstWhere(
+                  (p) => p.toString().split('.').last.toLowerCase() ==
+                  ((data['paymentMethod'] ?? 'cash').toString().toLowerCase()),
+              orElse: () => PaymentMethod.cash,
+            ),
+            address: data['address'] != null ? List<String>.from(data['address']) : [],
+          );
+        } catch (e) {
           rethrow;
         }
       }).toList();

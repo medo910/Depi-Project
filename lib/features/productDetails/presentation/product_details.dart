@@ -12,6 +12,9 @@ import 'package:depi_app/features/productDetails/presentation/widgets/ProductRev
 import 'package:depi_app/features/productDetails/presentation/widgets/QuantitySelector.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../cart/presentation/manager/cart_cubit.dart';
 
 class ProductDetails extends StatefulWidget {
   final Product product;
@@ -237,6 +240,8 @@ class _ProductDetailsState extends State<ProductDetails> {
             );
 
             await CartService().addToCart(user.uid, productToAdd);
+            context.read<CartCubit>().loadCart();
+
 
             ScaffoldMessenger.of(
               context,

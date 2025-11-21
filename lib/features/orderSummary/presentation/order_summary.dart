@@ -1,5 +1,7 @@
+import 'package:depi_app/core/utils/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:intl/intl.dart';
 
 import '../../../core/models/order.dart';
 import '../widgets/tracking_steps.dart';
@@ -11,6 +13,8 @@ class OrderSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final now = DateTime.now();
+    final formattedDate = DateFormat('d MMM yyyy').format(now);
     String _fontFamily= 'Montserrat';
     return Scaffold(
       backgroundColor:Theme.of(context).scaffoldBackgroundColor,
@@ -101,7 +105,7 @@ class OrderSummary extends StatelessWidget {
                       children: [
                         Text("Payment Method",style: Theme.of(context).textTheme.titleMedium,),
                         Text(
-                          "${order.paymentMethod}",
+                          order.paymentMethodFriendly,
                             style: Theme.of(context).textTheme.headlineSmall,
                         ),
                       ],
@@ -113,7 +117,7 @@ class OrderSummary extends StatelessWidget {
                       children: [
                         Text("Estimated Delivery",style: Theme.of(context).textTheme.titleMedium,),
                         Text(
-                          "Friday, November 21, 2025",
+                            DateFormat('dd MMM yyyy').format(order.date.toDate().add(Duration(days: 3))),
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
                       ],
@@ -124,7 +128,6 @@ class OrderSummary extends StatelessWidget {
 
               const SizedBox(height: 20),
 
-              // Tracking Card
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(18),
@@ -151,20 +154,29 @@ class OrderSummary extends StatelessWidget {
                     buildTrackingStep(
                       context:context,
                       title: "Order Confirmed",
-                      date: "11/18/2025",
-                      isActive: true,
+                      date: DateFormat('dd MMM yyyy').format(order.date.toDate()),
+                      isActive: formattedDate ==
+                          DateFormat('dd MMM yyyy').format(order.date.toDate()),
                     ),
                     buildTrackingStep(
                       context: context,
                       title: "Being Prepared",
-                      date: "Pending",
-                      isActive: false,
+                      date: formattedDate ==
+                          DateFormat('dd MMM yyyy').format(order.date.toDate().add(Duration(days:1)))
+                          ? formattedDate
+                          :"Pending",
+                      isActive:  formattedDate ==
+                          DateFormat('dd MMM yyyy').format(order.date.toDate().add(Duration(days:1))),
                     ),
                     buildTrackingStep(
                       context:context,
                       title: "Out for Delivery",
-                      date: "Pending",
-                      isActive: false,
+                      date:formattedDate ==
+                          DateFormat('dd MMM yyyy').format(order.date.toDate().add(Duration(days:3)))
+                          ? formattedDate
+                          :"Pending",
+                      isActive: formattedDate ==
+                          DateFormat('dd MMM yyyy').format(order.date.toDate().add(Duration(days:3))),
                     ),
                   ],
                 ),
@@ -172,11 +184,12 @@ class OrderSummary extends StatelessWidget {
 
               const SizedBox(height: 30),
 
-              // Buttons
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    AppRouter.router.go(AppRouter.kHome);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF80AF81),
                     foregroundColor: Colors.white,
@@ -201,7 +214,9 @@ class OrderSummary extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    AppRouter.router.go(AppRouter.kViewAllOrders);
+                  },
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     side: const BorderSide(color: Color(0xFF80AF81)),
@@ -226,5 +241,6 @@ class OrderSummary extends StatelessWidget {
     );
   }
 }
+
 
 

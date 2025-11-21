@@ -11,6 +11,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
         final cubit = context.watch<CartCubit>();
+        final cart = cubit.state.products;
 
         return Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -51,7 +52,7 @@ class CartScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {AppRouter.router.go(AppRouter.kHome);},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
                     foregroundColor: Colors.white,
@@ -79,10 +80,10 @@ class CartScreen extends StatelessWidget {
                       ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: cubit.state.products.length,
+                        itemCount: cart.length,
                         itemBuilder: (context, index) {
-                          final item = cubit.state.products[index];
-                          final qty = (item.productDetails['quantity'] ?? 1);
+                          final item = cart[index];
+                          final qty = item.productDetails['quantity'] ?? 1;
                           final size = item.productDetails['size'];
                           final color = item.productDetails['color'];
 

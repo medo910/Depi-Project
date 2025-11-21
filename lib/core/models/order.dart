@@ -8,7 +8,7 @@ enum Status { delivered, canceled, shipped, processing }
 class MyOrder {
   final String id;
   final String userId;
-  final List<ProductSelected> productIds;
+  final List<ProductSelected> products;
   final double totalPrice;
   final Timestamp date;
   final PaymentMethod paymentMethod;
@@ -20,7 +20,7 @@ class MyOrder {
   MyOrder({
     required this.id,
     required this.userId,
-    required this.productIds,
+    required this.products,
     required this.totalPrice,
     required this.date,
     required this.status,
@@ -30,13 +30,23 @@ class MyOrder {
     orderNumber++;
   }
 
+  String get paymentMethodFriendly {
+    switch (paymentMethod) {
+      case PaymentMethod.cash:
+        return "Cash on Delivery";
+      case PaymentMethod.visa:
+        return "Visa / Credit Card";
+    }
+  }
+
+
   factory MyOrder.fromMap(Map<String, dynamic> map, {required String id}) {
     return MyOrder(
       id: id,
       userId: map['userId'],
-      productIds: map['productIds'] != null
+      products: map['products'] != null
           ? List<ProductSelected>.from(
-        map['productIds'].map((e) => ProductSelected.fromMap(e)),
+        map['products'].map((e) => ProductSelected.fromMap(e)),
       )
           : [],
       totalPrice: (map['totalPrice'] as num).toDouble(),
@@ -61,7 +71,7 @@ class MyOrder {
     return {
       'id': id,
       'userId': userId,
-      'productIds': productIds.map((e) => e.toMap()).toList(),
+      'products': products.map((e) => e.toMap()).toList(),
       'totalPrice': totalPrice,
       'date': date,
       'status': status.toString().split('.').last,

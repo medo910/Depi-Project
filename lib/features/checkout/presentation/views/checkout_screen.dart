@@ -257,12 +257,15 @@ class CheckoutScreen extends StatelessWidget {
               child: SafeArea(
                 child: MyButton(
                   text: 'Confirm Payment • \$${cartCubit.total.toStringAsFixed(2)}',
-                  onPressed: state.isCheckoutValid
-                      ? () async {
+                  onPressed: state.isCheckoutValid ? () async {
                     final order = await cubit.confirmOrder();
-                    AppRouter.router.go(AppRouter.kOrderSummary, extra: order);
-                  }
-                      : null,
+                    if (order != null) {
+                      AppRouter.router.go(
+                        AppRouter.kOrderSummary,
+                        extra: order,
+                      );
+                    }
+                  } : null,
                   backgroundColor: state.isCheckoutValid
                       ? Theme.of(context).primaryColor
                       : const Color(0xFFBFD7C0),

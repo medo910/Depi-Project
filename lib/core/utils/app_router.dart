@@ -6,6 +6,7 @@ import 'package:depi_app/features/cart/presentation/views/cart_screen.dart';
 import 'package:depi_app/features/checkout/presentation/views/checkout_screen.dart';
 import 'package:depi_app/features/customerSupport/presentation/views/customer_support_screen.dart';
 import 'package:depi_app/features/onboarding/presentation/onboarding_view.dart';
+import 'package:depi_app/features/orderDetails/presentation/views/order_details.dart';
 import 'package:depi_app/features/orderSummary/presentation/order_summary.dart';
 import 'package:depi_app/core/models/product.dart';
 import 'package:depi_app/features/HomeScreen/presentation/home_screen.dart';
@@ -19,6 +20,7 @@ import 'package:depi_app/features/chat/presentation/view/chat_screen.dart';
 import 'package:depi_app/features/settings/presentation/edit_profile_view.dart';
 import 'package:depi_app/features/settings/presentation/settings_view.dart';
 import 'package:depi_app/features/splash/presentation/splash_view.dart';
+import 'package:depi_app/features/viewAllOrders/presentation/views/view_all_orders.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/profile/presentation/views/profile_screen.dart';
@@ -34,11 +36,14 @@ abstract class AppRouter {
   static const kProductDetails = '/ProductDetails';
   static const kFavoriteScreen = '/favoriteScreen';
   static const kHome = '/home';
+
   static const kCart='/cart';
   static const kCustomerSupport='/customerSupport';
   static const kCheckout='/checkout';
   static const kProfile='/profile';
   static const kOrderSummary='/orderSummary';
+  static const kViewAllOrders='/viewAllOrders';
+  static const kOrderDetails='/orderDetails';
 
   static const kSettings = '/settings';
   static const kEditProfile = '/editProfile';
@@ -69,21 +74,22 @@ abstract class AppRouter {
       // ),
       GoRoute(path: kCart, builder: (context, state) => const CartScreen()),
       GoRoute(path: kCustomerSupport, builder: (context, state) => const CustomerSupportScreen()),
-      GoRoute(path: kCheckout, builder: (context, state) =>  CheckoutScreen()),
+      GoRoute(path: kCheckout, builder: (context, state) => const  CheckoutScreen()),
       GoRoute(path: kProfile, builder: (context, state) => const ProfileScreen()),
       GoRoute(
-        path: kOrderSummary,
-        builder: (context, state) {
-          final snapshot = state.extra as QueryDocumentSnapshot<Map<String, dynamic>>;
-
-          final order = MyOrder.fromMap(
-            snapshot.data(),
-            id: snapshot.id,
-          );
-
-          return OrderSummary(order: order);
-        },
+      path: kOrderSummary,
+      builder: (context, state) {
+      final order = state.extra as MyOrder;
+      return OrderSummary(order: order);
+      },
       ),
+      GoRoute(path: kOrderDetails,
+        builder: (context, state) {
+          final order = state.extra as MyOrder;
+          return OrderDetailsScreen(order: order);
+        },),
+      GoRoute(path: kViewAllOrders, builder: (context, state) => const ViewAllOrders()),
+
 
 
 

@@ -71,6 +71,7 @@ import 'core/theme/app_theme.dart';
 import 'features/cart/presentation/manager/cart_cubit.dart';
 import 'features/profile/manager/profile_cubit.dart';
 import 'features/profile/manager/user_profile_cubit.dart';
+import 'features/profile/presentation/views/profile_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -88,7 +89,10 @@ class DepiApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => AuthCubit(AuthRepositoryImpl(AuthService())),),
         BlocProvider(create: (_) => ProfileCubit()),
-        BlocProvider(create: (_) => UserProfileCubit()..loadUserProfile()),
+        BlocProvider(
+          create: (context) => UserProfileCubit()..loadUserProfile(),
+          child: ProfileScreen(),
+        ),
         BlocProvider(create: (_) => AppSettingsCubit()),
         BlocProvider(create: (_)=> CartCubit()..loadCart()),
         BlocProvider(

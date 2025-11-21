@@ -206,4 +206,43 @@ class CartCubit extends Cubit<CartState> {
           .update({'cart': []});
     }
   }
+
+  Stream<List<Map<String, dynamic>>> getUserCartStream() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return Stream.value([]);
+
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .snapshots()
+        .map((snapshot) {
+      final data = snapshot.data();
+      if (data == null) return [];
+      final cart = data['cart'];
+      if (cart is List) {
+        return cart.map((item) => Map<String, dynamic>.from(item)).toList();
+      } else {
+        return [];
+      }
+    });
+  }
+
+  void startCartListener() {
+    getUserCartStream().listen((cartData) {
+      final items = cartData.map((e) => ProductSelected.fromMap(e)).toList();
+      _calculateTotals(items);
+    });
+  }
+
+
+// Future<void> updateCart(List<ProductSelected> cart) async {
+  //   final user = FirebaseAuth.instance.currentUser;
+  //   if (user == null) return;
+  //   await FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(user.uid)
+  //       .update({'cart': cart});
+  // }
+
+
 }
