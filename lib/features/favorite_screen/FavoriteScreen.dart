@@ -1,12 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_app/core/cubit/FavoritesCubit/favorites_cubit.dart';
 import 'package:depi_app/core/cubit/FavoritesCubit/favorites_state.dart';
 import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:depi_app/core/utils/app_router.dart';
 import 'package:depi_app/core/utils/FavoriteService.dart';
+import 'package:depi_app/core/widgets/custom_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:depi_app/core/models/product.dart';
+import 'package:lottie/lottie.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({Key? key}) : super(key: key);
@@ -21,7 +24,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundGradientEnd.withOpacity(0.9),
+      backgroundColor: AppColors.accent.withOpacity(0.5),
       body: BlocBuilder<FavoritesCubit, FavoritesState>(
         builder: (context, state) {
           if (state.loading && state.favorites.isEmpty) {
@@ -29,7 +32,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           }
 
           return StreamBuilder<List<Product>>(
-            stream: FavoriteService().favoriteProductsStream(user!.uid),
+            stream: FavoriteService().favoriteProductsStream(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -38,20 +41,80 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return Center(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Icon(
-                        Icons.favorite_border,
-                        size: 80,
-                        color: Colors.grey[400],
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 15),
+                        child: Container(
+                          decoration: BoxDecoration(color: Colors.white),
+                          height: 120,
+
+                          child: Padding(
+                            padding: const EdgeInsets.all(25.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                const Icon(
+                                  Icons.favorite,
+                                  color: Colors.green,
+                                  size: 26,
+                                ),
+                                const SizedBox(width: 12),
+                                Text(
+                                  'Favorites',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: 16),
+                      Lottie.asset(
+                        'assets/animations/Like.json',
+                        width: 400,
+                        height: 300,
+                      ),
                       Text(
                         'No favorites yet',
                         style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.grey[600],
+                          fontSize: 25,
+                          color: Colors.black,
                           fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        'Save items you love to your favorites list',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      SizedBox(height: 20),
+
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        width: 250,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.accent,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          onPressed: () async {
+                            AppRouter.router.go(AppRouter.kHome);
+                          },
+
+                          child: const Text(
+                            'Start Shopping',
+                            style: TextStyle(fontSize: 18, color: Colors.white),
+                          ),
                         ),
                       ),
                     ],

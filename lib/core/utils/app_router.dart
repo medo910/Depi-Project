@@ -9,6 +9,7 @@ import 'package:depi_app/features/onboarding/presentation/onboarding_view.dart';
 import 'package:depi_app/features/orderDetails/presentation/views/order_details.dart';
 import 'package:depi_app/features/orderSummary/presentation/order_summary.dart';
 import 'package:depi_app/core/models/product.dart';
+import 'package:depi_app/core/widgets/MainNavigation.dart';
 import 'package:depi_app/features/HomeScreen/presentation/home_screen.dart';
 import 'package:depi_app/features/auth/presentation/views/login_view.dart';
 import 'package:depi_app/features/auth/presentation/views/register_view.dart';
@@ -98,6 +99,11 @@ abstract class AppRouter {
         path: kFavoriteScreen,
         builder: (context, state) => const FavoritesScreen(),
       ),
+      // GoRoute(path: kHome, builder: (context, state) => const HomeScreen()),
+      // GoRoute(
+      //   path: kFavoriteScreen,
+      //   builder: (context, state) => const FavoritesScreen(),
+      // ),
       GoRoute(
         path: AppRouter.kProductDetails,
         builder: (context, state) {
@@ -117,6 +123,23 @@ abstract class AppRouter {
       GoRoute(
         path: kUserChat,
         builder: (context, state) => const UserChatScreen(),
+      ),
+
+      ShellRoute(
+        builder: (context, state, child) => MainNavigation(child: child),
+        routes: [
+          GoRoute(
+            path: kHome,
+            pageBuilder:
+                (context, state) => NoTransitionPage(child: const HomeScreen()),
+          ),
+          GoRoute(
+            path: kFavoriteScreen,
+            pageBuilder:
+                (context, state) =>
+                    NoTransitionPage(child: const FavoritesScreen()),
+          ),
+        ],
       ),
     ],
   );

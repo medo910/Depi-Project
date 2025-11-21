@@ -1,4 +1,5 @@
 import 'package:depi_app/core/utils/app_colors.dart';
+import 'package:depi_app/features/HomeScreen/presentation/widgets/categories.dart';
 import 'package:flutter/material.dart';
 
 class HorizontalCategoryButtons extends StatefulWidget {
@@ -15,15 +16,7 @@ class HorizontalCategoryButtons extends StatefulWidget {
 }
 
 class _HorizontalCategoryButtonsState extends State<HorizontalCategoryButtons> {
-  final List<String> categories = [
-    "All",
-    "Grocery",
-    "Electronics",
-    "Apparel",
-    "Sports",
-    "Books",
-    "Toys",
-  ];
+  final List<String> categories = Categories().categories;
 
   int? selectedIndex = 0;
   @override

@@ -61,6 +61,7 @@ import 'package:depi_app/features/auth/data/repos/auth_repository_impl.dart';
 import 'package:depi_app/features/auth/presentation/manager/auth_cubit/auth_cubit.dart';
 import 'package:depi_app/features/checkout/presentation/manager/checkout_cubit.dart';
 import 'package:depi_app/features/checkout/presentation/views/checkout_screen.dart';
+import 'package:depi_app/test.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -139,8 +140,7 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<FavoritesCubit>(
           create: (context) {
-            final user = FirebaseAuth.instance.currentUser;
-            return FavoritesCubit(user!.uid)..loadFavorites();
+            return FavoritesCubit()..loadFavorites();
           },
         ),
       ],
