@@ -21,8 +21,6 @@ class ProductSelected {
     required this.productDetails,
   });
 
-
-
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
@@ -45,11 +43,9 @@ class ProductSelected {
       photoURL: map['photoURL'] as String,
       brand: map['brand'] as String,
       category: map['category'] as String,
-      productDetails: Map<String, dynamic>.from((map['productDetails'] as Map<String, dynamic>),
-    ));
+      productDetails: Map<String, dynamic>.from(
+        (map['productDetails'] as Map<String, dynamic>),
+      ),
+    );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory ProductSelected.fromJson(String source) => ProductSelected.fromMap(json.decode(source) as Map<String, dynamic>);
 }

@@ -12,7 +12,7 @@ class MainNavigation extends StatefulWidget {
 }
 
 class _MainNavigationState extends State<MainNavigation> {
-  final List<String> _tabs = ['/home', '/favoriteScreen'];
+  final List<String> _tabs = ['/home', '/favoriteScreen', '/cart','/profile'];
 
   int _currentIndex = 0;
 
@@ -46,6 +46,8 @@ class _MainNavigationState extends State<MainNavigation> {
         items: const [
           TabItem(icon: Icons.home_filled, title: 'Home'),
           TabItem(icon: Icons.favorite, title: 'Favorites'),
+          TabItem(icon: Icons.shopping_cart, title: 'Cart'),
+          TabItem(icon: Icons.person, title: 'Profile'),
         ],
         onTap: (index) {
           if (index != _currentIndex) {

@@ -124,36 +124,36 @@ class DepiApp extends StatelessWidget {
   }
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (_) => AppSettingsCubit(),
-        ),
-        BlocProvider(
-          create: (_) => CartCubit()..loadCart(),
-        ),
-        BlocProvider<FavoritesCubit>(
-          create: (context) {
-            return FavoritesCubit()..loadFavorites();
-          },
-        ),
-      ],
-      child: BlocBuilder<AppSettingsCubit, AppSettingsState>(
-        builder: (context, state) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: state.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-            home: const CheckoutScreen(),
-          );
-        },
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return MultiBlocProvider(
+//       providers: [
+//         BlocProvider(
+//           create: (_) => AppSettingsCubit(),
+//         ),
+//         BlocProvider(
+//           create: (_) => CartCubit()..loadCart(),
+//         ),
+//         BlocProvider<FavoritesCubit>(
+//           create: (context) {
+//             return FavoritesCubit()..loadFavorites();
+//           },
+//         ),
+//       ],
+//       child: BlocBuilder<AppSettingsCubit, AppSettingsState>(
+//         builder: (context, state) {
+//           return MaterialApp(
+//             debugShowCheckedModeBanner: false,
+//             theme: AppTheme.lightTheme,
+//             darkTheme: AppTheme.darkTheme,
+//             themeMode: state.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+//             home: const CheckoutScreen(),
+//           );
+//         },
+//       ),
+//     );
+//   }
+// }

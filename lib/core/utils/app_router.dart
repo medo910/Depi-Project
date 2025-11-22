@@ -38,13 +38,13 @@ abstract class AppRouter {
   static const kFavoriteScreen = '/favoriteScreen';
   static const kHome = '/home';
 
-  static const kCart='/cart';
-  static const kCustomerSupport='/customerSupport';
-  static const kCheckout='/checkout';
-  static const kProfile='/profile';
-  static const kOrderSummary='/orderSummary';
-  static const kViewAllOrders='/viewAllOrders';
-  static const kOrderDetails='/orderDetails';
+  static const kCart = '/cart';
+  static const kCustomerSupport = '/customerSupport';
+  static const kCheckout = '/checkout';
+  static const kProfile = '/profile';
+  static const kOrderSummary = '/orderSummary';
+  static const kViewAllOrders = '/viewAllOrders';
+  static const kOrderDetails = '/orderDetails';
 
   static const kSettings = '/settings';
   static const kEditProfile = '/editProfile';
@@ -65,45 +65,33 @@ abstract class AppRouter {
         path: kForgotPassword,
         builder: (context, state) => const ForgotPasswordView(),
       ),
+
       GoRoute(
-        path: kResetPassword,
-        builder: (context, state) => const ForgotPasswordView(),
+        path: kCustomerSupport,
+        builder: (context, state) => const CustomerSupportScreen(),
       ),
-      // GoRoute(
-      //   path: kResetPassword,
-      //   builder: (context, state) => const SplashView(),
-      // ),
-      GoRoute(path: kCart, builder: (context, state) => const CartScreen()),
-      GoRoute(path: kCustomerSupport, builder: (context, state) => const CustomerSupportScreen()),
-      GoRoute(path: kCheckout, builder: (context, state) => const  CheckoutScreen()),
-      GoRoute(path: kProfile, builder: (context, state) => const ProfileScreen()),
       GoRoute(
-      path: kOrderSummary,
-      builder: (context, state) {
-      final order = state.extra as MyOrder;
-      return OrderSummary(order: order);
-      },
+        path: kCheckout,
+        builder: (context, state) => const CheckoutScreen(),
       ),
-      GoRoute(path: kOrderDetails,
+      GoRoute(
+        path: kOrderSummary,
+        builder: (context, state) {
+          final order = state.extra as MyOrder;
+          return OrderSummary(order: order);
+        },
+      ),
+      GoRoute(
+        path: kOrderDetails,
         builder: (context, state) {
           final order = state.extra as MyOrder;
           return OrderDetailsScreen(order: order);
-        },),
-      GoRoute(path: kViewAllOrders, builder: (context, state) => const ViewAllOrders()),
-
-
-
-
-      GoRoute(path: kHome, builder: (context, state) => const HomeScreen()),
-      GoRoute(
-        path: kFavoriteScreen,
-        builder: (context, state) => const FavoritesScreen(),
+        },
       ),
-      // GoRoute(path: kHome, builder: (context, state) => const HomeScreen()),
-      // GoRoute(
-      //   path: kFavoriteScreen,
-      //   builder: (context, state) => const FavoritesScreen(),
-      // ),
+      GoRoute(
+        path: kViewAllOrders,
+        builder: (context, state) => const ViewAllOrders(),
+      ),
       GoRoute(
         path: AppRouter.kProductDetails,
         builder: (context, state) {
@@ -138,6 +126,17 @@ abstract class AppRouter {
             pageBuilder:
                 (context, state) =>
                     NoTransitionPage(child: const FavoritesScreen()),
+          ),
+          GoRoute(
+            path: kCart,
+            pageBuilder:
+                (context, state) => NoTransitionPage(child: const CartScreen()),
+          ),
+          GoRoute(
+            path: kProfile,
+            pageBuilder:
+                (context, state) =>
+                    NoTransitionPage(child: const ProfileScreen()),
           ),
         ],
       ),
