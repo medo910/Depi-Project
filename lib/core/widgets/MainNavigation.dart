@@ -39,7 +39,7 @@ class _MainNavigationState extends State<MainNavigation> {
         initialActiveIndex: _currentIndex,
 
         gradient: LinearGradient(
-          colors: [AppColors.primary, AppColors.primary.withOpacity(0.6)],
+          colors: [Theme.of(context).hintColor, Theme.of(context).primaryColor],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),

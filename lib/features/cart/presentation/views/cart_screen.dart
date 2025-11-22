@@ -127,22 +127,15 @@ class CartScreen extends StatelessWidget {
                                     const SizedBox(width: 12),
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             item.name,
-                                            style:
-                                                Theme.of(
-                                                  context,
-                                                ).textTheme.titleMedium,
+                                            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                                           ),
                                           Text(
                                             item.brand,
-                                            style:
-                                                Theme.of(
-                                                  context,
-                                                ).textTheme.labelSmall,
+                                            style: Theme.of(context).textTheme.labelSmall,
                                           ),
                                           const SizedBox(height: 6),
                                           Row(
@@ -158,21 +151,12 @@ class CartScreen extends StatelessWidget {
                                                     right: 6,
                                                   ),
                                                   decoration: BoxDecoration(
-                                                    color:
-                                                        Theme.of(
-                                                          context,
-                                                        ).cardColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          8,
-                                                        ),
+                                                    color: Theme.of(context).cardColor,
+                                                    borderRadius: BorderRadius.circular(8),
                                                   ),
                                                   child: Text(
                                                     'Size: $size',
-                                                    style:
-                                                        Theme.of(
-                                                          context,
-                                                        ).textTheme.labelMedium,
+                                                    style: Theme.of(context).textTheme.labelMedium,
                                                   ),
                                                 ),
                                               if (color != null)
@@ -183,21 +167,12 @@ class CartScreen extends StatelessWidget {
                                                         vertical: 4,
                                                       ),
                                                   decoration: BoxDecoration(
-                                                    color:
-                                                        Theme.of(
-                                                          context,
-                                                        ).cardColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          8,
-                                                        ),
+                                                    color: Theme.of(context).cardColor,
+                                                    borderRadius: BorderRadius.circular(8),
                                                   ),
                                                   child: Text(
                                                     'Color: $color',
-                                                    style:
-                                                        Theme.of(
-                                                          context,
-                                                        ).textTheme.labelMedium,
+                                                    style: Theme.of(context).textTheme.labelMedium,
                                                   ),
                                                 ),
                                             ],
@@ -208,10 +183,7 @@ class CartScreen extends StatelessWidget {
                                               Text(
                                                 '\$${item.price}',
                                                 style: TextStyle(
-                                                  color:
-                                                      Theme.of(
-                                                        context,
-                                                      ).primaryColor,
+                                                  color: Theme.of(context).primaryColor,
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w600,
                                                 ),
@@ -221,20 +193,11 @@ class CartScreen extends StatelessWidget {
                                                 children: [
                                                   Container(
                                                     decoration: BoxDecoration(
-                                                      color:
-                                                          Theme.of(
-                                                            context,
-                                                          ).cardColor,
+                                                      color: Theme.of(context).cardColor,
                                                       border: Border.all(
-                                                        color:
-                                                            Colors
-                                                                .grey
-                                                                .shade300,
+                                                        color: Colors.grey.shade300,
                                                       ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            6,
-                                                          ),
+                                                      borderRadius: BorderRadius.circular(6),
                                                     ),
                                                     child: Row(
                                                       children: [
@@ -319,7 +282,7 @@ class CartScreen extends StatelessWidget {
                                         style:
                                             Theme.of(
                                               context,
-                                            ).textTheme.titleMedium,
+                                            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                                       ),
                                     ],
                                   ),
@@ -393,7 +356,7 @@ class CartScreen extends StatelessWidget {
                                       style:
                                           Theme.of(
                                             context,
-                                          ).textTheme.titleMedium,
+                                          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   const SizedBox(height: 12),
@@ -476,16 +439,14 @@ class CartScreen extends StatelessWidget {
                                       Text(
                                         "Total",
                                         style:
-                                            Theme.of(
-                                              context,
-                                            ).textTheme.bodyLarge,
+                                            Theme.of(context)
+                                                .textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                                       ),
                                       Text(
                                         "\$${cubit.total.toStringAsFixed(2)}",
                                         style:
-                                            Theme.of(
-                                              context,
-                                            ).textTheme.bodyLarge,
+                                            Theme.of(context)
+                                                .textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                                       ),
                                     ],
                                   ),

@@ -258,7 +258,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     }
 
                     final productToAdd = ProductSelected(
-                      id: DateTime.now().millisecondsSinceEpoch.toString(),
+                      id: user.uid,
                       productId: widget.product.id,
                       name: widget.product.name,
                       price: widget.product.price,

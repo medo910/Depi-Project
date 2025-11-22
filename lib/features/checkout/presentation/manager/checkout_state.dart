@@ -5,7 +5,7 @@ class CheckoutState extends Equatable {
   final String name;
   final String phone;
   final String address;
-  final String city;
+  // final String city;
   final String cardNumber;
   final String expiryDate;
   final String cvv;
@@ -13,12 +13,13 @@ class CheckoutState extends Equatable {
   final PaymentMethod? paymentMethod; // النوع من order.dart
   final bool isCheckoutValid;
   final bool isSubmitting;
+  final Status status;
 
   const CheckoutState({
     this.name = '',
     this.phone = '',
     this.address = '',
-    this.city = '',
+    // this.city = '',
     this.cardNumber = '',
     this.expiryDate = '',
     this.cvv = '',
@@ -26,13 +27,14 @@ class CheckoutState extends Equatable {
     this.paymentMethod,
     this.isCheckoutValid = false,
     this.isSubmitting = false,
+    this.status=Status.pending,
   });
 
   CheckoutState copyWith({
     String? name,
     String? phone,
     String? address,
-    String? city,
+    // String? city,
     String? cardNumber,
     String? expiryDate,
     String? cvv,
@@ -40,12 +42,13 @@ class CheckoutState extends Equatable {
     PaymentMethod? paymentMethod,
     bool? isCheckoutValid,
     bool? isSubmitting,
+    Status? status,
   }) {
     return CheckoutState(
       name: name ?? this.name,
       phone: phone ?? this.phone,
       address: address ?? this.address,
-      city: city ?? this.city,
+      // city: city ?? this.city,
       cardNumber: cardNumber ?? this.cardNumber,
       expiryDate: expiryDate ?? this.expiryDate,
       cvv: cvv ?? this.cvv,
@@ -53,6 +56,7 @@ class CheckoutState extends Equatable {
       paymentMethod: paymentMethod ?? this.paymentMethod,
       isCheckoutValid: isCheckoutValid ?? this.isCheckoutValid,
       isSubmitting: isSubmitting ?? this.isSubmitting,
+        status: status?? this.status,
     );
   }
 
@@ -61,7 +65,7 @@ class CheckoutState extends Equatable {
     name,
     phone,
     address,
-    city,
+    // city,
     cardNumber,
     expiryDate,
     cvv,
@@ -69,5 +73,6 @@ class CheckoutState extends Equatable {
     paymentMethod,
     isCheckoutValid,
     isSubmitting,
+    status,
   ];
 }

@@ -191,9 +191,10 @@ class ProfileScreen extends StatelessWidget {
                                 builder: (context, snapshot) {
                                   if (!snapshot.hasData ||
                                       snapshot.data!.isEmpty) {
-                                    return const Padding(
+                                    return  Padding(
                                       padding: EdgeInsets.all(20),
-                                      child: Text("No Orders Yet"),
+                                      child: Text("No Orders Yet",
+                                        style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),),
                                     );
                                   }
 
@@ -208,38 +209,127 @@ class ProfileScreen extends StatelessWidget {
                                       final order = orders[index];
                                       final date = order.date.toDate();
                                       final products = order.products;
-                                      print(products);
 
-                                      return InkWell(
-                                        onTap: () {
-                                          AppRouter.router.push(AppRouter.kOrderDetails, extra: order);
-                                        },
-                                        child: Column(
-                                          children: [
-                                            const Divider(),
-                                            buildOrderItem(
-                                              context: context,
-                                              id: order.id,
-                                              date:
-                                              "${DateFormat('yyyy-MM-dd').format(date)} • ${products.length} items",
-                                              price:
-                                              "\$${order.totalPrice.toStringAsFixed(2)}",
-                                              status: order.status.toString().split('.').last,
-                                              color: order.status ==
-                                                  Status.delivered
-                                                  ? const Color(0xFF087248)
-                                                  : order.status ==
-                                                  Status.shipped
-                                                  ? Colors.blue
-                                                  : order.status ==
-                                                  Status.processing
-                                                  ? Colors.orange
-                                                  : Colors.purple,
+                                      return Column(
+                                        children: [
+                                          const SizedBox(height: 8),
+                                          InkWell(
+                                            borderRadius: BorderRadius.circular(16),
+                                            onTap: () {
+                                              AppRouter.router.push(AppRouter.kOrderDetails, extra: order);
+                                            },
+                                            child: Container(
+                                              padding: const EdgeInsets.all(16),
+                                              decoration: BoxDecoration(
+                                                color: Theme.of(context).cardColor,
+                                                borderRadius: BorderRadius.circular(16),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    blurRadius: 8,
+                                                    spreadRadius: 1,
+                                                    offset: const Offset(0, 2),
+                                                    color: Colors.black.withOpacity(0.05),
+                                                  )
+                                                ],
+                                              ),
+                                              child: Row(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  // delete button
+                                                  (order.status==Status.processing || order.status==Status.pending)?
+                                                  IconButton(
+                                                    onPressed: () {
+                                                      showDialog( context: context,
+                                                        barrierDismissible: false,
+                                                        builder: (context) {
+                                                          return Dialog(
+                                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.all(20),
+                                                              child: Column(
+                                                                mainAxisSize: MainAxisSize.min,
+                                                                children: [
+                                                                  Container(
+                                                                    decoration: const BoxDecoration(
+                                                                      color: Color(0xFFFAE3E3),
+                                                                      shape: BoxShape.circle,
+                                                                    ),
+                                                                    padding: const EdgeInsets.all(15),
+                                                                    child: const Icon( Icons.delete_forever, size: 45, color: Colors.redAccent),
+                                                                  ),
+                                                                  const SizedBox(height: 20),
+
+                                                                  Text("Delete Order", style: Theme.of(context).textTheme.displayMedium,),
+                                                                  const SizedBox(height: 10),
+                                                                  Text( "Are you sure you want to delete your order?", textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleMedium, ),
+                                                                  const SizedBox(height: 25),
+                                                                  Row(
+                                                                    children: [
+                                                                      Expanded(
+                                                                        child: TextButton(
+                                                                            onPressed: () => Navigator.pop(context),
+                                                                            child: Text( "Cancel", style: Theme.of(context).textTheme.titleSmall,)
+                                                                        ),
+                                                                      ),
+                                                                      Expanded(
+                                                                        child: ElevatedButton(
+                                                                          style: ElevatedButton.styleFrom( backgroundColor: Colors.red),
+                                                                          onPressed: () {
+                                                                            Navigator.pop(context);
+                                                                            checkoutCubit.updateOrderStatus(order.id, Status.canceled);
+                                                                          },
+                                                                          child: Text("Delete",
+                                                                            style: TextStyle(
+                                                                                fontFamily: _fontFamily,
+                                                                                color: Colors.white,
+                                                                                fontWeight: FontWeight.w600),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      );
+                                                    },
+                                                    icon: const Icon(Icons.delete_forever, color: Colors.redAccent),
+                                                  ): const SizedBox(),
+
+                                                  const SizedBox(width: 8),
+
+                                                  // main details
+                                                  Expanded(
+                                                    child: buildOrderItem(
+                                                      context: context,
+                                                      id: order.id,
+                                                      date:
+                                                      "${DateFormat('yyyy-MM-dd').format(date)} • ${products.length} items",
+                                                      price: "\$${order.totalPrice.toStringAsFixed(2)}",
+                                                      status: order.status.toString().split('.').last,
+                                                      color: order.status == Status.delivered
+                                                          ? const Color(0xFF087248)
+                                                          : order.status == Status.shipped
+                                                          ? Colors.blue
+                                                          : order.status == Status.processing
+                                                          ? Colors.orange
+                                                          : order.status == Status.pending
+                                                          ? Colors.grey
+                                                          : order.status == Status.canceled
+                                                          ? Colors.red
+                                                          : Colors.purple,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       );
                                     },
+
                                   );
                                 },
                               ),

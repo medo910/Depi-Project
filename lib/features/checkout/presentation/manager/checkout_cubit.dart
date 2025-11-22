@@ -13,9 +13,9 @@ class CheckoutCubit extends Cubit<CheckoutState> {
   CheckoutCubit({required this.cartCubit}) : super(const CheckoutState());
 
   void updateName(String value) => _updateState(name: value);
+  void updateStatus (Status value) => _updateState(status: value);
   void updatePhone(String value) => _updateState(phone: value);
   void updateAddress(String value) => _updateState(address: value);
-  void updateCity(String value) => _updateState(city: value);
   void updateCardNumber(String value) => _updateState(cardNumber: value);
   void updateExpiryDate(String value) => _updateState(expiryDate: value);
   void updateCvv(String value) => _updateState(cvv: value);
@@ -26,30 +26,33 @@ class CheckoutCubit extends Cubit<CheckoutState> {
     String? name,
     String? phone,
     String? address,
-    String? city,
+    // String? city,
     String? cardNumber,
     String? expiryDate,
     String? cvv,
     String? cardholderName,
     checkout_state.PaymentMethod? paymentMethod,
+    Status? status,
   }) {
     final newState = state.copyWith(
       name: name,
       phone: phone,
       address: address,
-      city: city,
+      // city: city,
       cardNumber: cardNumber,
       expiryDate: expiryDate,
       cvv: cvv,
       cardholderName: cardholderName,
       paymentMethod: paymentMethod,
+      status:status
     );
 
     emit(newState.copyWith(isCheckoutValid: _validateCheckout(newState)));
   }
 
   bool _validateCheckout(CheckoutState s) {
-    final hasAddress = s.name.isNotEmpty && s.phone.isNotEmpty && s.address.isNotEmpty && s.city.isNotEmpty;
+    final hasAddress = s.name.isNotEmpty && s.phone.isNotEmpty && s.address.isNotEmpty;
+    // && s.city.isNotEmpty;
     if (s.paymentMethod == checkout_state.PaymentMethod.cash) {
       return hasAddress;
     } else {
@@ -75,29 +78,27 @@ class CheckoutCubit extends Cubit<CheckoutState> {
       'totalPrice': cartCubit.total,
       'date': Timestamp.now(),
       'paymentMethod': state.paymentMethod.toString().split('.').last,
-      'status': 'processing',
-      'address': [state.name, state.phone, state.address, state.city],
+      'status': 'pending',
+      'customerName': state.name,
+      'customerPhone': state.phone,
+      'customerAddress': state.address,
+
+
     };
-    // final orderx= MyOrder(
-    //     id: user.uid,
-    //     userId: user.uid,
-    //     products: cartCubit.state.products.map((e) => e.toMap()).toList(),
-    //     totalPrice: cartCubit.total,
-    //     date: Timestamp.now(),
-    //     status: MyOrder.Status,
-    //     paymentMethod: state.paymentMethod!,
-    //     address:  [state.name, state.phone, state.address, state.city])
 
     try {
-      final docRef = await FirebaseFirestore.instance.collection('orders').add(orderData);
+      final docRef = FirebaseFirestore.instance.collection('orders').doc();
 
       final myOrder = MyOrder.fromMap({
         ...orderData,
       }, id: docRef.id);
 
+      await docRef.set(myOrder.toMap());
+
       await cartCubit.clearCart();
 
       emit(state.copyWith(isSubmitting: false));
+
       return myOrder;
     } catch (e) {
       emit(state.copyWith(isSubmitting: false));
@@ -151,15 +152,18 @@ class CheckoutCubit extends Cubit<CheckoutState> {
             date: data['date'] ?? Timestamp.now(),
             status: Status.values.firstWhere(
                   (s) => s.toString().split('.').last.toLowerCase() ==
-                  ((data['status'] ?? 'processing').toString().toLowerCase()),
-              orElse: () => Status.processing,
+                  ((data['status'] ?? 'pending').toString().toLowerCase()),
+              orElse: () => Status.pending,
             ),
             paymentMethod: PaymentMethod.values.firstWhere(
                   (p) => p.toString().split('.').last.toLowerCase() ==
                   ((data['paymentMethod'] ?? 'cash').toString().toLowerCase()),
               orElse: () => PaymentMethod.cash,
             ),
-            address: data['address'] != null ? List<String>.from(data['address']) : [],
+            // address: data['address'] != null ? List<String>.from(data['address']) : [],
+            customerAddress: data['customerAddress'],
+            customerName: data['customerName'],
+            customerPhone: data['customerPhone'],
           );
         } catch (e) {
           // print("Error parsing order ${doc.id}: $e");
@@ -201,15 +205,18 @@ class CheckoutCubit extends Cubit<CheckoutState> {
             date: data['date'] ?? Timestamp.now(),
             status: Status.values.firstWhere(
                   (s) => s.toString().split('.').last.toLowerCase() ==
-                  ((data['status'] ?? 'processing').toString().toLowerCase()),
-              orElse: () => Status.processing,
+                  ((data['status'] ?? 'pending').toString().toLowerCase()),
+              orElse: () => Status.pending,
             ),
             paymentMethod: PaymentMethod.values.firstWhere(
                   (p) => p.toString().split('.').last.toLowerCase() ==
                   ((data['paymentMethod'] ?? 'cash').toString().toLowerCase()),
               orElse: () => PaymentMethod.cash,
             ),
-            address: data['address'] != null ? List<String>.from(data['address']) : [],
+            // address: data['address'] != null ? List<String>.from(data['address']) : [],
+            customerAddress: data['customerAddress'] ?? '',
+            customerName: data['customerName'] ?? user.displayName,
+            customerPhone: data['customerPhone'] ?? user.phoneNumber,
           );
         } catch (e) {
           rethrow;
@@ -220,4 +227,23 @@ class CheckoutCubit extends Cubit<CheckoutState> {
       return <MyOrder>[];
     });
   }
+
+  Future<void> updateOrderStatus(String orderId, Status newStatus) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('orders')
+          .doc(orderId)
+          .update({
+        'status': newStatus.toString().split('.').last,
+      });
+
+      // كمان نحدّث الستيت المحلي لو محتاجة تستخدمينه
+      emit(state.copyWith(status: newStatus));
+
+    } catch (e) {
+      print("Error updating order status: $e");
+    }
+  }
+
+
 }

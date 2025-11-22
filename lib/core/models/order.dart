@@ -3,7 +3,7 @@ import 'package:depi_app/core/models/selectedProduct.dart';
 
 enum PaymentMethod { cash, visa }
 
-enum Status { delivered, canceled, shipped, processing }
+enum Status { delivered, canceled, shipped, processing, pending }
 
 class MyOrder {
   final String id;
@@ -13,9 +13,11 @@ class MyOrder {
   final Timestamp date;
   final PaymentMethod paymentMethod;
   final Status status;
-  final List<String> address;
+  // final List<String> address;
+  final String customerName;
+  final String customerPhone;
+  final String customerAddress;
 
-  static int orderNumber = 0;
 
   MyOrder({
     required this.id,
@@ -25,10 +27,11 @@ class MyOrder {
     required this.date,
     required this.status,
     required this.paymentMethod,
-    required this.address,
-  }) {
-    orderNumber++;
-  }
+    // required this.address,
+    required this.customerAddress,
+    required this.customerName,
+    required this.customerPhone,
+  });
 
   String get paymentMethodFriendly {
     switch (paymentMethod) {
@@ -53,15 +56,18 @@ class MyOrder {
       date: map['date'] ?? Timestamp.now(),
       status: Status.values.firstWhere(
             (e) => e.name == map['status'],
-        orElse: () => Status.processing,
+        orElse: () => Status.pending,
       ),
       paymentMethod: PaymentMethod.values.firstWhere(
             (e) => e.name == map['paymentMethod'],
         orElse: () => PaymentMethod.cash,
       ),
-      address: map['address'] != null
-          ? List<String>.from(map['address'])
-          : [],
+      // address: map['address'] != null
+      //     ? List<String>.from(map['address'])
+      //     : [],
+      customerAddress: map['customerAddress'],
+      customerName: map['customerName'],
+      customerPhone: map['customerPhone'],
     );
   }
 
@@ -76,7 +82,10 @@ class MyOrder {
       'date': date,
       'status': status.toString().split('.').last,
       'paymentMethod': paymentMethod.toString().split('.').last,
-      'address': address,
+      // 'address': address,
+      'customerAddress':customerAddress,
+      'customerName': customerName,
+      'customerPhone': customerPhone,
     };
   }
 

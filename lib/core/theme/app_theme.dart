@@ -58,7 +58,7 @@ class AppTheme {
     fontFamily: 'Montserrat',
     scaffoldBackgroundColor: Color(0xFF1E1E1E),
     primaryColor: Color(0xFF508D4E),
-    hintColor:  Colors.white,
+    hintColor:  Color(0xFF508D4E),
     appBarTheme: const AppBarTheme(
       backgroundColor: Color(0xFF2D2D2D),
       foregroundColor: Colors.white,

@@ -25,9 +25,9 @@ Widget buildTextFieldWithCubit({
     case 'address':
       controller = TextEditingController(text: state.address);
       break;
-    case 'city':
-      controller = TextEditingController(text: state.city);
-      break;
+    // case 'city':
+    //   controller = TextEditingController(text: state.city);
+    //   break;
     case 'cardNumber':
       controller = TextEditingController(text: state.cardNumber);
       break;
@@ -56,9 +56,9 @@ Widget buildTextFieldWithCubit({
           case 'address':
             cubit.updateAddress(value);
             break;
-          case 'city':
-            cubit.updateCity(value);
-            break;
+          // case 'city':
+          //   cubit.updateCity(value);
+          //   break;
           case 'cardNumber':
             cubit.updateCardNumber(value);
             break;
