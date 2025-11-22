@@ -269,7 +269,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     );
 
                     await CartService().addToCart(user.uid, productToAdd);
-
+                    context.read<CartCubit>().loadCart();
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Added to cart")),
                     );
