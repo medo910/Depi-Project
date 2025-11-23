@@ -1,7 +1,10 @@
 import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+
+import '../../features/profile/manager/user_profile_cubit.dart';
 
 class MainNavigation extends StatefulWidget {
   final Widget child;
@@ -19,6 +22,7 @@ class _MainNavigationState extends State<MainNavigation> {
   @override
   Widget build(BuildContext context) {
     final router = GoRouter.of(context);
+    final profileCubit=context.read<UserProfileCubit>();
     final state = router.state;
     final currentPath = state.uri.path;
     final tabIndex = _tabs.indexWhere((path) => currentPath.startsWith(path));
@@ -30,9 +34,9 @@ class _MainNavigationState extends State<MainNavigation> {
       body: widget.child,
       bottomNavigationBar: ConvexAppBar(
         key: ValueKey(_currentIndex),
-        style: TabStyle.reactCircle,
-        backgroundColor: Colors.white,
-        activeColor: AppColors.accent,
+        style: TabStyle.react,
+        // backgroundColor: Theme.of(context).cardColor,
+        activeColor: Colors.black,
         color: Colors.white,
         shadowColor: Colors.black26,
         elevation: 5,
@@ -43,12 +47,83 @@ class _MainNavigationState extends State<MainNavigation> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        items: const [
-          TabItem(icon: Icons.home_filled, title: 'Home'),
-          TabItem(icon: Icons.favorite, title: 'Favorites'),
-          TabItem(icon: Icons.shopping_cart, title: 'Cart'),
-          TabItem(icon: Icons.person, title: 'Profile'),
+        items: [
+          const TabItem(
+            icon: Icon(Icons.home_filled,color: Colors.white),
+            title: 'Home',
+          ),
+          TabItem(
+            icon: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                const Icon(Icons.favorite, color: Colors.white),
+                Positioned(
+                  right: -4,
+                  top: -4,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    child: StreamBuilder<int>(
+                        stream: profileCubit.getUserFavoriteCountStream(),
+                        builder: (context, snapshot) {
+                        return Text(
+                          snapshot.data?.toString() ?? "0",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      }
+                    ),
+                  ),
+                )
+              ],
+            ),
+            title: 'Favorites',
+          ),
+          TabItem(
+            icon: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                const Icon(Icons.shopping_cart, color: Colors.white),
+                Positioned(
+                  right: -4,
+                  top: -4,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    child: StreamBuilder<int>(
+                        stream: profileCubit.getUserCartCountStream(),
+                        builder: (context, snapshot) {
+                        return Text(
+                          snapshot.data?.toString() ?? "0",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      }
+                    ),
+                  ),
+                )
+              ],
+            ),
+            title: 'Cart',
+          ),
+          const TabItem(
+              icon: Icon(Icons.person, color: Colors.white),
+              title: 'Profile'
+          ),
         ],
+
         onTap: (index) {
           if (index != _currentIndex) {
             context.go(_tabs[index]);

@@ -237,12 +237,48 @@ class CheckoutCubit extends Cubit<CheckoutState> {
         'status': newStatus.toString().split('.').last,
       });
 
-      // كمان نحدّث الستيت المحلي لو محتاجة تستخدمينه
       emit(state.copyWith(status: newStatus));
 
     } catch (e) {
-      print("Error updating order status: $e");
+      // print("Error updating order status: $e");
     }
+  }
+
+  Stream<List<Map<String, dynamic>>> getUserPreviousAddresses(String userId) {
+    return FirebaseFirestore.instance
+        .collection('orders')
+        .where('userId', isEqualTo: userId)
+        .snapshots()
+        .map((snapshot) {
+
+      final data = snapshot.docs.map((doc) {
+        final d = doc.data();
+        return {
+          "name": d["customerName"],
+          "address": d["customerAddress"],
+          "phone": d["customerPhone"],
+        };
+      }).toList();
+
+      final seen = <String>{};
+      final unique = <Map<String, dynamic>>[];
+
+      for (var item in data) {
+        final key = "${item['name']}_${item['address']}_${item['phone']}";
+        if (!seen.contains(key)) {
+          seen.add(key);
+          unique.add(item);
+        }
+      }
+
+      return unique;
+    });
+  }
+
+  bool areAddressFieldsValid(CheckoutCubit cubit) {
+    return state.name.isNotEmpty &&
+        state.phone.isNotEmpty &&
+        state.address.isNotEmpty;
   }
 
 

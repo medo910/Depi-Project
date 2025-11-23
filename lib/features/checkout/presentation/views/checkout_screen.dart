@@ -1,14 +1,13 @@
 import 'package:depi_app/core/utils/app_router.dart';
 import 'package:depi_app/features/checkout/presentation/widgets/mybutton.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/widgets/custom_FAB_Location.dart';
 import '../../../cart/presentation/manager/cart_cubit.dart';
-import '../../../cart/presentation/manager/cart_state.dart';
 import '../manager/checkout_cubit.dart';
 import '../manager/checkout_state.dart';
 import '../widgets/buildtextfield.dart';
-import '../../../../core/models/order.dart'; // استخدمنا PaymentMethod من الموديل
+import '../../../../core/models/order.dart';
 
 class CheckoutScreen extends StatelessWidget {
   const CheckoutScreen({super.key});
@@ -16,6 +15,9 @@ class CheckoutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _fontFamily = 'Montserrat';
+    bool showFields = false;
+    int? selectedIndex;
+
 
     return  BlocBuilder<CheckoutCubit, CheckoutState>(
         builder: (context, state) {
@@ -52,14 +54,224 @@ class CheckoutScreen extends StatelessWidget {
                                 Text(" Shipping Address", style: Theme.of(context).textTheme.headlineSmall),
                               ],
                             ),
-                            const SizedBox(height: 15),
-                            buildTextField('Full Name', 'Full Name', null, context, onChanged: cubit.updateName),
-                            const SizedBox(height: 12),
-                            buildTextField('Phone Number', '+20 1234567890', null, context, onChanged: cubit.updatePhone),
-                            const SizedBox(height: 12),
-                            buildTextField('Address', 'Floor, Apartment, Building, Street.', null, context, onChanged: cubit.updateAddress),
+
+              StreamBuilder(
+              stream: cubit.getUserPreviousAddresses(
+                  FirebaseAuth.instance.currentUser!.uid),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                final addresses = snapshot.data!;
+                final hasNoAddresses = addresses.isEmpty;
+
+                if (hasNoAddresses && showFields == false) {
+                  showFields = true;
+                }
+
+                return StatefulBuilder(
+                  builder: (context, setStateSB) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+
+                        if (!hasNoAddresses)
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: GridView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: addresses.length + 1, // + button
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 12,
+                                mainAxisSpacing: 12,
+                                childAspectRatio: 0.9,
+                              ),
+                              itemBuilder: (context, i) {
+                                if (i == addresses.length) {
+                                  return InkWell(
+                                    onTap: () {
+                                      setStateSB(() {
+                                        showFields = !showFields;
+                                        selectedIndex = i;
+                                      });
+                                      // cubit.updateName('');
+                                      // cubit.updatePhone('');
+                                      // cubit.updateAddress('');
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(14),
+                                        border: Border.all(
+                                      color: selectedIndex == i ? Theme.of(context).primaryColor : Colors.grey.shade300,
+                                        width: selectedIndex == i ? 2 : 1,
+                                      ),
+                                        color: Theme.of(context).cardColor,
+                                      ),
+                                      child: Center(
+                                        child: Icon(Icons.add,
+                                            size: 35,
+                                            color: Theme.of(context).primaryColor),
+                                      ),
+                                    ),
+                                  );
+                                }
+
+                                final item = addresses[i];
+
+                                return InkWell(
+                                  onTap: () {
+                                    setStateSB(() {
+                                      showFields = false;
+                                      selectedIndex = i;
+                                    });
+
+                                    cubit.updateName(item["name"]);
+                                    cubit.updatePhone(item["phone"]);
+                                    cubit.updateAddress(item["address"]);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).cardColor,
+                                      borderRadius: BorderRadius.circular(14),
+                                      border: Border.all(
+                                      color: selectedIndex == i ?Theme.of(context).primaryColor : Colors.grey.shade300,
+                                      width: selectedIndex == i ? 2 : 1,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 4,
+                                          offset: Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    padding: const EdgeInsets.all(12),
+                                    child:Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Full Name:',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: _fontFamily,
+                                              ),
+                                            ),
+                                            Text(
+                                              item["name"],
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.normal,
+                                                fontFamily: _fontFamily,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 6),
+
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Phone Number:',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: _fontFamily,
+                                              ),
+                                            ),
+                                            Text(
+                                              item["phone"],
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.normal,
+                                                fontFamily: _fontFamily,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 8),
+
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Address:',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: _fontFamily,
+                                              ),
+                                            ),
+                                            Text(
+                                              item["address"],
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.normal,
+                                                fontFamily: _fontFamily,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    )
+
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+
+                        if (showFields) ...[
+                          const SizedBox(height: 15),
+                          buildTextField(
+                            'Full Name',
+                            'Full Name',
+                            null,
+                            context,
+                            onChanged: cubit.updateName,
+                          ),
+                          const SizedBox(height: 12),
+                          buildTextField(
+                            'Phone Number',
+                            '+20 1234567890',
+                            null,
+                            context,
+                            onChanged: cubit.updatePhone,
+                          ),
+                          const SizedBox(height: 12),
+                          buildTextField(
+                            'Address',
+                            'Floor, Apartment, Building, Street, City.',
+                            null,
+                            context,
+                            onChanged: cubit.updateAddress,
+                          ),
+                        ],
+                      ],
+                    );
+                  },
+                );
+              },
+            )
+
+
+
+
+
+            // const SizedBox(height: 15),
+                            // buildTextField('Full Name', 'Full Name', null, context, onChanged: cubit.updateName),
                             // const SizedBox(height: 12),
-                            // buildTextField('City', 'City/Area', null, context, onChanged: cubit.updateCity),
+                            // buildTextField('Phone Number', '+20 1234567890', null, context, onChanged: cubit.updatePhone),
+                            // const SizedBox(height: 12),
+                            // buildTextField('Address', 'Floor, Apartment, Building, Street, City.', null, context, onChanged: cubit.updateAddress),
                           ],
                         ),
                       ),
@@ -257,7 +469,8 @@ class CheckoutScreen extends StatelessWidget {
               child: SafeArea(
                 child: MyButton(
                   text: 'Confirm Payment • \$${cartCubit.total.toStringAsFixed(2)}',
-                  onPressed: state.isCheckoutValid ? () async {
+                  onPressed:  (state.isCheckoutValid &&
+                      (!showFields || cubit.areAddressFieldsValid(cubit))) ? () async {
                     final order = await cubit.confirmOrder();
                     if (order != null) {
                       AppRouter.router.go(
@@ -266,7 +479,8 @@ class CheckoutScreen extends StatelessWidget {
                       );
                     }
                   } : null,
-                  backgroundColor: state.isCheckoutValid
+                  backgroundColor: (state.isCheckoutValid &&
+                      (!showFields || cubit.areAddressFieldsValid(cubit)))
                       ? Theme.of(context).primaryColor
                       : const Color(0xFFBFD7C0),
                   size: 18,
