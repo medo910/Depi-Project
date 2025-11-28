@@ -1,5 +1,4 @@
 import 'package:depi_app/core/utils/app_styles.dart';
-import 'package:depi_app/features/checkout/presentation/data/decreaseStockService.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,7 +7,6 @@ import '../../../../core/models/order.dart' as checkout_state;
 import '../../../../core/models/selectedProduct.dart';
 import '../../../cart/presentation/manager/cart_cubit.dart';
 import 'checkout_state.dart';
-import 'package:flutter/material.dart';
 
 class CheckoutCubit extends Cubit<CheckoutState> {
   final CartCubit cartCubit;
@@ -71,133 +69,7 @@ class CheckoutCubit extends Cubit<CheckoutState> {
     }
   }
 
-  Future<MyOrder?> confirmOrder(BuildContext context) async {
-    if (!state.isCheckoutValid) return null;
-
-    emit(state.copyWith(isSubmitting: true));
-
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      emit(state.copyWith(isSubmitting: false));
-      return null;
-    }
-
-    final orderData = {
-      'userId': user.uid,
-      'products': cartCubit.state.products.map((e) => e.toMap()).toList(),
-      'totalPrice': cartCubit.total,
-      'date': Timestamp.now(),
-      'paymentMethod': state.paymentMethod.toString().split('.').last,
-      'status': 'pending',
-      'customerName': state.name,
-      'customerPhone': state.phone,
-      'customerAddress': state.address,
-    };
-
-    final myOrder = MyOrder.fromMap({
-      ...orderData,
-    }, id: FirebaseFirestore.instance.collection('orders').doc().id);
-
-    final stockService = StockService();
-
-    // ======================================
-    // 1- Check stock before saving order
-    // ======================================
-    List<Map<String, dynamic>> insufficientItems = await stockService
-        .checkInsufficientStockForOrder(myOrder);
-
-    if (insufficientItems.isNotEmpty) {
-      emit(state.copyWith(isSubmitting: false));
-
-      showDialog(
-        context: context,
-        builder:
-            (context) => AlertDialog(
-              backgroundColor: Colors.white,
-              title: Text(
-                "Insufficient Stock",
-                style: AppStyles.styleBold24Dark,
-              ),
-              content: SizedBox(
-                width: double.maxFinite,
-                child: ListView(
-                  shrinkWrap: true,
-                  children:
-                      insufficientItems.map((item) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                item['name'],
-                                style: AppStyles.styleSemiBold20Dark,
-                              ),
-                              SizedBox(height: 2),
-                              if (item['color'] != null && item['size'] != null)
-                                Text(
-                                  "(Color: ${item['color']} , Size: ${item['size']})",
-                                ),
-                              if (item['color'] != null && item['size'] == null)
-                                Text("Color: ${item['color']}"),
-                              if (item['size'] != null && item['color'] == null)
-                                Text("Size: ${item['size']}"),
-                              SizedBox(height: 2),
-                              Row(
-                                children: [
-                                  Text(
-                                    "Requested: ${item['requested']}",
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                  SizedBox(width: 16),
-                                  Text(
-                                    "Available: ${item['available']}",
-                                    style: TextStyle(color: Colors.green),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text("OK"),
-                ),
-              ],
-            ),
-      );
-
-      return null;
-    }
-
-    // ======================================
-    // 2- Save order if stock is sufficient
-    // ======================================
-    try {
-      stockService.decreaseStockForOrder(myOrder);
-
-      final docRef = FirebaseFirestore.instance
-          .collection('orders')
-          .doc(myOrder.id);
-
-      await docRef.set(myOrder.toMap());
-
-      await cartCubit.clearCart();
-
-      emit(state.copyWith(isSubmitting: false));
-
-      return myOrder;
-    } catch (e) {
-      emit(state.copyWith(isSubmitting: false));
-      rethrow;
-    }
-  }
-
-  // Future<MyOrder?> confirmOrder() async {
+  // Future<MyOrder?> confirmOrder(BuildContext context) async {
   //   if (!state.isCheckoutValid) return null;
 
   //   emit(state.copyWith(isSubmitting: true));
@@ -218,15 +90,97 @@ class CheckoutCubit extends Cubit<CheckoutState> {
   //     'customerName': state.name,
   //     'customerPhone': state.phone,
   //     'customerAddress': state.address,
-
   //   };
 
-  //   try {
-  //     final docRef = FirebaseFirestore.instance.collection('orders').doc();
+  //   final myOrder = MyOrder.fromMap({
+  //     ...orderData,
+  //   }, id: FirebaseFirestore.instance.collection('orders').doc().id);
 
-  //     final myOrder = MyOrder.fromMap({
-  //       ...orderData,
-  //     }, id: docRef.id);
+  //   final stockService = StockService();
+
+  //   // ======================================
+  //   // 1- Check stock before saving order
+  //   // ======================================
+  //   List<Map<String, dynamic>> insufficientItems = await stockService
+  //       .checkInsufficientStockForOrder(myOrder);
+
+  //   if (insufficientItems.isNotEmpty) {
+  //     emit(state.copyWith(isSubmitting: false));
+
+  //     showDialog(
+  //       context: context,
+  //       builder:
+  //           (context) => AlertDialog(
+  //             backgroundColor: Colors.white,
+  //             title: Text(
+  //               "Insufficient Stock",
+  //               style: AppStyles.styleBold24Dark,
+  //             ),
+  //             content: SizedBox(
+  //               width: double.maxFinite,
+  //               child: ListView(
+  //                 shrinkWrap: true,
+  //                 children:
+  //                     insufficientItems.map((item) {
+  //                       return Padding(
+  //                         padding: const EdgeInsets.symmetric(vertical: 4.0),
+  //                         child: Column(
+  //                           crossAxisAlignment: CrossAxisAlignment.start,
+  //                           children: [
+  //                             Text(
+  //                               item['name'],
+  //                               style: AppStyles.styleSemiBold20Dark,
+  //                             ),
+  //                             SizedBox(height: 2),
+  //                             if (item['color'] != null && item['size'] != null)
+  //                               Text(
+  //                                 "(Color: ${item['color']} , Size: ${item['size']})",
+  //                               ),
+  //                             if (item['color'] != null && item['size'] == null)
+  //                               Text("Color: ${item['color']}"),
+  //                             if (item['size'] != null && item['color'] == null)
+  //                               Text("Size: ${item['size']}"),
+  //                             SizedBox(height: 2),
+  //                             Row(
+  //                               children: [
+  //                                 Text(
+  //                                   "Requested: ${item['requested']}",
+  //                                   style: TextStyle(color: Colors.red),
+  //                                 ),
+  //                                 SizedBox(width: 16),
+  //                                 Text(
+  //                                   "Available: ${item['available']}",
+  //                                   style: TextStyle(color: Colors.green),
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                           ],
+  //                         ),
+  //                       );
+  //                     }).toList(),
+  //               ),
+  //             ),
+  //             actions: [
+  //               TextButton(
+  //                 onPressed: () => Navigator.of(context).pop(),
+  //                 child: Text("OK"),
+  //               ),
+  //             ],
+  //           ),
+  //     );
+
+  //     return null;
+  //   }
+
+  //   // ======================================
+  //   // 2- Save order if stock is sufficient
+  //   // ======================================
+  //   try {
+  //     stockService.decreaseStockForOrder(myOrder);
+
+  //     final docRef = FirebaseFirestore.instance
+  //         .collection('orders')
+  //         .doc(myOrder.id);
 
   //     await docRef.set(myOrder.toMap());
 
@@ -240,6 +194,50 @@ class CheckoutCubit extends Cubit<CheckoutState> {
   //     rethrow;
   //   }
   // }
+
+  Future<MyOrder?> confirmOrder() async {
+    if (!state.isCheckoutValid) return null;
+
+    emit(state.copyWith(isSubmitting: true));
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      emit(state.copyWith(isSubmitting: false));
+      return null;
+    }
+
+    final orderData = {
+      'userId': user.uid,
+      'products': cartCubit.state.products.map((e) => e.toMap()).toList(),
+      'totalPrice': cartCubit.total,
+      'date': Timestamp.now(),
+      'paymentMethod': state.paymentMethod.toString().split('.').last,
+      'status': 'pending',
+      'customerName': state.name,
+      'customerPhone': state.phone,
+      'customerAddress': state.address,
+
+    };
+
+    try {
+      final docRef = FirebaseFirestore.instance.collection('orders').doc();
+
+      final myOrder = MyOrder.fromMap({
+        ...orderData,
+      }, id: docRef.id);
+
+      await docRef.set(myOrder.toMap());
+
+      await cartCubit.clearCart();
+
+      emit(state.copyWith(isSubmitting: false));
+
+      return myOrder;
+    } catch (e) {
+      emit(state.copyWith(isSubmitting: false));
+      rethrow;
+    }
+  }
 
   Stream<int> getUserOrdersCountStream() {
     final user = FirebaseAuth.instance.currentUser;

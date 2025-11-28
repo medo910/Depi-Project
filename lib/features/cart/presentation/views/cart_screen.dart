@@ -1,3 +1,6 @@
+import 'package:depi_app/core/utils/app_styles.dart';
+import 'package:depi_app/features/checkout/presentation/data/decreaseStockService.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../manager/cart_cubit.dart';
@@ -14,27 +17,53 @@ class CartScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'Shopping Cart (${cubit.state.products.length})',
-          style: TextStyle(fontWeight: FontWeight.w500),
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            AppRouter.router.go(AppRouter.kProfile);
-          },
-        ),
-      ),
+      // appBar: AppBar(
+      //   centerTitle: true,
+      //   title: Text(
+      //     'Shopping Cart (${cubit.state.products.length})',
+      //     style: TextStyle(fontWeight: FontWeight.w500),
+      //   ),
+      //   leading: IconButton(
+      //     icon: Icon(Icons.arrow_back),
+      //     onPressed: () {
+      //       AppRouter.router.go(AppRouter.kProfile);
+      //     },
+      //   ),
+      // ),
       body:
           cubit.state.isLoading
               ? const Center(child: CircularProgressIndicator())
               : cubit.state.products.isEmpty
               ? Center(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).cardColor,
+                      ),
+                      height: 120,
+
+                      child: Padding(
+                        padding: const EdgeInsets.all(25.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Icon(
+                              Icons.shopping_cart,
+                              color: Theme.of(context).primaryColor,
+                              size: 26,
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Shopping Cart',
+                              style: Theme.of(context).textTheme.headlineMedium,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 150),
                     const Text("🛒", style: TextStyle(fontSize: 100)),
                     const SizedBox(height: 8),
                     Text(
@@ -74,9 +103,34 @@ class CartScreen extends StatelessWidget {
               )
               : Column(
                 children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                    ),
+                    height: 120,
+
+                    child: Padding(
+                      padding: const EdgeInsets.all(25.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Icon(
+                            Icons.shopping_cart,
+                            color: Theme.of(context).primaryColor,
+                            size: 26,
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            'Shopping Cart',
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   Expanded(
                     child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.only(left: 12, right: 12),
                       child: Column(
                         children: [
                           ListView.builder(
@@ -127,15 +181,23 @@ class CartScreen extends StatelessWidget {
                                     const SizedBox(width: 12),
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             item.name,
-                                            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.titleMedium?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                           Text(
                                             item.brand,
-                                            style: Theme.of(context).textTheme.labelSmall,
+                                            style:
+                                                Theme.of(
+                                                  context,
+                                                ).textTheme.labelSmall,
                                           ),
                                           const SizedBox(height: 6),
                                           Row(
@@ -151,12 +213,21 @@ class CartScreen extends StatelessWidget {
                                                     right: 6,
                                                   ),
                                                   decoration: BoxDecoration(
-                                                    color: Theme.of(context).cardColor,
-                                                    borderRadius: BorderRadius.circular(8),
+                                                    color:
+                                                        Theme.of(
+                                                          context,
+                                                        ).cardColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          8,
+                                                        ),
                                                   ),
                                                   child: Text(
                                                     'Size: $size',
-                                                    style: Theme.of(context).textTheme.labelMedium,
+                                                    style:
+                                                        Theme.of(
+                                                          context,
+                                                        ).textTheme.labelMedium,
                                                   ),
                                                 ),
                                               if (color != null)
@@ -167,12 +238,21 @@ class CartScreen extends StatelessWidget {
                                                         vertical: 4,
                                                       ),
                                                   decoration: BoxDecoration(
-                                                    color: Theme.of(context).cardColor,
-                                                    borderRadius: BorderRadius.circular(8),
+                                                    color:
+                                                        Theme.of(
+                                                          context,
+                                                        ).cardColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          8,
+                                                        ),
                                                   ),
                                                   child: Text(
                                                     'Color: $color',
-                                                    style: Theme.of(context).textTheme.labelMedium,
+                                                    style:
+                                                        Theme.of(
+                                                          context,
+                                                        ).textTheme.labelMedium,
                                                   ),
                                                 ),
                                             ],
@@ -183,7 +263,10 @@ class CartScreen extends StatelessWidget {
                                               Text(
                                                 '\$${item.price}',
                                                 style: TextStyle(
-                                                  color: Theme.of(context).primaryColor,
+                                                  color:
+                                                      Theme.of(
+                                                        context,
+                                                      ).primaryColor,
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w600,
                                                 ),
@@ -193,11 +276,20 @@ class CartScreen extends StatelessWidget {
                                                 children: [
                                                   Container(
                                                     decoration: BoxDecoration(
-                                                      color: Theme.of(context).cardColor,
+                                                      color:
+                                                          Theme.of(
+                                                            context,
+                                                          ).cardColor,
                                                       border: Border.all(
-                                                        color: Colors.grey.shade300,
+                                                        color:
+                                                            Colors
+                                                                .grey
+                                                                .shade300,
                                                       ),
-                                                      borderRadius: BorderRadius.circular(6),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            6,
+                                                          ),
                                                     ),
                                                     child: Row(
                                                       children: [
@@ -279,10 +371,11 @@ class CartScreen extends StatelessWidget {
                                       const SizedBox(width: 6),
                                       Text(
                                         "Discount Coupon",
-                                        style:
-                                            Theme.of(
-                                              context,
-                                            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.titleMedium?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -353,10 +446,11 @@ class CartScreen extends StatelessWidget {
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                       "Order Summary",
-                                      style:
-                                          Theme.of(
-                                            context,
-                                          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.titleMedium?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(height: 12),
@@ -438,15 +532,19 @@ class CartScreen extends StatelessWidget {
                                     children: [
                                       Text(
                                         "Total",
-                                        style:
-                                            Theme.of(context)
-                                                .textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyLarge?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                       Text(
                                         "\$${cubit.total.toStringAsFixed(2)}",
-                                        style:
-                                            Theme.of(context)
-                                                .textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyLarge?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -462,8 +560,96 @@ class CartScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: CustomButton(
-                      onPressed: () {
-                        AppRouter.router.go(AppRouter.kCheckout);
+                      onPressed: () async {
+                        final stockService = StockService();
+                        List<Map<String, dynamic>> insufficientItems =
+                            await stockService.checkInsufficientStockForCart(
+                              cart,
+                            );
+                        if (insufficientItems.isNotEmpty) {
+                          showDialog(
+                            context: context,
+                            builder:
+                                (context) => AlertDialog(
+                                  backgroundColor: Colors.white,
+                                  title: Text(
+                                    "Insufficient Stock",
+                                    style: AppStyles.styleBold24Dark,
+                                  ),
+                                  content: SizedBox(
+                                    width: double.maxFinite,
+                                    child: ListView(
+                                      shrinkWrap: true,
+                                      children:
+                                          insufficientItems.map((item) {
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    vertical: 4.0,
+                                                  ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    item['name'],
+                                                    style:
+                                                        AppStyles
+                                                            .styleSemiBold20Dark,
+                                                  ),
+                                                  SizedBox(height: 2),
+                                                  if (item['color'] != null &&
+                                                      item['size'] != null)
+                                                    Text(
+                                                      "(Color: ${item['color']} , Size: ${item['size']})",
+                                                    ),
+                                                  if (item['color'] != null &&
+                                                      item['size'] == null)
+                                                    Text(
+                                                      "Color: ${item['color']}",
+                                                    ),
+                                                  if (item['size'] != null &&
+                                                      item['color'] == null)
+                                                    Text(
+                                                      "Size: ${item['size']}",
+                                                    ),
+                                                  SizedBox(height: 2),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        "Requested: ${item['requested']}",
+                                                        style: TextStyle(
+                                                          color: Colors.red,
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 16),
+                                                      Text(
+                                                        "Available: ${item['available']}",
+                                                        style: TextStyle(
+                                                          color: Colors.green,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }).toList(),
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed:
+                                          () => Navigator.of(context).pop(),
+                                      child: Text("OK"),
+                                    ),
+                                  ],
+                                ),
+                          );
+                        } else {
+                          await stockService.decreaseStockForcart(cart);
+                          AppRouter.router.go(AppRouter.kCheckout);
+                        }
                       },
                       text: 'Checkout • \$${cubit.total.toStringAsFixed(2)}',
                       backgroundColor: Theme.of(context).primaryColor,

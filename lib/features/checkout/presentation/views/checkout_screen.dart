@@ -700,7 +700,7 @@ class CheckoutScreen extends StatelessWidget {
                     (state.isCheckoutValid &&
                             (!showFields || cubit.areAddressFieldsValid(cubit)))
                         ? () async {
-                          final order = await cubit.confirmOrder(context);
+                          final order = await cubit.confirmOrder();
                           if (order != null) {
                             AppRouter.router.go(
                               AppRouter.kOrderSummary,
