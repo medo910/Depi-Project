@@ -1,3 +1,6 @@
+import 'package:depi_app/core/utils/app_colors.dart';
+import 'package:depi_app/core/utils/app_styles.dart';
+import 'package:depi_app/features/checkout/presentation/data/decreaseStockService.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,6 +9,7 @@ import '../../../../core/models/order.dart' as checkout_state;
 import '../../../../core/models/selectedProduct.dart';
 import '../../../cart/presentation/manager/cart_cubit.dart';
 import 'checkout_state.dart';
+import 'package:flutter/material.dart';
 
 class CheckoutCubit extends Cubit<CheckoutState> {
   final CartCubit cartCubit;
@@ -13,14 +17,16 @@ class CheckoutCubit extends Cubit<CheckoutState> {
   CheckoutCubit({required this.cartCubit}) : super(const CheckoutState());
 
   void updateName(String value) => _updateState(name: value);
-  void updateStatus (Status value) => _updateState(status: value);
+  void updateStatus(Status value) => _updateState(status: value);
   void updatePhone(String value) => _updateState(phone: value);
   void updateAddress(String value) => _updateState(address: value);
   void updateCardNumber(String value) => _updateState(cardNumber: value);
   void updateExpiryDate(String value) => _updateState(expiryDate: value);
   void updateCvv(String value) => _updateState(cvv: value);
-  void updateCardholderName(String value) => _updateState(cardholderName: value);
-  void updatePaymentMethod(checkout_state.PaymentMethod method) => _updateState(paymentMethod: method);
+  void updateCardholderName(String value) =>
+      _updateState(cardholderName: value);
+  void updatePaymentMethod(checkout_state.PaymentMethod method) =>
+      _updateState(paymentMethod: method);
 
   void _updateState({
     String? name,
@@ -44,24 +50,29 @@ class CheckoutCubit extends Cubit<CheckoutState> {
       cvv: cvv,
       cardholderName: cardholderName,
       paymentMethod: paymentMethod,
-      status:status
+      status: status,
     );
 
     emit(newState.copyWith(isCheckoutValid: _validateCheckout(newState)));
   }
 
   bool _validateCheckout(CheckoutState s) {
-    final hasAddress = s.name.isNotEmpty && s.phone.isNotEmpty && s.address.isNotEmpty;
+    final hasAddress =
+        s.name.isNotEmpty && s.phone.isNotEmpty && s.address.isNotEmpty;
     // && s.city.isNotEmpty;
     if (s.paymentMethod == checkout_state.PaymentMethod.cash) {
       return hasAddress;
     } else {
-      final hasCard = s.cardNumber.isNotEmpty && s.expiryDate.isNotEmpty && s.cvv.isNotEmpty && s.cardholderName.isNotEmpty;
+      final hasCard =
+          s.cardNumber.isNotEmpty &&
+          s.expiryDate.isNotEmpty &&
+          s.cvv.isNotEmpty &&
+          s.cardholderName.isNotEmpty;
       return hasAddress && hasCard;
     }
   }
 
-  Future<MyOrder?> confirmOrder() async {
+  Future<MyOrder?> confirmOrder(BuildContext context) async {
     if (!state.isCheckoutValid) return null;
 
     emit(state.copyWith(isSubmitting: true));
@@ -82,16 +93,97 @@ class CheckoutCubit extends Cubit<CheckoutState> {
       'customerName': state.name,
       'customerPhone': state.phone,
       'customerAddress': state.address,
-
-
     };
 
-    try {
-      final docRef = FirebaseFirestore.instance.collection('orders').doc();
+    final myOrder = MyOrder.fromMap({
+      ...orderData,
+    }, id: FirebaseFirestore.instance.collection('orders').doc().id);
 
-      final myOrder = MyOrder.fromMap({
-        ...orderData,
-      }, id: docRef.id);
+    final stockService = StockService();
+
+    // ======================================
+    // 1- Check stock before saving order
+    // ======================================
+    List<Map<String, dynamic>> insufficientItems = await stockService
+        .checkInsufficientStockForOrder(myOrder);
+
+    if (insufficientItems.isNotEmpty) {
+      emit(state.copyWith(isSubmitting: false));
+
+      showDialog(
+        context: context,
+        builder:
+            (context) => AlertDialog(
+              backgroundColor: Colors.white,
+              title: Text(
+                "Insufficient Stock",
+                style: AppStyles.styleBold24Dark,
+              ),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: ListView(
+                  shrinkWrap: true,
+                  children:
+                      insufficientItems.map((item) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item['name'],
+                                style: AppStyles.styleSemiBold20Dark,
+                              ),
+                              SizedBox(height: 2),
+                              if (item['color'] != null && item['size'] != null)
+                                Text(
+                                  "(Color: ${item['color']} , Size: ${item['size']})",
+                                ),
+                              if (item['color'] != null && item['size'] == null)
+                                Text("Color: ${item['color']}"),
+                              if (item['size'] != null && item['color'] == null)
+                                Text("Size: ${item['size']}"),
+                              SizedBox(height: 2),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Requested: ${item['requested']}",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                  SizedBox(width: 16),
+                                  Text(
+                                    "Available: ${item['available']}",
+                                    style: TextStyle(color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text("OK"),
+                ),
+              ],
+            ),
+      );
+
+      return null;
+    }
+
+    // ======================================
+    // 2- Save order if stock is sufficient
+    // ======================================
+    try {
+      stockService.decreaseStockForOrder(myOrder);
+
+      final docRef = FirebaseFirestore.instance
+          .collection('orders')
+          .doc(myOrder.id);
 
       await docRef.set(myOrder.toMap());
 
@@ -106,6 +198,49 @@ class CheckoutCubit extends Cubit<CheckoutState> {
     }
   }
 
+  // Future<MyOrder?> confirmOrder() async {
+  //   if (!state.isCheckoutValid) return null;
+
+  //   emit(state.copyWith(isSubmitting: true));
+
+  //   final user = FirebaseAuth.instance.currentUser;
+  //   if (user == null) {
+  //     emit(state.copyWith(isSubmitting: false));
+  //     return null;
+  //   }
+
+  //   final orderData = {
+  //     'userId': user.uid,
+  //     'products': cartCubit.state.products.map((e) => e.toMap()).toList(),
+  //     'totalPrice': cartCubit.total,
+  //     'date': Timestamp.now(),
+  //     'paymentMethod': state.paymentMethod.toString().split('.').last,
+  //     'status': 'pending',
+  //     'customerName': state.name,
+  //     'customerPhone': state.phone,
+  //     'customerAddress': state.address,
+
+  //   };
+
+  //   try {
+  //     final docRef = FirebaseFirestore.instance.collection('orders').doc();
+
+  //     final myOrder = MyOrder.fromMap({
+  //       ...orderData,
+  //     }, id: docRef.id);
+
+  //     await docRef.set(myOrder.toMap());
+
+  //     await cartCubit.clearCart();
+
+  //     emit(state.copyWith(isSubmitting: false));
+
+  //     return myOrder;
+  //   } catch (e) {
+  //     emit(state.copyWith(isSubmitting: false));
+  //     rethrow;
+  //   }
+  // }
 
   Stream<int> getUserOrdersCountStream() {
     final user = FirebaseAuth.instance.currentUser;
@@ -133,47 +268,61 @@ class CheckoutCubit extends Cubit<CheckoutState> {
         .orderBy('date', descending: true)
         .snapshots()
         .map((snapshot) {
-      // print("Orders snapshot received: ${snapshot.docs.length} documents");
+          // print("Orders snapshot received: ${snapshot.docs.length} documents");
 
-      final orders = snapshot.docs.map((doc) {
-        final data = doc.data();
-        // print("Order data: ${doc.id} -> $data");
+          final orders =
+              snapshot.docs.map((doc) {
+                final data = doc.data();
+                // print("Order data: ${doc.id} -> $data");
 
-        try {
-          return MyOrder(
-            id: doc.id,
-            userId: data['userId'] ?? '',
-            products: data['products'] != null
-                ? List.from(data['products']).map((e) =>
-                ProductSelected.fromMap(Map<String, dynamic>.from(e))).toList()
-                : [],
+                try {
+                  return MyOrder(
+                    id: doc.id,
+                    userId: data['userId'] ?? '',
+                    products:
+                        data['products'] != null
+                            ? List.from(data['products'])
+                                .map(
+                                  (e) => ProductSelected.fromMap(
+                                    Map<String, dynamic>.from(e),
+                                  ),
+                                )
+                                .toList()
+                            : [],
 
-            totalPrice: (data['totalPrice'] ?? 0).toDouble(),
-            date: data['date'] ?? Timestamp.now(),
-            status: Status.values.firstWhere(
-                  (s) => s.toString().split('.').last.toLowerCase() ==
-                  ((data['status'] ?? 'pending').toString().toLowerCase()),
-              orElse: () => Status.pending,
-            ),
-            paymentMethod: PaymentMethod.values.firstWhere(
-                  (p) => p.toString().split('.').last.toLowerCase() ==
-                  ((data['paymentMethod'] ?? 'cash').toString().toLowerCase()),
-              orElse: () => PaymentMethod.cash,
-            ),
-            // address: data['address'] != null ? List<String>.from(data['address']) : [],
-            customerAddress: data['customerAddress'],
-            customerName: data['customerName'],
-            customerPhone: data['customerPhone'],
-          );
-        } catch (e) {
-          // print("Error parsing order ${doc.id}: $e");
-          rethrow;
-        }
-      }).toList();
-      return orders;
-    }).handleError((error) {
-      return <MyOrder>[];
-    });
+                    totalPrice: (data['totalPrice'] ?? 0).toDouble(),
+                    date: data['date'] ?? Timestamp.now(),
+                    status: Status.values.firstWhere(
+                      (s) =>
+                          s.toString().split('.').last.toLowerCase() ==
+                          ((data['status'] ?? 'pending')
+                              .toString()
+                              .toLowerCase()),
+                      orElse: () => Status.pending,
+                    ),
+                    paymentMethod: PaymentMethod.values.firstWhere(
+                      (p) =>
+                          p.toString().split('.').last.toLowerCase() ==
+                          ((data['paymentMethod'] ?? 'cash')
+                              .toString()
+                              .toLowerCase()),
+                      orElse: () => PaymentMethod.cash,
+                    ),
+                    // address: data['address'] != null ? List<String>.from(data['address']) : [],
+                    customerAddress: data['customerAddress'],
+                    customerName: data['customerName'],
+                    customerPhone: data['customerPhone'],
+                  );
+                } catch (e) {
+                  // print("Error parsing order ${doc.id}: $e");
+                  rethrow;
+                }
+              }).toList();
+          return orders;
+        })
+        .handleError((error) {
+          return <MyOrder>[];
+        });
   }
 
   Stream<List<MyOrder>>? getLastThreeOrdersStream() {
@@ -189,56 +338,66 @@ class CheckoutCubit extends Cubit<CheckoutState> {
         .limit(3)
         .snapshots()
         .map((snapshot) {
-      final orders = snapshot.docs.map((doc) {
-        final data = doc.data();
+          final orders =
+              snapshot.docs.map((doc) {
+                final data = doc.data();
 
-        try {
-          return MyOrder(
-            id: doc.id,
-            userId: data['userId'] ?? '',
-            products: data['products'] != null
-                ? List.from(data['products']).map((e) =>
-                ProductSelected.fromMap(Map<String, dynamic>.from(e))).toList()
-                : [],
+                try {
+                  return MyOrder(
+                    id: doc.id,
+                    userId: data['userId'] ?? '',
+                    products:
+                        data['products'] != null
+                            ? List.from(data['products'])
+                                .map(
+                                  (e) => ProductSelected.fromMap(
+                                    Map<String, dynamic>.from(e),
+                                  ),
+                                )
+                                .toList()
+                            : [],
 
-            totalPrice: (data['totalPrice'] ?? 0).toDouble(),
-            date: data['date'] ?? Timestamp.now(),
-            status: Status.values.firstWhere(
-                  (s) => s.toString().split('.').last.toLowerCase() ==
-                  ((data['status'] ?? 'pending').toString().toLowerCase()),
-              orElse: () => Status.pending,
-            ),
-            paymentMethod: PaymentMethod.values.firstWhere(
-                  (p) => p.toString().split('.').last.toLowerCase() ==
-                  ((data['paymentMethod'] ?? 'cash').toString().toLowerCase()),
-              orElse: () => PaymentMethod.cash,
-            ),
-            // address: data['address'] != null ? List<String>.from(data['address']) : [],
-            customerAddress: data['customerAddress'] ?? '',
-            customerName: data['customerName'] ?? user.displayName,
-            customerPhone: data['customerPhone'] ?? user.phoneNumber,
-          );
-        } catch (e) {
-          rethrow;
-        }
-      }).toList();
-      return orders;
-    }).handleError((error) {
-      return <MyOrder>[];
-    });
+                    totalPrice: (data['totalPrice'] ?? 0).toDouble(),
+                    date: data['date'] ?? Timestamp.now(),
+                    status: Status.values.firstWhere(
+                      (s) =>
+                          s.toString().split('.').last.toLowerCase() ==
+                          ((data['status'] ?? 'pending')
+                              .toString()
+                              .toLowerCase()),
+                      orElse: () => Status.pending,
+                    ),
+                    paymentMethod: PaymentMethod.values.firstWhere(
+                      (p) =>
+                          p.toString().split('.').last.toLowerCase() ==
+                          ((data['paymentMethod'] ?? 'cash')
+                              .toString()
+                              .toLowerCase()),
+                      orElse: () => PaymentMethod.cash,
+                    ),
+                    // address: data['address'] != null ? List<String>.from(data['address']) : [],
+                    customerAddress: data['customerAddress'] ?? '',
+                    customerName: data['customerName'] ?? user.displayName,
+                    customerPhone: data['customerPhone'] ?? user.phoneNumber,
+                  );
+                } catch (e) {
+                  rethrow;
+                }
+              }).toList();
+          return orders;
+        })
+        .handleError((error) {
+          return <MyOrder>[];
+        });
   }
 
   Future<void> updateOrderStatus(String orderId, Status newStatus) async {
     try {
-      await FirebaseFirestore.instance
-          .collection('orders')
-          .doc(orderId)
-          .update({
-        'status': newStatus.toString().split('.').last,
-      });
+      await FirebaseFirestore.instance.collection('orders').doc(orderId).update(
+        {'status': newStatus.toString().split('.').last},
+      );
 
       emit(state.copyWith(status: newStatus));
-
     } catch (e) {
       // print("Error updating order status: $e");
     }
@@ -250,29 +409,29 @@ class CheckoutCubit extends Cubit<CheckoutState> {
         .where('userId', isEqualTo: userId)
         .snapshots()
         .map((snapshot) {
+          final data =
+              snapshot.docs.map((doc) {
+                final d = doc.data();
+                return {
+                  "name": d["customerName"],
+                  "address": d["customerAddress"],
+                  "phone": d["customerPhone"],
+                };
+              }).toList();
 
-      final data = snapshot.docs.map((doc) {
-        final d = doc.data();
-        return {
-          "name": d["customerName"],
-          "address": d["customerAddress"],
-          "phone": d["customerPhone"],
-        };
-      }).toList();
+          final seen = <String>{};
+          final unique = <Map<String, dynamic>>[];
 
-      final seen = <String>{};
-      final unique = <Map<String, dynamic>>[];
+          for (var item in data) {
+            final key = "${item['name']}_${item['address']}_${item['phone']}";
+            if (!seen.contains(key)) {
+              seen.add(key);
+              unique.add(item);
+            }
+          }
 
-      for (var item in data) {
-        final key = "${item['name']}_${item['address']}_${item['phone']}";
-        if (!seen.contains(key)) {
-          seen.add(key);
-          unique.add(item);
-        }
-      }
-
-      return unique;
-    });
+          return unique;
+        });
   }
 
   bool areAddressFieldsValid(CheckoutCubit cubit) {
@@ -280,6 +439,4 @@ class CheckoutCubit extends Cubit<CheckoutState> {
         state.phone.isNotEmpty &&
         state.address.isNotEmpty;
   }
-
-
 }

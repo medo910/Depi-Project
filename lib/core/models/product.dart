@@ -72,13 +72,13 @@ class Product {
       category: map['category'] ?? '',
       description: map['description'] ?? '',
       instruction: List<String>.from(map['instruction'] ?? []),
-      productAttributeType: _stringToAttributeType(map['productAttributeType']),
+      productAttributeType: stringToAttributeType(map['productAttributeType']),
       stock: map['stock'],
       date: map['date'] ?? Timestamp.now(),
     );
   }
 
-  static ProductAttributeType _stringToAttributeType(String? value) {
+  static ProductAttributeType stringToAttributeType(String? value) {
     switch (value) {
       case 'size':
         return ProductAttributeType.size;
