@@ -83,11 +83,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).cardColor,
       body: SafeArea(
         child: Column(
           children: [
-            // ======= Header =======
             Padding(
               padding: const EdgeInsets.symmetric(
                 vertical: 16.0,
@@ -95,13 +94,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: Row(
                 children: [
-                  const Text(
+                   Text(
                     'Kite',
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.primary,
-                    ),
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(color: Theme.of(context).primaryColor)
                   ),
                   Spacer(),
                   IconButton(
@@ -131,7 +126,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // ======= Search Bar =======
             Row(
               children: [
                 Expanded(
@@ -186,7 +180,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
             const SizedBox(height: 16),
 
-            // ======= Categories Buttons =======
             HorizontalCategoryButtons(
               onCategorySelected: (category) {
                 setState(() {
@@ -197,7 +190,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
             const SizedBox(height: 16),
 
-            // ======= Products Grid / Empty State =======
             Expanded(
               child: Container(
                 width: double.infinity,

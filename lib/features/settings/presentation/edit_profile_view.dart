@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_app/core/utils/app_colors.dart';
+import 'package:depi_app/core/utils/app_router.dart';
 import 'package:depi_app/core/widgets/custom_button.dart';
 import 'package:depi_app/core/widgets/custom_form_text_field.dart';
 import 'package:depi_app/core/widgets/show_snack_bar.dart';
@@ -77,8 +78,14 @@ class _EditProfileViewState extends State<EditProfileView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Edit Profile"),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.accent,
         foregroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            AppRouter.router.go(AppRouter.kHome);
+          },
+        ),
       ),
       body:
           _isLoadingData
