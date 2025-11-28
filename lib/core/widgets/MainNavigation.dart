@@ -23,7 +23,7 @@ class _MainNavigationState extends State<MainNavigation> {
     UserProfileCubit profileCubit,
   ) {
     return Container(
-      padding: EdgeInsets.only(top: 8, bottom: 12),
+      padding: EdgeInsets.only(top: 8, bottom: 8),
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(25)),

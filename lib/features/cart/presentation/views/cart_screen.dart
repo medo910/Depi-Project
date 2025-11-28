@@ -17,53 +17,27 @@ class CartScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      // appBar: AppBar(
-      //   centerTitle: true,
-      //   title: Text(
-      //     'Shopping Cart (${cubit.state.products.length})',
-      //     style: TextStyle(fontWeight: FontWeight.w500),
-      //   ),
-      //   leading: IconButton(
-      //     icon: Icon(Icons.arrow_back),
-      //     onPressed: () {
-      //       AppRouter.router.go(AppRouter.kProfile);
-      //     },
-      //   ),
-      // ),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          'Shopping Cart (${cubit.state.products.length})',
+          style: TextStyle(fontWeight: FontWeight.w500),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            AppRouter.router.go(AppRouter.kProfile);
+          },
+        ),
+      ),
       body:
           cubit.state.isLoading
               ? const Center(child: CircularProgressIndicator())
               : cubit.state.products.isEmpty
               ? Center(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).cardColor,
-                      ),
-                      height: 120,
-
-                      child: Padding(
-                        padding: const EdgeInsets.all(25.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Icon(
-                              Icons.shopping_cart,
-                              color: Theme.of(context).primaryColor,
-                              size: 26,
-                            ),
-                            const SizedBox(width: 12),
-                            Text(
-                              'Shopping Cart',
-                              style: Theme.of(context).textTheme.headlineMedium,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 150),
                     const Text("🛒", style: TextStyle(fontSize: 100)),
                     const SizedBox(height: 8),
                     Text(
@@ -103,34 +77,9 @@ class CartScreen extends StatelessWidget {
               )
               : Column(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).cardColor,
-                    ),
-                    height: 120,
-
-                    child: Padding(
-                      padding: const EdgeInsets.all(25.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Icon(
-                            Icons.shopping_cart,
-                            color: Theme.of(context).primaryColor,
-                            size: 26,
-                          ),
-                          const SizedBox(width: 12),
-                          Text(
-                            'Shopping Cart',
-                            style: Theme.of(context).textTheme.headlineMedium,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
                   Expanded(
                     child: SingleChildScrollView(
-                      padding: const EdgeInsets.only(left: 12, right: 12),
+                      padding: const EdgeInsets.all(12),
                       child: Column(
                         children: [
                           ListView.builder(
