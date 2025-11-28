@@ -25,7 +25,7 @@ class CartScreen extends StatelessWidget {
             const SizedBox(width: 10,),
             Text(
               'Shopping Cart (${cubit.state.products.length})',
-              style: TextStyle(fontWeight: FontWeight.w500),
+              style: theme.textTheme.headlineMedium,
             ),
           ],
         ),

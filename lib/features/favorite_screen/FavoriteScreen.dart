@@ -45,7 +45,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         padding: const EdgeInsets.only(bottom: 15),
                         child: Container(
                           decoration: BoxDecoration(color: theme.cardColor),
-                          height: 120,
+                          height: 90,
 
                           child: Padding(
                             padding: const EdgeInsets.all(25.0),
@@ -117,13 +117,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 15),
+                    padding: const EdgeInsets.only(bottom: 25),
                     child: Container(
                       decoration: BoxDecoration(color:theme.cardColor),
-                      height: 120,
+                      height: 90,
 
                       child: Padding(
-                        padding: const EdgeInsets.all(25.0),
+                        padding: const EdgeInsets.all(15.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.end,

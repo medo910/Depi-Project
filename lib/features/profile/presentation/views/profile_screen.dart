@@ -235,7 +235,6 @@ class ProfileScreen extends StatelessWidget {
                                               child: Row(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  // delete button
                                                   (order.status==Status.processing || order.status==Status.pending)?
                                                   IconButton(
                                                     onPressed: () {
@@ -397,9 +396,7 @@ class ProfileScreen extends StatelessWidget {
                               title: Text("Order History", style: Theme.of(context).textTheme.headlineSmall),
                               subtitle: Text("View all your past orders",style: Theme.of(context).textTheme.bodyMedium),
                               trailing: Icon(Icons.chevron_right),
-                              onTap: (){
-                                AppRouter.router.go(AppRouter.kHome);
-                              },
+                              onTap: (){},
                             ),
 
                             const Divider(),
@@ -409,8 +406,7 @@ class ProfileScreen extends StatelessWidget {
                               title: Text("My Reviews", style: Theme.of(context).textTheme.headlineSmall),
                               subtitle: Text( "Manage your ratings and reviews",style: Theme.of(context).textTheme.bodyMedium),
                               trailing: const Icon(Icons.chevron_right),
-                              onTap: (){ AppRouter.router.push(AppRouter.kCart);
-                                },
+                              onTap: (){},
                             ),
                             const Divider(),
 
