@@ -1,6 +1,4 @@
-import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:depi_app/core/utils/app_router.dart';
-import 'package:depi_app/core/utils/app_styles.dart';
 import 'package:depi_app/core/widgets/show_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +6,7 @@ import 'package:depi_app/features/auth/presentation/manager/auth_cubit/auth_cubi
 import 'package:depi_app/core/widgets/custom_form_text_field.dart';
 import 'package:depi_app/core/widgets/custom_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -20,11 +19,12 @@ class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  late final theme = Theme.of(context);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundAuth,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -35,10 +35,7 @@ class _LoginViewState extends State<LoginView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Center(
-                    child: const Text(
-                      'Login',
-                      style: AppStyles.styleSemiBold24Dark,
-                    ),
+                    child: Text('Login', style: theme.textTheme.displaySmall),
                   ),
                   const SizedBox(height: 40),
                   CustomFormTextField(
@@ -61,13 +58,13 @@ class _LoginViewState extends State<LoginView> {
 
                   GestureDetector(
                     onTap: () {
-                      AppRouter.router.go(AppRouter.kForgotPassword);
+                      context.push(AppRouter.kForgotPassword);
                     },
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: Text(
                         'Forgot Password?',
-                        style: AppStyles.styleBold20Primary.copyWith(
+                        style: theme.textTheme.headlineLarge?.copyWith(
                           fontSize: 15,
                         ),
                       ),
@@ -77,7 +74,7 @@ class _LoginViewState extends State<LoginView> {
                   BlocConsumer<AuthCubit, AuthState>(
                     listener: (context, state) {
                       if (state is AuthError) {
-                        showSnackBar(context, "${state.message}", Colors.red);
+                        showSnackBar(context, state.message, Colors.red);
                       } else if (state is AuthSuccess) {
                         showSnackBar(context, "Login Successful", Colors.green);
                         AppRouter.router.go(AppRouter.kHome);
@@ -87,7 +84,7 @@ class _LoginViewState extends State<LoginView> {
                       return Column(
                         children: [
                           CustomButton(
-                            backgroundColor: AppColors.accent,
+                            backgroundColor: Theme.of(context).primaryColor,
                             text: 'Login',
                             isLoading:
                                 state is AuthLoading && !state.isGoogleLogin,
@@ -103,14 +100,14 @@ class _LoginViewState extends State<LoginView> {
                           const SizedBox(height: 20),
                           Text(
                             '----------------------- OR -----------------------',
-                            style: AppStyles.styleRegular14Muted.copyWith(
+                            style: theme.textTheme.labelLarge?.copyWith(
                               color: Colors.grey,
                             ),
                           ),
                           const SizedBox(height: 20),
                           CustomButton(
                             icon: FontAwesomeIcons.google,
-                            backgroundColor: AppColors.accent,
+                            backgroundColor: theme.primaryColor,
                             text: 'Sign in with Google',
                             isLoading:
                                 state is AuthLoading && state.isGoogleLogin,
@@ -128,17 +125,17 @@ class _LoginViewState extends State<LoginView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
+                      Text(
                         'Don\'t have an account?',
-                        style: AppStyles.styleRegular16Muted,
+                        style: theme.textTheme.bodyMedium,
                       ),
                       GestureDetector(
                         onTap: () {
                           AppRouter.router.go(AppRouter.kRegister);
                         },
-                        child: const Text(
+                        child: Text(
                           '  Register',
-                          style: AppStyles.styleMedium14Primary,
+                          style: theme.textTheme.labelLarge,
                         ),
                       ),
                     ],

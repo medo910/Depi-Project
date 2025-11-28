@@ -5,10 +5,9 @@ import 'package:depi_app/core/widgets/show_custom_alert_dialog.dart';
 import 'package:depi_app/core/widgets/show_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:depi_app/core/utils/app_colors.dart';
-import 'package:depi_app/core/utils/app_styles.dart';
 import 'package:depi_app/features/auth/presentation/manager/auth_cubit/auth_cubit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({super.key});
@@ -34,22 +33,23 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
 
   @override
   Widget build(BuildContext context) {
+    late final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: AppColors.backgroundAuth,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const FaIcon(
-            FontAwesomeIcons.arrowLeftLong,
-            color: Colors.black,
-          ),
-          onPressed: () => AppRouter.router.go(AppRouter.kLogin),
+          icon: const FaIcon(FontAwesomeIcons.arrowLeftLong),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              AppRouter.router.go(AppRouter.kLogin);
+            }
+          },
         ),
-        title: const Text(
-          'Reset Password',
-          style: AppStyles.styleSemiBold20Dark,
-        ),
+        title: Text('Reset Password', style: theme.textTheme.headlineMedium),
         centerTitle: true,
       ),
       body: Padding(
@@ -58,19 +58,19 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
           children: [
             CircleAvatar(
               radius: 40,
-              backgroundColor: AppColors.accent.withOpacity(0.1),
+              backgroundColor: theme.primaryColor.withOpacity(0.1),
               child: Icon(
                 Icons.mail_outline,
-                color: AppColors.accent,
+                color: theme.primaryColor,
                 size: 40,
               ),
             ),
             const SizedBox(height: 30),
-            Text("Reset your password", style: AppStyles.styleSemiBold20Dark),
+            Text("Reset your password", style: theme.textTheme.headlineMedium),
             const SizedBox(height: 8),
             Text(
               'Enter your email and we will send you a link to reset your password.',
-              style: AppStyles.styleRegular14Muted,
+              style: theme.textTheme.bodyMedium?.copyWith(fontSize: 14),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 28),
@@ -88,7 +88,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
             BlocConsumer<AuthCubit, AuthState>(
               listener: (context, state) {
                 if (state is AuthError) {
-                  showSnackBar(context, "${state.message}", Colors.red);
+                  showSnackBar(context, state.message, Colors.red);
                 } else if (state is AuthPasswordReset) {
                   showCustomAlertDialog(context, _emailCtrl.text.trim());
                 }
@@ -98,7 +98,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 return Column(
                   children: [
                     CustomButton(
-                      backgroundColor: AppColors.accent,
+                      backgroundColor: theme.primaryColor,
                       text: "Send reset email",
                       onPressed: _submit,
                       isLoading: isLoading,

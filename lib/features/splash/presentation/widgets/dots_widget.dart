@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class DotsWidget extends StatelessWidget {
@@ -22,9 +21,9 @@ class DotsWidget extends StatelessWidget {
                 child: Container(
                   width: 14,
                   height: 14,
-                  decoration: const BoxDecoration(
+                  decoration:  BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.accent,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
               ),
