@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:depi_app/features/productDetails/data/ReviewService.dart';
 import 'package:depi_app/features/productDetails/presentation/data/repos/UserService.dart';
 import 'package:depi_app/features/productDetails/presentation/widgets/LikeButton.dart';
@@ -49,6 +48,7 @@ class _ProductReviewsExpandableFullState
       context: context,
       barrierDismissible: false,
       builder: (context) {
+        late final theme=Theme.of(context);
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return Dialog(
@@ -68,7 +68,7 @@ class _ProductReviewsExpandableFullState
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [Colors.white, Colors.grey.shade50],
+                      colors: [theme.cardColor, Colors.grey.shade50], //******
                     ),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
@@ -89,8 +89,8 @@ class _ProductReviewsExpandableFullState
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              AppColors.accent.withOpacity(0.1),
-                              AppColors.accent.withOpacity(0.05),
+                              theme.primaryColor.withOpacity(0.1),
+                              theme.primaryColor.withOpacity(0.05),
                             ],
                           ),
                           borderRadius: BorderRadius.circular(12),
@@ -100,7 +100,7 @@ class _ProductReviewsExpandableFullState
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: AppColors.accent,
+                                color: theme.primaryColor,
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: const Icon(
@@ -110,25 +110,18 @@ class _ProductReviewsExpandableFullState
                               ),
                             ),
                             const SizedBox(width: 12),
-                            const Expanded(
+                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     'Share Your Experience',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black87,
-                                    ),
+                                    style: theme.textTheme.titleMedium,
                                   ),
                                   SizedBox(height: 2),
                                   Text(
                                     'Help others make better decisions',
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      color: Colors.grey,
-                                    ),
+                                    style: theme.textTheme.labelSmall,
                                   ),
                                 ],
                               ),
@@ -138,14 +131,13 @@ class _ProductReviewsExpandableFullState
                       ),
                       const SizedBox(height: 16),
 
-                      // Rating Section
                       Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: 12,
                           horizontal: 12,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: theme.cardColor,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: Colors.grey.shade200,
@@ -154,13 +146,9 @@ class _ProductReviewsExpandableFullState
                         ),
                         child: Column(
                           children: [
-                            const Text(
+                             Text(
                               'How would you rate this product?',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black87,
-                              ),
+                              style: theme.textTheme.labelMedium,
                             ),
                             const SizedBox(height: 10),
 
@@ -202,11 +190,7 @@ class _ProductReviewsExpandableFullState
                               duration: const Duration(milliseconds: 300),
                               child: Text(
                                 _getRatingText(_selectedRate.toInt()),
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.accent,
-                                ),
+                                style: theme.textTheme.labelLarge,
                               ),
                             ),
                           ],
@@ -215,10 +199,9 @@ class _ProductReviewsExpandableFullState
 
                       const SizedBox(height: 16),
 
-                      // Comment TextField
                       Container(
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: theme.cardColor,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: Colors.grey.shade200,
@@ -229,18 +212,12 @@ class _ProductReviewsExpandableFullState
                           controller: _commentController,
                           decoration: InputDecoration(
                             labelText: 'Share your thoughts...',
-                            labelStyle: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontSize: 13,
-                            ),
+                            labelStyle: theme.textTheme.labelSmall,
                             hintText: 'What did you like or dislike?',
-                            hintStyle: TextStyle(
-                              color: Colors.grey.shade400,
-                              fontSize: 12,
-                            ),
+                            hintStyle: theme.textTheme.labelSmall,
                             prefixIcon: Icon(
                               Icons.edit_note_rounded,
-                              color: AppColors.accent.withOpacity(0.6),
+                              color: theme.primaryColor.withOpacity(0.6),
                               size: 22,
                             ),
                             border: OutlineInputBorder(
@@ -283,13 +260,9 @@ class _ProductReviewsExpandableFullState
                                   width: 1.5,
                                 ),
                               ),
-                              child: const Text(
+                              child:  Text(
                                 'Cancel',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.grey,
-                                ),
+                                style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
                               ),
                             ),
                           ),
@@ -370,24 +343,21 @@ class _ProductReviewsExpandableFullState
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 12,
                                 ),
-                                backgroundColor: AppColors.accent,
+                                backgroundColor: theme.primaryColor,
                                 foregroundColor: Colors.white,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
-                              child: const Row(
+                              child:  Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(Icons.send_rounded, size: 16),
                                   SizedBox(width: 6),
                                   Text(
                                     'Submit Review',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                    style: theme.textTheme.bodySmall,
                                   ),
                                 ],
                               ),
@@ -425,6 +395,7 @@ class _ProductReviewsExpandableFullState
 
   @override
   Widget build(BuildContext context) {
+    late final theme=Theme.of(context);
     return StreamBuilder<Product>(
       stream: ProductReviewService().getProductStream(widget.productId),
       builder: (context, snapshot) {
@@ -450,18 +421,17 @@ class _ProductReviewsExpandableFullState
         return Theme(
           data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
           child: ExpansionTile(
-            leading: const Icon(Icons.reviews, color: AppColors.primary),
-            title: const Text(
+            leading:  Icon(Icons.reviews, color: theme.primaryColor),
+            title:  Text(
               'Customer Reviews',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              style: theme.textTheme.bodyLarge,
             ),
             children: [
-              // ملخص التقييمات
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE8F5E9),
+                  color: theme.cardColor,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
@@ -472,11 +442,7 @@ class _ProductReviewsExpandableFullState
                         children: [
                           Text(
                             avg.toStringAsFixed(1),
-                            style: const TextStyle(
-                              fontSize: 48,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF2E7D32),
-                            ),
+                            style:  theme.textTheme.displayLarge?.copyWith(fontSize: 48),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -495,10 +461,7 @@ class _ProductReviewsExpandableFullState
                           const SizedBox(height: 4),
                           Text(
                             '${comments.length} reviews',
-                            style: const TextStyle(
-                              color: Colors.grey,
-                              fontSize: 12,
-                            ),
+                            style: theme.textTheme.labelSmall,
                           ),
                         ],
                       ),
@@ -522,7 +485,7 @@ class _ProductReviewsExpandableFullState
                                   children: [
                                     Text(
                                       '$star',
-                                      style: const TextStyle(fontSize: 12),
+                                      style: theme.textTheme.labelMedium,
                                     ),
                                     const SizedBox(width: 4),
                                     const Icon(
@@ -550,10 +513,7 @@ class _ProductReviewsExpandableFullState
                                       width: 20,
                                       child: Text(
                                         '$count',
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
-                                        ),
+                                        style: theme.textTheme.labelSmall,
                                         textAlign: TextAlign.end,
                                       ),
                                     ),
@@ -568,7 +528,6 @@ class _ProductReviewsExpandableFullState
               ),
               const SizedBox(height: 12),
 
-              // زرار إضافة تعليق
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -577,7 +536,7 @@ class _ProductReviewsExpandableFullState
                 child: ElevatedButton.icon(
                   onPressed: () => _showAddReviewDialog(comments),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.accent,
+                    backgroundColor: theme.primaryColor,
                     minimumSize: const Size(double.infinity, 48),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -592,10 +551,9 @@ class _ProductReviewsExpandableFullState
               ),
               const SizedBox(height: 8),
 
-              // قائمة التعليقات
               ...comments.map<Widget>((r) {
                 return Card(
-                  color: Colors.white,
+                  color: theme.cardColor,
                   margin: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 4,
@@ -614,22 +572,16 @@ class _ProductReviewsExpandableFullState
                           children: [
                             Text(
                               r.name,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
+                              style: theme.textTheme.bodyLarge,
                             ),
                             Text(
                               formatDate(r.date),
-                              style: const TextStyle(
-                                color: Colors.grey,
-                                fontSize: 12,
-                              ),
+                              style: theme.textTheme.labelSmall,
                             ),
                           ],
                         ),
                         const SizedBox(height: 6),
-                        Text(r.message, style: const TextStyle(fontSize: 14)),
+                        Text(r.message, style: theme.textTheme.bodySmall),
                         const SizedBox(height: 8),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -655,7 +607,7 @@ class _ProductReviewsExpandableFullState
                     ),
                   ),
                 );
-              }).toList(),
+              }),
             ],
           ),
         );

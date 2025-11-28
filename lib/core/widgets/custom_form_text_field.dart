@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:depi_app/core/utils/app_colors.dart';
 
 enum FieldType { name, email, password, phone }
 
@@ -135,14 +134,14 @@ class _CustomFormTextFieldState extends State<CustomFormTextField> {
                   )
                   : null,
           filled: true,
-          fillColor: widget.fillColor ?? const Color(0xFFF9FAFB),
+          fillColor: widget.fillColor ?? Theme.of(context).cardColor,
           enabledBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: Color(0xffd1d5db)),
             borderRadius: BorderRadius.circular(12),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: AppColors.backgroundGradientEnd,
+            borderSide:  BorderSide(
+              color: Theme.of(context).scaffoldBackgroundColor,
               width: 2,
             ),
             borderRadius: BorderRadius.circular(12),

@@ -12,16 +12,17 @@ class ProductDetailsExpandable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    late final theme=Theme.of(context);
     return Theme(
-      data: Theme.of(context).copyWith(
+      data: theme.copyWith(
         dividerColor: Colors.transparent,
       ),
       child: Column(
         children: [
           ExpansionTile(
-            title: const Text(
+            title:  Text(
               'Description',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              style: theme.textTheme.titleMedium,
             ),
             children: [
               Padding(
@@ -34,9 +35,9 @@ class ProductDetailsExpandable extends StatelessWidget {
             ],
           ),
           ExpansionTile(
-            title: const Text(
+            title:  Text(
               'Instruction',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              style: theme.textTheme.titleMedium,
             ),
             children:
                 instruction.map<Widget>((e) {
@@ -47,7 +48,7 @@ class ProductDetailsExpandable extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.check, size: 16, color: Colors.green),
+                         Icon(Icons.check, size: 16, color: theme.primaryColor),
                         const SizedBox(width: 6),
                         Expanded(child: Text(e)),
                       ],

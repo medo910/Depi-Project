@@ -43,6 +43,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   @override
   Widget build(BuildContext context) {
+    late final theme=Theme.of(context);
     if (widget.product.productAttributeType == ProductAttributeType.none) {
       canAddToCart = true;
     } else if ((widget.product.productAttributeType ==
@@ -58,7 +59,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       canAddToCart = true;
     }
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.cardColor,
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -66,9 +67,9 @@ class _ProductDetailsState extends State<ProductDetails> {
             AppRouter.router.go(AppRouter.kHome);
           },
         ),
-        backgroundColor: Colors.white,
+        // backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
+        // iconTheme: const IconThemeData(color: Colors.black),
         actions: [
           FavoriteButton(
             productId: widget.product.id,
@@ -96,10 +97,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                   children: [
                     Text(
                       widget.product.brand,
-                      style: AppStyles.styleRegular16Muted,
+                      style: theme.textTheme.bodyMedium,
                     ),
                     const SizedBox(height: 4),
-                    Text(widget.product.name, style: AppStyles.styleBold24Dark),
+                    Text(widget.product.name, style: theme.textTheme.displayMedium),
                     const SizedBox(height: 8),
 
                     StreamBuilder<Product>(
@@ -141,17 +142,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                             const SizedBox(width: 8),
                             Text(
                               avgRate.toStringAsFixed(1),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: theme.textTheme.bodySmall,
                             ),
                             const SizedBox(width: 4),
                             Text(
                               '($reviewCount reviews)',
-                              style: const TextStyle(
-                                color: Colors.grey,
-                                fontSize: 15,
-                              ),
+                              style: theme.textTheme.bodyMedium,
                             ),
                           ],
                         );
@@ -162,11 +158,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
                     Text(
                       '\$${widget.product.price}',
-                      style: const TextStyle(
-                        color: AppColors.accent,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 26,
-                      ),
+                      style: theme.textTheme.displayMedium?.copyWith(color: theme.primaryColor),
                     ),
                     const SizedBox(height: 16),
 
@@ -186,7 +178,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                       },
                     ),
                     const SizedBox(height: 25),
-                    Text("Quantity", style: AppStyles.styleSemiBold18Dark),
+                    Text("Quantity", style: theme.textTheme.headlineSmall),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: QuantitySelector(
@@ -220,7 +212,7 @@ class _ProductDetailsState extends State<ProductDetails> {
         width: double.infinity,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: canAddToCart ? AppColors.accent : Colors.grey,
+            backgroundColor: canAddToCart ? theme.primaryColor : Colors.grey,
             padding: const EdgeInsets.symmetric(vertical: 14),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),

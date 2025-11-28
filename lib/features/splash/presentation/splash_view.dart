@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:depi_app/core/utils/app_router.dart';
 import 'package:depi_app/features/splash/presentation/widgets/dots_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -35,7 +34,7 @@ class _SplashViewState extends State<SplashView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundGradientEnd,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -48,7 +47,7 @@ class _SplashViewState extends State<SplashView>
               width: _barWidth,
               height: 5,
               decoration: BoxDecoration(
-                color: AppColors.primary,
+                color: Theme.of(context).primaryColor,
                 borderRadius: BorderRadius.circular(10),
               ),
             ),

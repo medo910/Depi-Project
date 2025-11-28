@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:depi_app/core/utils/app_router.dart';
 import 'package:depi_app/core/widgets/custom_button.dart';
 import 'package:depi_app/core/widgets/custom_form_text_field.dart';
@@ -75,11 +74,10 @@ class _EditProfileViewState extends State<EditProfileView> {
 
   @override
   Widget build(BuildContext context) {
+    late final theme=Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Edit Profile"),
-        backgroundColor: AppColors.accent,
-        foregroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -132,9 +130,9 @@ class _EditProfileViewState extends State<EditProfileView> {
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(
+                            icon:  Icon(
                               Iconsax.add_circle_copy,
-                              color: AppColors.primary,
+                              color: Theme.of(context).primaryColor,
                             ),
                             onPressed: _addAddressField,
                           ),
@@ -186,7 +184,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                         builder: (context, state) {
                           return CustomButton(
                             text: "Save Changes",
-                            backgroundColor: AppColors.accent,
+                            backgroundColor: theme.primaryColor,
                             isLoading: state is AuthLoading,
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {

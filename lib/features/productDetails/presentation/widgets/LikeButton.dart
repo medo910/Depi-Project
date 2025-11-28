@@ -1,4 +1,3 @@
-import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class LikeButton extends StatefulWidget {
@@ -46,6 +45,7 @@ class _LikeButtonState extends State<LikeButton> {
 
   @override
   Widget build(BuildContext context) {
+    late final theme=Theme.of(context);
     return InkWell(
       onTap: _toggleLike,
       borderRadius: BorderRadius.circular(20),
@@ -54,9 +54,9 @@ class _LikeButtonState extends State<LikeButton> {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color:
-              isLiked ? AppColors.accent.withOpacity(0.1) : Colors.transparent,
+              isLiked ? theme.primaryColor.withOpacity(0.1) : Colors.transparent,
           border: Border.all(
-            color: isLiked ? AppColors.accent : Colors.grey[300]!,
+            color: isLiked ? theme.primaryColor : Colors.grey[300]!,
             width: 1.5,
           ),
           borderRadius: BorderRadius.circular(20),
@@ -67,13 +67,13 @@ class _LikeButtonState extends State<LikeButton> {
             Icon(
               isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
               size: 16,
-              color: isLiked ? AppColors.accent : Colors.grey,
+              color: isLiked ? theme.primaryColor : Colors.grey,
             ),
             const SizedBox(width: 4),
             Text(
               currentLikes.toString(),
               style: TextStyle(
-                color: isLiked ? AppColors.accent : Colors.grey,
+                color: isLiked ? theme.primaryColor : Colors.grey,
                 fontSize: 12,
                 fontWeight: isLiked ? FontWeight.w600 : FontWeight.normal,
               ),

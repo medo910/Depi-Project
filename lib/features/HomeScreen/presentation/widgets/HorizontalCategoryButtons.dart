@@ -17,6 +17,7 @@ class HorizontalCategoryButtons extends StatefulWidget {
 
 class _HorizontalCategoryButtonsState extends State<HorizontalCategoryButtons> {
   final List<String> categories = Categories().categories;
+  late final theme=Theme.of(context);
 
   int? selectedIndex = 0;
   @override
@@ -30,7 +31,7 @@ class _HorizontalCategoryButtonsState extends State<HorizontalCategoryButtons> {
           bool isSelected = selectedIndex == index;
 
           Color bgColor =
-              isSelected ? AppColors.accent : AppColors.accent.withOpacity(0.5);
+              isSelected ? theme.primaryColor : theme.canvasColor.withOpacity(0.5);
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -51,10 +52,7 @@ class _HorizontalCategoryButtonsState extends State<HorizontalCategoryButtons> {
                 child: Center(
                   child: Text(
                     categories[index],
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: theme.textTheme.bodySmall,
                   ),
                 ),
               ),

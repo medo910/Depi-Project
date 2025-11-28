@@ -1,6 +1,4 @@
-import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:depi_app/core/utils/app_router.dart';
-import 'package:depi_app/core/utils/app_styles.dart';
 import 'package:depi_app/core/widgets/show_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,11 +18,12 @@ class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  late final theme=Theme.of(context);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundAuth,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -35,9 +34,9 @@ class _LoginViewState extends State<LoginView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Center(
-                    child: const Text(
+                    child:  Text(
                       'Login',
-                      style: AppStyles.styleSemiBold24Dark,
+                      style: theme.textTheme.displaySmall,
                     ),
                   ),
                   const SizedBox(height: 40),
@@ -67,7 +66,7 @@ class _LoginViewState extends State<LoginView> {
                       alignment: Alignment.centerRight,
                       child: Text(
                         'Forgot Password?',
-                        style: AppStyles.styleBold20Primary.copyWith(
+                        style: theme.textTheme.headlineLarge?.copyWith(
                           fontSize: 15,
                         ),
                       ),
@@ -87,7 +86,7 @@ class _LoginViewState extends State<LoginView> {
                       return Column(
                         children: [
                           CustomButton(
-                            backgroundColor: AppColors.accent,
+                            backgroundColor:Theme.of(context).primaryColor,
                             text: 'Login',
                             isLoading:
                                 state is AuthLoading && !state.isGoogleLogin,
@@ -103,14 +102,14 @@ class _LoginViewState extends State<LoginView> {
                           const SizedBox(height: 20),
                           Text(
                             '----------------------- OR -----------------------',
-                            style: AppStyles.styleRegular14Muted.copyWith(
+                            style: theme.textTheme.labelLarge?.copyWith(
                               color: Colors.grey,
                             ),
                           ),
                           const SizedBox(height: 20),
                           CustomButton(
                             icon: FontAwesomeIcons.google,
-                            backgroundColor: AppColors.accent,
+                            backgroundColor: theme.primaryColor,
                             text: 'Sign in with Google',
                             isLoading:
                                 state is AuthLoading && state.isGoogleLogin,
@@ -128,17 +127,17 @@ class _LoginViewState extends State<LoginView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
+                       Text(
                         'Don\'t have an account?',
-                        style: AppStyles.styleRegular16Muted,
+                        style: theme.textTheme.bodyMedium,
                       ),
                       GestureDetector(
                         onTap: () {
                           AppRouter.router.go(AppRouter.kRegister);
                         },
-                        child: const Text(
+                        child:  Text(
                           '  Register',
-                          style: AppStyles.styleMedium14Primary,
+                          style: theme.textTheme.labelLarge,
                         ),
                       ),
                     ],

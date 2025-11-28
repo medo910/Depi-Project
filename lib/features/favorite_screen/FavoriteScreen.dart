@@ -20,11 +20,12 @@ class FavoritesScreen extends StatefulWidget {
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
   final user = FirebaseAuth.instance.currentUser;
+  late final theme=Theme.of(context);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.accent.withOpacity(0.5),
+      backgroundColor:theme.scaffoldBackgroundColor,
       body: BlocBuilder<FavoritesCubit, FavoritesState>(
         builder: (context, state) {
           if (state.loading && state.favorites.isEmpty) {
@@ -46,7 +47,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 15),
                         child: Container(
-                          decoration: BoxDecoration(color: Colors.white),
+                          decoration: BoxDecoration(color: theme.cardColor),
                           height: 120,
 
                           child: Padding(
@@ -54,18 +55,15 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                const Icon(
+                                 Icon(
                                   Icons.favorite,
-                                  color: Colors.green,
+                                  color:theme.primaryColor,
                                   size: 26,
                                 ),
                                 const SizedBox(width: 12),
                                 Text(
                                   'Favorites',
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  style: theme.textTheme.headlineMedium
                                 ),
                               ],
                             ),
@@ -79,29 +77,22 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                       ),
                       Text(
                         'No favorites yet',
-                        style: TextStyle(
-                          fontSize: 25,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: theme.textTheme.displaySmall,
                       ),
                       SizedBox(height: 10),
                       Text(
                         'Save items you love to your favorites list',
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                        ),
+                        style: theme.textTheme.titleMedium,
                       ),
                       SizedBox(height: 20),
 
                       Container(
+                        color: theme.scaffoldBackgroundColor,
                         padding: const EdgeInsets.all(16),
                         width: 250,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.accent,
+                            backgroundColor:theme.primaryColor,
                             padding: const EdgeInsets.symmetric(vertical: 14),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -130,7 +121,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 15),
                     child: Container(
-                      decoration: BoxDecoration(color: Colors.white),
+                      decoration: BoxDecoration(color:theme.cardColor),
                       height: 120,
 
                       child: Padding(
@@ -138,18 +129,15 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            const Icon(
+                             Icon(
                               Icons.favorite,
-                              color: Colors.green,
+                              color: theme.primaryColor,
                               size: 26,
                             ),
                             const SizedBox(width: 12),
                             Text(
                               'Favorites (${products.length})',
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                              ),
+                              style: theme.textTheme.headlineMedium,
                             ),
                           ],
                         ),
@@ -191,11 +179,12 @@ class FavoriteProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    late final theme=Theme.of(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -207,12 +196,11 @@ class FavoriteProductCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Product Image
           Container(
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: const Color(0xFFFFF3E0),
+              color:  Colors.white,
               borderRadius: BorderRadius.circular(12),
             ),
             child: ClipRRect(
@@ -232,17 +220,13 @@ class FavoriteProductCard extends StatelessWidget {
           ),
           const SizedBox(width: 12),
 
-          // Product Info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   product.name,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: theme.textTheme.bodyLarge,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -251,7 +235,7 @@ class FavoriteProductCard extends StatelessWidget {
                   children: [
                     Text(
                       product.brand,
-                      style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                      style: theme.textTheme.labelSmall,
                     ),
                     const Text(' 😊'),
                   ],
@@ -263,30 +247,21 @@ class FavoriteProductCard extends StatelessWidget {
                     const SizedBox(width: 4),
                     Text(
                       '${product.rate.toStringAsFixed(1)}(${product.reviews})',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: theme.textTheme.labelMedium,
                     ),
                   ],
                 ),
                 const SizedBox(height: 8),
                 Text(
                   '\$${product.price.toStringAsFixed(0)}',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green,
-                  ),
+                  style:theme.textTheme.headlineSmall?.copyWith(color: theme.primaryColor),
                 ),
               ],
             ),
           ),
 
-          // Action Buttons
           Column(
             children: [
-              // Favorite Button
               BlocBuilder<FavoritesCubit, FavoritesState>(
                 builder: (context, state) {
                   return IconButton(
@@ -308,16 +283,14 @@ class FavoriteProductCard extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 8),
-              // Add to Cart Button
               Container(
                 decoration: BoxDecoration(
                   color: const Color(0xFFE8F5E9),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: IconButton(
-                  icon: const Icon(Icons.shopping_cart, color: Colors.green),
+                  icon:  Icon(Icons.shopping_cart,color: theme.primaryColor,),
                   onPressed: () {
-                    // Add to cart logic here
                     AppRouter.router.go(
                       AppRouter.kProductDetails,
                       extra: product,

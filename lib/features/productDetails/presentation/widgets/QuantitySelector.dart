@@ -47,6 +47,7 @@ class _QuantitySelectorState extends State<QuantitySelector> {
 
   @override
   Widget build(BuildContext context) {
+    late final theme=Theme.of(context);
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
@@ -60,7 +61,7 @@ class _QuantitySelectorState extends State<QuantitySelector> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(
               quantity.toString(),
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: theme.textTheme.bodyLarge,
             ),
           ),
           IconButton(onPressed: increase, icon: const Icon(Icons.add)),

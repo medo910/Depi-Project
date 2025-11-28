@@ -29,9 +29,11 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    late final theme=Theme.of(context);
     return GestureDetector(
       onTap: onTap,
       child: Card(
+        color: theme.cardColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 3,
         child: Column(
@@ -43,18 +45,21 @@ class ProductItem extends StatelessWidget {
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(12),
                   ),
-                  child: Image.network(
-                    productImage,
-                    fit: BoxFit.fill,
-                    height: 140,
-                    width: double.infinity,
-                    errorBuilder: (context, error, _) {
-                      return Container(
-                        height: 140,
-                        color: Colors.grey[200],
-                        child: const Icon(Icons.image, size: 50),
-                      );
-                    },
+                  child: Container(
+                    color: Colors.white,
+                    child: Image.network(
+                      productImage,
+                      fit: BoxFit.fill,
+                      height: 140,
+                      width: double.infinity,
+                      errorBuilder: (context, error, _) {
+                        return Container(
+                          height: 140,
+                          color: Colors.grey[200],
+                          child: const Icon(Icons.image, size: 50),
+                        );
+                      },
+                    ),
                   ),
                 ),
 
@@ -109,25 +114,20 @@ class ProductItem extends StatelessWidget {
                       const SizedBox(width: 4),
                       Text(
                         "${productRating.toStringAsFixed(1)} ($productReviews reviews)",
-                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                      ),
+                        style: theme.textTheme.labelSmall),
                     ],
                   ),
                   const SizedBox(height: 4),
 
                   Text(
                     "\$${productPrice.toStringAsFixed(2)}",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.green[700],
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: theme.textTheme.titleSmall,
                   ),
                   const SizedBox(height: 2),
 
                   Text(
                     productType,
-                    style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                    style: theme.textTheme.labelSmall,
                   ),
                 ],
               ),

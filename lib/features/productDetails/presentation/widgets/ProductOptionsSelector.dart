@@ -1,5 +1,3 @@
-import 'package:depi_app/core/utils/app_colors.dart';
-import 'package:depi_app/core/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 
 class ProductOptionsSelector extends StatefulWidget {
@@ -26,6 +24,7 @@ class _ProductOptionsSelectorState extends State<ProductOptionsSelector> {
 
   @override
   Widget build(BuildContext context) {
+    late final theme=Theme.of(context);
     final stock = widget.stock;
 
     switch (widget.sizeColorBoth) {
@@ -33,7 +32,7 @@ class _ProductOptionsSelectorState extends State<ProductOptionsSelector> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Color", style: AppStyles.styleSemiBold18Dark),
+             Text("Color", style:theme.textTheme.headlineSmall),
             const SizedBox(height: 8),
             Wrap(
               spacing: 20,
@@ -53,16 +52,16 @@ class _ProductOptionsSelectorState extends State<ProductOptionsSelector> {
                         ),
                         decoration: BoxDecoration(
                           color:
-                              isSelected ? AppColors.primary : AppColors.accent,
+                              isSelected ? theme.hintColor : theme.primaryColor,
                           border: Border.all(
-                            color: isSelected ? AppColors.primary : Colors.grey,
+                            color: isSelected ? theme.primaryColor : Colors.grey,
                             width: isSelected ? 2 : 1,
                           ),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           color,
-                          style: AppStyles.styleSemiBold18Dark,
+                          style: theme.textTheme.headlineSmall,
                         ),
                       ),
                     );
@@ -75,7 +74,7 @@ class _ProductOptionsSelectorState extends State<ProductOptionsSelector> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Size", style: AppStyles.styleSemiBold18Dark),
+             Text("Size", style: theme.textTheme.headlineSmall),
             const SizedBox(height: 8),
             Wrap(
               spacing: 20,
@@ -95,14 +94,14 @@ class _ProductOptionsSelectorState extends State<ProductOptionsSelector> {
                         ),
                         decoration: BoxDecoration(
                           color:
-                              isSelected ? AppColors.primary : AppColors.accent,
+                              isSelected ? theme.hintColor : theme.primaryColor,
                           border: Border.all(
-                            color: isSelected ? AppColors.primary : Colors.grey,
+                            color: isSelected ? theme.primaryColor : Colors.grey,
                             width: isSelected ? 2 : 1,
                           ),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Text(size, style: AppStyles.styleSemiBold18Dark),
+                        child: Text(size, style: theme.textTheme.headlineSmall),
                       ),
                     );
                   }).toList(),
@@ -114,7 +113,7 @@ class _ProductOptionsSelectorState extends State<ProductOptionsSelector> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Color", style: AppStyles.styleSemiBold18Dark),
+             Text("Color", style: theme.textTheme.headlineSmall),
             const SizedBox(height: 8),
             Wrap(
               spacing: 20,
@@ -137,23 +136,23 @@ class _ProductOptionsSelectorState extends State<ProductOptionsSelector> {
                         ),
                         decoration: BoxDecoration(
                           color:
-                              isSelected ? AppColors.primary : AppColors.accent,
+                              isSelected ? theme.hintColor : theme.primaryColor,
                           border: Border.all(
-                            color: isSelected ? AppColors.primary : Colors.grey,
+                            color: isSelected ? theme.primaryColor : Colors.grey,
                             width: isSelected ? 2 : 1,
                           ),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           color,
-                          style: AppStyles.styleSemiBold18Dark,
+                          style: theme.textTheme.headlineSmall,
                         ),
                       ),
                     );
                   }).toList(),
             ),
             const SizedBox(height: 16),
-            const Text("Size", style: AppStyles.styleSemiBold18Dark),
+            Text("Size", style: theme.textTheme.headlineSmall),
             const SizedBox(height: 8),
             if (selectedColor != null)
               Wrap(
@@ -175,27 +174,27 @@ class _ProductOptionsSelectorState extends State<ProductOptionsSelector> {
                           decoration: BoxDecoration(
                             color:
                                 isSelected
-                                    ? AppColors.primary
-                                    : AppColors.accent,
+                                    ? theme.hintColor
+                                    : theme.primaryColor,
                             border: Border.all(
                               color:
-                                  isSelected ? AppColors.primary : Colors.grey,
+                                  isSelected ? theme.primaryColor : Colors.grey,
                               width: isSelected ? 2 : 1,
                             ),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
                             size,
-                            style: AppStyles.styleSemiBold18Dark,
+                            style: theme.textTheme.headlineSmall,
                           ),
                         ),
                       );
                     }).toList(),
               )
             else
-              const Text(
+               Text(
                 "Choose a color first",
-                style: AppStyles.styleSemiBold12Red,
+                style:theme.textTheme.labelMedium?.copyWith(color: Colors.red),
               ),
           ],
         );

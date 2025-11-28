@@ -1,6 +1,4 @@
-import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:depi_app/core/utils/app_router.dart';
-import 'package:depi_app/core/utils/app_styles.dart';
 import 'package:depi_app/core/widgets/custom_button.dart';
 import 'package:depi_app/core/widgets/custom_form_text_field.dart';
 import 'package:depi_app/core/widgets/show_snack_bar.dart';
@@ -25,8 +23,9 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   Widget build(BuildContext context) {
+    late final theme=Theme.of(context);
     return Scaffold(
-      backgroundColor: AppColors.backgroundAuth,
+      backgroundColor: theme.scaffoldBackgroundColor ,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40),
@@ -37,9 +36,9 @@ class _RegisterViewState extends State<RegisterView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Center(
-                    child: const Text(
+                    child:  Text(
                       'Register',
-                      style: AppStyles.styleSemiBold24Dark,
+                      style: theme.textTheme.displaySmall,
                     ),
                   ),
                   const SizedBox(height: 40),
@@ -94,7 +93,7 @@ class _RegisterViewState extends State<RegisterView> {
                       return Column(
                         children: [
                           CustomButton(
-                            backgroundColor: AppColors.accent,
+                            backgroundColor: theme.primaryColor,
                             text: 'Register',
                             isLoading:
                                 state is AuthLoading && !state.isGoogleLogin,
@@ -111,14 +110,15 @@ class _RegisterViewState extends State<RegisterView> {
                           const SizedBox(height: 20),
                           Text(
                             '----------------------- OR -----------------------',
-                            style: AppStyles.styleRegular14Muted.copyWith(
+                            style: theme.textTheme.labelSmall?.copyWith(
                               color: Colors.grey,
+                              fontSize: 14
                             ),
                           ),
                           const SizedBox(height: 20),
                           CustomButton(
                             icon: FontAwesomeIcons.google,
-                            backgroundColor: AppColors.accent,
+                            backgroundColor: theme.primaryColor,
                             text: 'Sign in with Google',
                             isLoading:
                                 state is AuthLoading && state.isGoogleLogin,
@@ -136,17 +136,17 @@ class _RegisterViewState extends State<RegisterView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
+                       Text(
                         'Already have an account?',
-                        style: AppStyles.styleRegular16Muted,
+                        style: theme.textTheme.bodyMedium,
                       ),
                       GestureDetector(
                         onTap: () {
                           AppRouter.router.go(AppRouter.kLogin);
                         },
-                        child: const Text(
+                        child:  Text(
                           '  Login',
-                          style: AppStyles.styleMedium14Primary,
+                          style: theme.textTheme.labelLarge,
                         ),
                       ),
                     ],

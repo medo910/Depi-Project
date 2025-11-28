@@ -82,218 +82,222 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    late final theme=Theme.of(context);
     return Scaffold(
-      backgroundColor: Theme.of(context).cardColor,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 16.0,
-                horizontal: 15.0,
-              ),
-              child: Row(
-                children: [
-                   Text(
-                    'Kite',
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(color: Theme.of(context).primaryColor)
-                  ),
-                  Spacer(),
-                  IconButton(
-                    icon: const Icon(Iconsax.setting_2_copy),
-                    onPressed: () {
-                      GoRouter.of(context).push(AppRouter.kSettings);
-                    },
-                  ),
-                  StreamBuilder<int>(
-                    stream: ChatRepository().getUnreadCountStream(),
-                    builder: (context, snapshot) {
-                      final count = snapshot.data ?? 0;
-                      return IconButton(
-                        onPressed: () {
-                          GoRouter.of(context).push(AppRouter.kUserChat);
-                        },
-                        icon: Badge(
-                          isLabelVisible: count > 0,
-                          label: Text('$count'),
-                          backgroundColor: Colors.red,
-                          child: const Icon(Iconsax.message_text_copy),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-
-            Row(
+      backgroundColor:theme.scaffoldBackgroundColor,
+      body: Column(
               children: [
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.search),
+                Container(
+                  color: theme.cardColor,
+                  child:Column(
+                    children: [
+                      const SizedBox(height: 10,),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 16.0,
+                          horizontal: 15.0,
                         ),
-                        Expanded(
-                          child: GestureDetector(
-                            child: const Text(
-                              'Search for products...',
-                              style: AppStyles.styleMedium18Muted,
+                        child: Row(
+                          children: [
+                            Text(
+                                'Kite',
+                                style: theme.textTheme.displaySmall?.copyWith(color: theme.primaryColor)
                             ),
-                            onTap: () {},
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.mic_none_rounded),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.camera_alt_outlined),
-                        ),
-                        Builder(
-                          builder: (innerContext) {
-                            return IconButton(
+                            Spacer(),
+                            IconButton(
+                              icon: const Icon(Iconsax.setting_2_copy),
                               onPressed: () {
-                                Scaffold.of(innerContext).openEndDrawer();
+                                GoRouter.of(context).push(AppRouter.kSettings);
                               },
-                              icon: const Icon(
-                                Iconsax.filter_edit_copy,
-                                color: AppColors.primary,
-                              ),
-                            );
-                          },
+                            ),
+                            StreamBuilder<int>(
+                              stream: ChatRepository().getUnreadCountStream(),
+                              builder: (context, snapshot) {
+                                final count = snapshot.data ?? 0;
+                                return IconButton(
+                                  onPressed: () {
+                                    GoRouter.of(context).push(AppRouter.kUserChat);
+                                  },
+                                  icon: Badge(
+                                    isLabelVisible: count > 0,
+                                    label: Text('$count'),
+                                    backgroundColor: Colors.red,
+                                    child: const Icon(Iconsax.message_text_copy),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              decoration: BoxDecoration(
+                                color: theme.cardColor,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.search),
+                                  ),
+                                  Expanded(
+                                    child: GestureDetector(
+                                      child:  Text(
+                                        'Search for products...',
+                                        style: theme.textTheme.titleLarge,
+                                      ),
+                                      onTap: () {},
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.mic_none_rounded),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.camera_alt_outlined),
+                                  ),
+                                  Builder(
+                                    builder: (innerContext) {
+                                      return IconButton(
+                                        onPressed: () {
+                                          Scaffold.of(innerContext).openEndDrawer();
+                                        },
+                                        icon:  Icon(
+                                          Iconsax.filter_edit_copy,
+                                          color: theme.primaryColor,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      HorizontalCategoryButtons(
+                        onCategorySelected: (category) {
+                          setState(() {
+                            selectedCategory = category;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                   ),
                 ),
-              ],
-            ),
 
-            const SizedBox(height: 16),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: StreamBuilder<List<Product>>(
+                stream: ProductService().getProductsStream(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-            HorizontalCategoryButtons(
-              onCategorySelected: (category) {
-                setState(() {
-                  selectedCategory = category;
-                });
-              },
-            ),
-
-            const SizedBox(height: 16),
-
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(12),
-                color: AppColors.accent.withOpacity(0.5),
-                child: StreamBuilder<List<Product>>(
-                  stream: ProductService().getProductsStream(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-
-                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(
-                        child: Text(
-                          'No products found',
-                          style: AppStyles.styleRegular12Muted,
-                        ),
-                      );
-                    }
-
-                    allProducts = snapshot.data!;
-
-                    List<Product> filteredProducts =
-                        selectedCategory == 'All'
-                            ? allProducts
-                            : allProducts
-                                .where((p) => p.category == selectedCategory)
-                                .toList();
-
-                    if (filteredProducts.isEmpty) {
-                      return const Center(
-                        child: Text(
-                          'No products found in this category',
-                          style: AppStyles.styleRegular12Muted,
-                        ),
-                      );
-                    }
-                    filteredProducts =
-                        filteredProducts
-                            .where(
-                              (p) =>
-                                  p.price >= _currentRangeValues.start &&
-                                  p.price <= _currentRangeValues.end,
-                            )
-                            .toList();
-                    if (selectedValue == "Price: Low to High") {
-                      filteredProducts.sort(
-                        (a, b) => a.price.compareTo(b.price),
-                      );
-                    } else if (selectedValue == "Price: High to Low") {
-                      filteredProducts.sort(
-                        (a, b) => b.price.compareTo(a.price),
-                      );
-                    } else if (selectedValue == "Rating") {
-                      filteredProducts.sort((a, b) => b.rate.compareTo(a.rate));
-                    }
-
-                    return GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 0.68,
-                            crossAxisSpacing: 12,
-                            mainAxisSpacing: 12,
-                          ),
-                      itemCount: filteredProducts.length,
-                      itemBuilder: (context, index) {
-                        final product = filteredProducts[index];
-
-                        return ProductItem(
-                          productId: product.id,
-                          userId: user!.uid,
-                          productImage: product.photoUrl,
-                          productName: product.name,
-                          productRating: product.rate,
-                          productReviews: product.reviews,
-                          productPrice: product.price,
-                          productType: product.category,
-                          onTap: () async {
-                            context.push(
-                              AppRouter.kProductDetails,
-                              extra: product,
-                            );
-                          },
-                        );
-                      },
+                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return  Center(
+                      child: Text(
+                        'No products found',
+                        style: theme.textTheme.labelSmall,
+                      ),
                     );
-                  },
-                ),
+                  }
+
+                  allProducts = snapshot.data!;
+
+                  List<Product> filteredProducts =
+                      selectedCategory == 'All'
+                          ? allProducts
+                          : allProducts
+                              .where((p) => p.category == selectedCategory)
+                              .toList();
+
+                  if (filteredProducts.isEmpty) {
+                    return  Center(
+                      child: Text(
+                        'No products found in this category',
+                        style: theme.textTheme.labelSmall,
+                      ),
+                    );
+                  }
+                  filteredProducts =
+                      filteredProducts
+                          .where(
+                            (p) =>
+                                p.price >= _currentRangeValues.start &&
+                                p.price <= _currentRangeValues.end,
+                          )
+                          .toList();
+                  if (selectedValue == "Price: Low to High") {
+                    filteredProducts.sort(
+                      (a, b) => a.price.compareTo(b.price),
+                    );
+                  } else if (selectedValue == "Price: High to Low") {
+                    filteredProducts.sort(
+                      (a, b) => b.price.compareTo(a.price),
+                    );
+                  } else if (selectedValue == "Rating") {
+                    filteredProducts.sort((a, b) => b.rate.compareTo(a.rate));
+                  }
+
+                  return GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.68,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                        ),
+                    itemCount: filteredProducts.length,
+                    itemBuilder: (context, index) {
+                      final product = filteredProducts[index];
+
+                      return ProductItem(
+                        productId: product.id,
+                        userId: user!.uid,
+                        productImage: product.photoUrl,
+                        productName: product.name,
+                        productRating: product.rate,
+                        productReviews: product.reviews,
+                        productPrice: product.price,
+                        productType: product.category,
+                        onTap: () async {
+                          context.push(
+                            AppRouter.kProductDetails,
+                            extra: product,
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       endDrawer: Drawer(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.cardColor,
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [AppColors.accent, AppColors.accent.withOpacity(0.7)],
+                  colors: [theme.primaryColor, theme.primaryColor.withOpacity(0.7)],
                 ),
               ),
               child: Align(
@@ -308,18 +312,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            // ------- Price Range Section -------
+
             Container(
+              color: theme.cardColor,
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
                     'Price Range: \$${_currentRangeValues.start.round()} - \$${_currentRangeValues.end.round()}',
-                    style: const TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style:theme.textTheme.bodyLarge,
                   ),
 
                   RangeSlider(
@@ -327,8 +329,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     min: 0,
                     max: maxPrice,
                     divisions: 200,
-                    activeColor: AppColors.primary,
-                    inactiveColor: AppColors.primary.withOpacity(0.3),
+                    activeColor: theme.primaryColor,
+                    inactiveColor: theme.primaryColor.withOpacity(0.3),
                     onChanged: (RangeValues values) {
                       setState(() {
                         _currentRangeValues = values;
@@ -341,7 +343,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // ------- Stylish Dropdown Section -------
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -349,11 +350,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text(
                     "Sort",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black87,
-                    ),
+                    style: theme.textTheme.headlineSmall,
                   ),
 
                   const SizedBox(height: 12),
@@ -367,7 +364,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       value: selectedValue,
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: theme.cardColor,
                         contentPadding: EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 12,
@@ -384,7 +381,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                      dropdownColor: Colors.white,
+                      dropdownColor: theme.cardColor,
                       borderRadius: BorderRadius.circular(16),
                       icon: Icon(
                         Icons.keyboard_arrow_down_rounded,
@@ -421,7 +418,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            // ----------------------------------------
           ],
         ),
       ),

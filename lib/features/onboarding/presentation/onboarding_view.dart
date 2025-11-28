@@ -1,10 +1,8 @@
 import 'package:depi_app/core/utils/app_router.dart';
-import 'package:depi_app/core/utils/app_styles.dart';
 import 'package:depi_app/features/onboarding/presentation/widgets/custom_elevated_button.dart';
 import 'package:depi_app/features/onboarding/presentation/widgets/onboarding_slide_widget.dart';
 import 'package:depi_app/features/onboarding/presentation/widgets/page_indicator_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:depi_app/core/utils/app_colors.dart';
 
 class OnboardingView extends StatefulWidget {
   const OnboardingView({super.key});
@@ -16,25 +14,26 @@ class OnboardingView extends StatefulWidget {
 class _OnboardingViewState extends State<OnboardingView> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
+  late final theme=Theme.of(context);
 
-  final List<OnboardingSlideWidget> _slides = const [
+  late final List<OnboardingSlideWidget> _slides =  [
     OnboardingSlideWidget(
       icon: Icons.shopping_bag_outlined,
       title: 'Shop Easily',
       subtitle: 'Browse thousands of products with just a few taps',
-      color: AppColors.primary,
+      color: theme.primaryColor,
     ),
     OnboardingSlideWidget(
       icon: Icons.shield_outlined,
       title: 'Secure Payments',
       subtitle: 'Your payments are safe and protected with us',
-      color: AppColors.accent,
+      color: theme.primaryColor,
     ),
     OnboardingSlideWidget(
       icon: Icons.chat_bubble_outline,
       title: 'Live Support',
       subtitle: 'Get help from our team anytime you need it',
-      color: AppColors.primary,
+      color: theme.primaryColor,
     ),
   ];
 
@@ -62,8 +61,9 @@ class _OnboardingViewState extends State<OnboardingView> {
 
   @override
   Widget build(BuildContext context) {
+    late final theme=Theme.of(context);
     return Scaffold(
-      backgroundColor: AppColors.backgroundGradientEnd,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -89,11 +89,10 @@ class _OnboardingViewState extends State<OnboardingView> {
                       icon: const Icon(
                         Icons.arrow_back_ios,
                         size: 16,
-                        color: Colors.black,
                       ),
-                      label: const Text(
+                      label:  Text(
                         'Back',
-                        style: AppStyles.styleMedium16Dark,
+                        style: theme.textTheme.bodyLarge,
                       ),
                     )
                   else

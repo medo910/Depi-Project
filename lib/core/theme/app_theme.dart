@@ -9,6 +9,8 @@ class AppTheme {
     scaffoldBackgroundColor: const Color(0xFFD6EFD8),
     primaryColor: const Color(0xFF80AF81), // selected(dark) buttons, green text , user profile no photo
     hintColor:  Color(0xFF508D4E),
+    // primaryColorLight:const Color(0xFF80AF81),
+    canvasColor: const Color(0xFF80AF81),
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.white,
       foregroundColor: Colors.black,
@@ -59,6 +61,7 @@ class AppTheme {
     scaffoldBackgroundColor: Color(0xFF1E1E1E),
     primaryColor: Color(0xFF508D4E),
     hintColor:  Color(0xFF508D4E),
+    canvasColor:const Color(0xFF2D2D2D),
     appBarTheme: const AppBarTheme(
       backgroundColor: Color(0xFF2D2D2D),
       foregroundColor: Colors.white,

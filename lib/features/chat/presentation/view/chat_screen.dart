@@ -1,4 +1,3 @@
-import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:depi_app/features/chat/presentation/cubits/chat_cubit/chat_cubit.dart';
 import 'package:depi_app/features/chat/repositories/chat_repository.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +30,7 @@ class _UserChatScreenState extends State<UserChatScreen> {
       child: Builder(
         builder: (context) {
           return Scaffold(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             appBar: AppBar(
               title: const Row(
                 children: [
@@ -42,7 +42,7 @@ class _UserChatScreenState extends State<UserChatScreen> {
                   Text("Customer Support"),
                 ],
               ),
-              backgroundColor: AppColors.accent, // أو لون البراند بتاعك
+              backgroundColor: Theme.of(context).primaryColor,
               foregroundColor: Colors.white,
             ),
             body: Column(
@@ -109,7 +109,7 @@ class _UserChatScreenState extends State<UserChatScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         boxShadow: [
           BoxShadow(
             color: Colors.black12,
@@ -131,7 +131,7 @@ class _UserChatScreenState extends State<UserChatScreen> {
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
-                fillColor: Colors.grey[100],
+                fillColor: Colors.white.withOpacity(0.2),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 20,
                   vertical: 10,
@@ -141,7 +141,7 @@ class _UserChatScreenState extends State<UserChatScreen> {
           ),
           const SizedBox(width: 8),
           CircleAvatar(
-            backgroundColor: Colors.blue,
+            backgroundColor: Theme.of(context).primaryColor,
             child: IconButton(
               icon: const Icon(
                 Iconsax.send_1_copy,
