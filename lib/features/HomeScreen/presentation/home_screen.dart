@@ -82,47 +82,98 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    late final theme=Theme.of(context);
+    late final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor:theme.scaffoldBackgroundColor,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Column(
+        children: [
+          Container(
+            color: theme.cardColor,
+            child: Column(
               children: [
-                Container(
-                  color: theme.cardColor,
-                  child:Column(
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 16.0,
+                    horizontal: 15.0,
+                  ),
+                  child: Row(
                     children: [
-                      const SizedBox(height: 10,),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 16.0,
-                          horizontal: 15.0,
+                      Text(
+                        'Kite',
+                        style: theme.textTheme.displaySmall?.copyWith(
+                          color: theme.primaryColor,
+                        ),
+                      ),
+                      Spacer(),
+                      IconButton(
+                        icon: const Icon(Iconsax.setting_2_copy),
+                        onPressed: () {
+                          GoRouter.of(context).push(AppRouter.kSettings);
+                        },
+                      ),
+                      StreamBuilder<int>(
+                        stream: ChatRepository().getUnreadCountStream(),
+                        builder: (context, snapshot) {
+                          final count = snapshot.data ?? 0;
+                          return IconButton(
+                            onPressed: () {
+                              GoRouter.of(context).push(AppRouter.kUserChat);
+                            },
+                            icon: Badge(
+                              isLabelVisible: count > 0,
+                              label: Text('$count'),
+                              backgroundColor: Colors.red,
+                              child: const Icon(Iconsax.message_text_copy),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        decoration: BoxDecoration(
+                          color: theme.cardColor,
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
                           children: [
-                            Text(
-                                'Kite',
-                                style: theme.textTheme.displaySmall?.copyWith(color: theme.primaryColor)
-                            ),
-                            Spacer(),
                             IconButton(
-                              icon: const Icon(Iconsax.setting_2_copy),
-                              onPressed: () {
-                                GoRouter.of(context).push(AppRouter.kSettings);
-                              },
+                              onPressed: () {},
+                              icon: const Icon(Icons.search),
                             ),
-                            StreamBuilder<int>(
-                              stream: ChatRepository().getUnreadCountStream(),
-                              builder: (context, snapshot) {
-                                final count = snapshot.data ?? 0;
+                            Expanded(
+                              child: GestureDetector(
+                                child: Text(
+                                  'Search for products...',
+                                  style: theme.textTheme.titleLarge,
+                                ),
+                                onTap: () {},
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.mic_none_rounded),
+                            ),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.camera_alt_outlined),
+                            ),
+                            Builder(
+                              builder: (innerContext) {
                                 return IconButton(
                                   onPressed: () {
-                                    GoRouter.of(context).push(AppRouter.kUserChat);
+                                    Scaffold.of(innerContext).openEndDrawer();
                                   },
-                                  icon: Badge(
-                                    isLabelVisible: count > 0,
-                                    label: Text('$count'),
-                                    backgroundColor: Colors.red,
-                                    child: const Icon(Iconsax.message_text_copy),
+                                  icon: Icon(
+                                    Iconsax.filter_edit_copy,
+                                    color: theme.primaryColor,
                                   ),
                                 );
                               },
@@ -130,76 +181,26 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8),
-                              decoration: BoxDecoration(
-                                color: theme.cardColor,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.search),
-                                  ),
-                                  Expanded(
-                                    child: GestureDetector(
-                                      child:  Text(
-                                        'Search for products...',
-                                        style: theme.textTheme.titleLarge,
-                                      ),
-                                      onTap: () {},
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.mic_none_rounded),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.camera_alt_outlined),
-                                  ),
-                                  Builder(
-                                    builder: (innerContext) {
-                                      return IconButton(
-                                        onPressed: () {
-                                          Scaffold.of(innerContext).openEndDrawer();
-                                        },
-                                        icon:  Icon(
-                                          Iconsax.filter_edit_copy,
-                                          color: theme.primaryColor,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      HorizontalCategoryButtons(
-                        onCategorySelected: (category) {
-                          setState(() {
-                            selectedCategory = category;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+
+                const SizedBox(height: 16),
+                HorizontalCategoryButtons(
+                  onCategorySelected: (category) {
+                    setState(() {
+                      selectedCategory = category;
+                    });
+                  },
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
 
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
               child: StreamBuilder<List<Product>>(
                 stream: ProductService().getProductsStream(),
                 builder: (context, snapshot) {
@@ -208,7 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
 
                   if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return  Center(
+                    return Center(
                       child: Text(
                         'No products found',
                         style: theme.textTheme.labelSmall,
@@ -226,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               .toList();
 
                   if (filteredProducts.isEmpty) {
-                    return  Center(
+                    return Center(
                       child: Text(
                         'No products found in this category',
                         style: theme.textTheme.labelSmall,
@@ -242,13 +243,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           )
                           .toList();
                   if (selectedValue == "Price: Low to High") {
-                    filteredProducts.sort(
-                      (a, b) => a.price.compareTo(b.price),
-                    );
+                    filteredProducts.sort((a, b) => a.price.compareTo(b.price));
                   } else if (selectedValue == "Price: High to Low") {
-                    filteredProducts.sort(
-                      (a, b) => b.price.compareTo(a.price),
-                    );
+                    filteredProducts.sort((a, b) => b.price.compareTo(a.price));
                   } else if (selectedValue == "Rating") {
                     filteredProducts.sort((a, b) => b.rate.compareTo(a.rate));
                   }
@@ -297,7 +294,10 @@ class _HomeScreenState extends State<HomeScreen> {
             DrawerHeader(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [theme.primaryColor, theme.primaryColor.withOpacity(0.7)],
+                  colors: [
+                    theme.primaryColor,
+                    theme.primaryColor.withOpacity(0.7),
+                  ],
                 ),
               ),
               child: Align(
@@ -321,7 +321,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: <Widget>[
                   Text(
                     'Price Range: \$${_currentRangeValues.start.round()} - \$${_currentRangeValues.end.round()}',
-                    style:theme.textTheme.bodyLarge,
+                    style: theme.textTheme.bodyLarge,
                   ),
 
                   RangeSlider(
@@ -348,10 +348,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Sort",
-                    style: theme.textTheme.headlineSmall,
-                  ),
+                  Text("Sort", style: theme.textTheme.headlineSmall),
 
                   const SizedBox(height: 12),
 

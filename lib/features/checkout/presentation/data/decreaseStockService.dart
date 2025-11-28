@@ -1,19 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:depi_app/core/models/order.dart';
 import 'package:depi_app/core/models/product.dart';
+import 'package:depi_app/core/models/selectedProduct.dart';
+import 'package:depi_app/core/models/user.dart';
 
 class StockService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// =======================================
-  /// Check which products in the order are insufficient
+  /// Check which products in the cart are insufficient
   /// =======================================
-  Future<List<Map<String, dynamic>>> checkInsufficientStockForOrder(
-    MyOrder order,
+  Future<List<Map<String, dynamic>>> checkInsufficientStockForCart(
+    List<ProductSelected> cart,
   ) async {
     List<Map<String, dynamic>> insufficientItems = [];
 
-    for (var item in order.products) {
+    for (var item in cart) {
       final stockCheck = await checkStock(
         productID: item.productId,
         color: item.productDetails['color'],
@@ -154,8 +155,8 @@ class StockService {
   /// =======================================
   ///  Decrease stock for a full order
   /// =======================================
-  Future<void> decreaseStockForOrder(MyOrder order) async {
-    for (var item in order.products) {
+  Future<void> decreaseStockForcart(List<ProductSelected> cart) async {
+    for (var item in cart) {
       await decreaseStock(
         productID: item.productId,
         color: item.productDetails['color'],
