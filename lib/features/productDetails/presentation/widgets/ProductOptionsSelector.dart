@@ -52,9 +52,9 @@ class _ProductOptionsSelectorState extends State<ProductOptionsSelector> {
                         ),
                         decoration: BoxDecoration(
                           color:
-                              isSelected ? theme.hintColor : theme.primaryColor,
+                              isSelected ? theme.primaryColor.withOpacity(0.5):theme.primaryColor,
                           border: Border.all(
-                            color: isSelected ? theme.primaryColor : Colors.grey,
+                            color: isSelected ? theme.primaryColor.withOpacity(0.5):theme.primaryColor,
                             width: isSelected ? 2 : 1,
                           ),
                           borderRadius: BorderRadius.circular(8),
@@ -94,9 +94,9 @@ class _ProductOptionsSelectorState extends State<ProductOptionsSelector> {
                         ),
                         decoration: BoxDecoration(
                           color:
-                              isSelected ? theme.hintColor : theme.primaryColor,
+                              isSelected ? theme.primaryColor.withOpacity(0.5):theme.primaryColor,
                           border: Border.all(
-                            color: isSelected ? theme.primaryColor : Colors.grey,
+                            color: isSelected ? theme.primaryColor.withOpacity(0.5):theme.primaryColor,
                             width: isSelected ? 2 : 1,
                           ),
                           borderRadius: BorderRadius.circular(8),
@@ -136,9 +136,9 @@ class _ProductOptionsSelectorState extends State<ProductOptionsSelector> {
                         ),
                         decoration: BoxDecoration(
                           color:
-                              isSelected ? theme.hintColor : theme.primaryColor,
+                              isSelected ?  theme.primaryColor.withOpacity(0.5):theme.primaryColor,
                           border: Border.all(
-                            color: isSelected ? theme.primaryColor : Colors.grey,
+                            color: isSelected ? theme.primaryColor.withOpacity(0.5):theme.primaryColor,
                             width: isSelected ? 2 : 1,
                           ),
                           borderRadius: BorderRadius.circular(8),
@@ -173,12 +173,10 @@ class _ProductOptionsSelectorState extends State<ProductOptionsSelector> {
                           ),
                           decoration: BoxDecoration(
                             color:
-                                isSelected
-                                    ? theme.hintColor
-                                    : theme.primaryColor,
+                                isSelected? theme.primaryColor.withOpacity(0.5):theme.primaryColor,
                             border: Border.all(
                               color:
-                                  isSelected ? theme.primaryColor : Colors.grey,
+                                  isSelected ? theme.primaryColor.withOpacity(0.5):theme.primaryColor,
                               width: isSelected ? 2 : 1,
                             ),
                             borderRadius: BorderRadius.circular(8),

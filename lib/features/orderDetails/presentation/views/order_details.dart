@@ -50,11 +50,14 @@ class OrderDetailsScreen extends StatelessWidget {
         contentPadding: const EdgeInsets.all(14),
         leading: ClipRRect(
           borderRadius: BorderRadius.circular(14),
-          child: Image.network(
-            product.photoURL,
-            width: 65,
-            height: 65,
-            fit: BoxFit.cover,
+          child: Container(
+            color: Colors.white70,
+            child: Image.network(
+              product.photoURL,
+              width: 65,
+              height: 65,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
         title: Text(
@@ -75,6 +78,7 @@ class OrderDetailsScreen extends StatelessWidget {
           "\$${product.price.toStringAsFixed(2)}",
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
+            color: Theme.of(context).primaryColor
           ),
         ),
       ),
@@ -111,6 +115,8 @@ class OrderDetailsScreen extends StatelessWidget {
           _summaryRow(context, "Phone", order.customerPhone),
           Divider(height: 28),
           _summaryRow(context, "Address", order.customerAddress),
+          Divider(height: 28),
+          _summaryRow(context, "Status", order.status.name),
         ],
       ),
     );

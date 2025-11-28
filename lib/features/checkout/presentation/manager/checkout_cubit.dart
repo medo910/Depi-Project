@@ -1,4 +1,3 @@
-import 'package:depi_app/core/utils/app_styles.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 
 import '../../features/profile/manager/user_profile_cubit.dart';
 
@@ -76,20 +75,20 @@ class _MainNavigationState extends State<MainNavigation> {
             duration: Duration(milliseconds: 250),
             padding: EdgeInsets.all(isActive ? 6 : 4),
             decoration: BoxDecoration(
-              color: isActive ? Colors.white : Theme.of(context).primaryColor,
+              color: isActive ? Colors.white70 : Theme.of(context).primaryColor,
               shape: BoxShape.circle,
             ),
             child: Icon(
               icon,
               size: isActive ? 28 : 24,
-              color: isActive ? Theme.of(context).primaryColor : Colors.white70,
+              color: isActive ? Theme.of(context).primaryColor : Theme.of(context).cardColor,
             ),
           ),
           SizedBox(height: 4),
           Text(
             label,
             style: TextStyle(
-              color: isActive ? Colors.white : Colors.white70,
+              color: isActive ?  Colors.white70 :Theme.of(context).cardColor,
               fontSize: 12,
             ),
           ),
@@ -121,7 +120,7 @@ class _MainNavigationState extends State<MainNavigation> {
                 duration: Duration(milliseconds: 250),
                 padding: EdgeInsets.all(isActive ? 6 : 4),
                 decoration: BoxDecoration(
-                  color: isActive ? Colors.white : Colors.transparent,
+                  color: isActive ? Colors.white70 : Colors.transparent,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -130,7 +129,7 @@ class _MainNavigationState extends State<MainNavigation> {
                   color:
                       isActive
                           ? Theme.of(context).primaryColor
-                          : Colors.white70,
+                          : Theme.of(context).cardColor,
                 ),
               ),
 
@@ -153,7 +152,7 @@ class _MainNavigationState extends State<MainNavigation> {
                       child: Text(
                         "$value",
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Theme.of(context).cardColor,
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
                         ),
@@ -168,7 +167,7 @@ class _MainNavigationState extends State<MainNavigation> {
           Text(
             label,
             style: TextStyle(
-              color: isActive ? Colors.white : Colors.white60,
+              color: isActive ?  Colors.white60 : Theme.of(context).cardColor,
               fontSize: 12,
             ),
           ),

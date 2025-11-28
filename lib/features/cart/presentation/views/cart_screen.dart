@@ -1,6 +1,4 @@
-import 'package:depi_app/core/utils/app_styles.dart';
 import 'package:depi_app/features/checkout/presentation/data/decreaseStockService.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../manager/cart_cubit.dart';
@@ -14,20 +12,22 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = context.watch<CartCubit>();
     final cart = cubit.state.products;
+    late final theme=Theme.of(context);
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
-          'Shopping Cart (${cubit.state.products.length})',
-          style: TextStyle(fontWeight: FontWeight.w500),
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            AppRouter.router.go(AppRouter.kProfile);
-          },
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.shopping_cart,color: Theme.of(context).primaryColor,),
+            const SizedBox(width: 10,),
+            Text(
+              'Shopping Cart (${cubit.state.products.length})',
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ],
         ),
       ),
       body:
@@ -518,83 +518,126 @@ class CartScreen extends StatelessWidget {
                         if (insufficientItems.isNotEmpty) {
                           showDialog(
                             context: context,
-                            builder:
-                                (context) => AlertDialog(
-                                  backgroundColor: Colors.white,
-                                  title: Text(
+                            builder: (context) => AlertDialog(
+                              backgroundColor: Theme.of(context).cardColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              elevation: 8,
+                              titlePadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+                              contentPadding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
+                              actionsPadding: const EdgeInsets.fromLTRB(0, 0, 12, 12),
+
+                              title: Row(
+                                children: [
+                                  Icon(Icons.error_outline, color: Colors.red, size: 28),
+                                  SizedBox(width: 8),
+                                  Text(
                                     "Insufficient Stock",
-                                    style: AppStyles.styleBold24Dark,
+                                    style: theme.textTheme.displayMedium?.copyWith(fontSize: 22),
                                   ),
-                                  content: SizedBox(
-                                    width: double.maxFinite,
-                                    child: ListView(
-                                      shrinkWrap: true,
-                                      children:
-                                          insufficientItems.map((item) {
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    vertical: 4.0,
-                                                  ),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    item['name'],
-                                                    style:
-                                                        AppStyles
-                                                            .styleSemiBold20Dark,
-                                                  ),
-                                                  SizedBox(height: 2),
-                                                  if (item['color'] != null &&
-                                                      item['size'] != null)
-                                                    Text(
-                                                      "(Color: ${item['color']} , Size: ${item['size']})",
-                                                    ),
-                                                  if (item['color'] != null &&
-                                                      item['size'] == null)
-                                                    Text(
-                                                      "Color: ${item['color']}",
-                                                    ),
-                                                  if (item['size'] != null &&
-                                                      item['color'] == null)
-                                                    Text(
-                                                      "Size: ${item['size']}",
-                                                    ),
-                                                  SizedBox(height: 2),
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        "Requested: ${item['requested']}",
-                                                        style: TextStyle(
-                                                          color: Colors.red,
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 16),
-                                                      Text(
-                                                        "Available: ${item['available']}",
-                                                        style: TextStyle(
-                                                          color: Colors.green,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
+                                ],
+                              ),
+
+                              content: SizedBox(
+                                width: double.maxFinite,
+                                child: ListView(
+                                  shrinkWrap: true,
+                                  children: insufficientItems.map((item) {
+                                    return Container(
+                                      margin: const EdgeInsets.symmetric(vertical: 6),
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color: theme.cardColor,
+                                        borderRadius: BorderRadius.circular(16),
+                                        border: Border.all(color: Colors.grey.shade300),
+                                      ),
+
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            item['name'],
+                                            style: theme.textTheme.headlineMedium?.copyWith(
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                          SizedBox(height: 4),
+
+                                          if (item['color'] != null && item['size'] != null)
+                                            Text(
+                                              "(${item['color']} • ${item['size']})",
+                                              style: TextStyle(color: Colors.grey.shade700),
+                                            ),
+
+                                          if (item['color'] != null && item['size'] == null)
+                                            Text(
+                                              "Color: ${item['color']}",
+                                              style: TextStyle(color: Colors.grey.shade700),
+                                            ),
+
+                                          if (item['size'] != null && item['color'] == null)
+                                            Text(
+                                              "Size: ${item['size']}",
+                                              style: TextStyle(color: Colors.grey.shade700),
+                                            ),
+
+                                          SizedBox(height: 10),
+
+                                          Row(
+                                            children: [
+                                              Container(
+                                                padding:
+                                                EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.red.withOpacity(.1),
+                                                  borderRadius: BorderRadius.circular(8),
+                                                ),
+                                                child: Text(
+                                                  "Requested: ${item['requested']}",
+                                                  style: TextStyle(color: Colors.red),
+                                                ),
                                               ),
-                                            );
-                                          }).toList(),
+                                              SizedBox(width: 10),
+                                              Container(
+                                                padding:
+                                                EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.green.withOpacity(.1),
+                                                  borderRadius: BorderRadius.circular(8),
+                                                ),
+                                                child: Text(
+                                                  "Available: ${item['available']}",
+                                                  style: TextStyle(color: Colors.green),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    backgroundColor: Colors.black87,
+                                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
                                   ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed:
-                                          () => Navigator.of(context).pop(),
-                                      child: Text("OK"),
-                                    ),
-                                  ],
+                                  child: Text("OK", style: TextStyle(fontSize: 16)),
                                 ),
+                              ],
+                            ),
                           );
+
+
                         } else {
                           await stockService.decreaseStockForcart(cart);
                           AppRouter.router.go(AppRouter.kCheckout);

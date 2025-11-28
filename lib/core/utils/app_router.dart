@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_app/features/auth/presentation/views/login_view.dart';
 import 'package:depi_app/features/auth/presentation/views/register_view.dart';
 import 'package:depi_app/features/auth/presentation/views/reset_password_view.dart';
@@ -11,11 +10,7 @@ import 'package:depi_app/features/orderSummary/presentation/order_summary.dart';
 import 'package:depi_app/core/models/product.dart';
 import 'package:depi_app/core/widgets/MainNavigation.dart';
 import 'package:depi_app/features/HomeScreen/presentation/home_screen.dart';
-import 'package:depi_app/features/auth/presentation/views/login_view.dart';
-import 'package:depi_app/features/auth/presentation/views/register_view.dart';
-import 'package:depi_app/features/auth/presentation/views/reset_password_view.dart';
 import 'package:depi_app/features/favorite_screen/FavoriteScreen.dart';
-import 'package:depi_app/features/onboarding/presentation/onboarding_view.dart';
 import 'package:depi_app/features/productDetails/presentation/product_details.dart';
 import 'package:depi_app/features/chat/presentation/view/chat_screen.dart';
 import 'package:depi_app/features/settings/presentation/edit_profile_view.dart';

@@ -3,7 +3,6 @@ import 'package:depi_app/core/utils/app_router.dart';
 import 'package:depi_app/features/chat/repositories/chat_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:depi_app/features/HomeScreen/presentation/widgets/HorizontalCategoryButtons.dart';
 import 'package:depi_app/features/HomeScreen/presentation/widgets/product_item.dart';
 import 'package:depi_app/features/HomeScreen/data/repos/ProductService.dart';
@@ -78,7 +77,6 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     });
   }
-  //xx
 
   @override
   Widget build(BuildContext context) {
@@ -368,12 +366,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
-                          borderSide: BorderSide(color: Colors.grey.shade300),
+                          borderSide: BorderSide(color: theme.primaryColor),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
                           borderSide: BorderSide(
-                            color: AppColors.accent,
+                            color: theme.primaryColor,
                             width: 1.5,
                           ),
                         ),

@@ -191,7 +191,7 @@ class OrderSummary extends StatelessWidget {
                     AppRouter.router.go(AppRouter.kHome);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF80AF81),
+                    backgroundColor: Theme.of(context).primaryColor,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
