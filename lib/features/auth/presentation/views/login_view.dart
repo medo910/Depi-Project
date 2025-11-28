@@ -60,7 +60,7 @@ class _LoginViewState extends State<LoginView> {
 
                   GestureDetector(
                     onTap: () {
-                      AppRouter.router.go(AppRouter.kForgotPassword);
+                      AppRouter.router.push(AppRouter.kForgotPassword);
                     },
                     child: Align(
                       alignment: Alignment.centerRight,
