@@ -1,4 +1,3 @@
-import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:depi_app/features/HomeScreen/presentation/widgets/categories.dart';
 import 'package:flutter/material.dart';
 

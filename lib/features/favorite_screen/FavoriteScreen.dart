@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_app/core/cubit/FavoritesCubit/favorites_cubit.dart';
 import 'package:depi_app/core/cubit/FavoritesCubit/favorites_state.dart';
-import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:depi_app/core/utils/app_router.dart';
 import 'package:depi_app/core/utils/FavoriteService.dart';
 import 'package:depi_app/core/widgets/custom_button.dart';

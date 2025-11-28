@@ -4,7 +4,6 @@ import 'package:depi_app/features/chat/repositories/chat_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:depi_app/core/utils/app_colors.dart';
-import 'package:depi_app/core/utils/app_styles.dart';
 import 'package:depi_app/features/HomeScreen/presentation/widgets/HorizontalCategoryButtons.dart';
 import 'package:depi_app/features/HomeScreen/presentation/widgets/product_item.dart';
 import 'package:depi_app/features/HomeScreen/data/repos/ProductService.dart';

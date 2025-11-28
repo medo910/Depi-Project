@@ -1,4 +1,3 @@
-import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:depi_app/core/utils/app_styles.dart';
 import 'package:depi_app/features/checkout/presentation/data/decreaseStockService.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

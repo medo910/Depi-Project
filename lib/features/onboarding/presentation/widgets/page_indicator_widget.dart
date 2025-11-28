@@ -1,4 +1,3 @@
-import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class PageIndicatorsWidget extends StatelessWidget {
@@ -23,7 +22,7 @@ class PageIndicatorsWidget extends StatelessWidget {
           width: isActive ? 12 : 8,
           height: isActive ? 12 : 8,
           decoration: BoxDecoration(
-            color: isActive ? AppColors.primary : Colors.grey.shade400,
+            color: isActive ? Theme.of(context).primaryColor : Colors.grey.shade400,
             shape: BoxShape.circle,
           ),
         );

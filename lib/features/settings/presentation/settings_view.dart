@@ -1,4 +1,3 @@
-import 'package:depi_app/core/utils/app_colors.dart';
 import 'package:depi_app/core/utils/app_router.dart';
 import 'package:depi_app/core/widgets/custom_button.dart';
 import 'package:depi_app/features/auth/presentation/manager/auth_cubit/auth_cubit.dart';
@@ -25,9 +24,9 @@ class SettingsView extends StatelessWidget {
         child: Column(
           children: [
             ListTile(
-              leading: const Icon(
+              leading:  Icon(
                 Iconsax.user_edit_copy,
-                color: AppColors.primary,
+                color: Theme.of(context).primaryColor,
               ),
               title: const Text("Edit Profile"),
               subtitle: const Text("Change name, email, phone, addresses"),
@@ -43,9 +42,9 @@ class SettingsView extends StatelessWidget {
                 // TODO: implement listener
               },
               child: ListTile(
-                leading: const Icon(
+                leading:  Icon(
                   Iconsax.lock_copy,
-                  color: AppColors.primary,
+                  color: Theme.of(context).primaryColor
                 ),
                 title: const Text("Reset Password"),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),
