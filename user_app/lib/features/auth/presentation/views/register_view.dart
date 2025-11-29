@@ -23,25 +23,30 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   Widget build(BuildContext context) {
-    late final theme=Theme.of(context);
+    final size = MediaQuery.sizeOf(context);
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor ,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40),
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(
+              horizontal: size.width * 0.06,
+              vertical: size.height * 0.02,
+            ),
+            child: Form(
+              key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Center(
-                    child:  Text(
+                    child: Text(
                       'Register',
                       style: theme.textTheme.displaySmall,
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  SizedBox(height: size.height * 0.04),
                   CustomFormTextField(
                     labelText: 'Full Name',
                     hintText: 'Enter your full name',
@@ -49,7 +54,7 @@ class _RegisterViewState extends State<RegisterView> {
                     prefixIcon: Icons.person_outline,
                     controller: fullNameController,
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: size.height * 0.015),
                   CustomFormTextField(
                     labelText: 'Email',
                     hintText: 'Enter your email',
@@ -57,7 +62,7 @@ class _RegisterViewState extends State<RegisterView> {
                     prefixIcon: Icons.email_outlined,
                     controller: emailController,
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: size.height * 0.015),
                   CustomFormTextField(
                     labelText: 'Password',
                     hintText: 'Enter your password',
@@ -65,7 +70,7 @@ class _RegisterViewState extends State<RegisterView> {
                     prefixIcon: Icons.lock_outline,
                     controller: passwordController,
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: size.height * 0.015),
                   CustomFormTextField(
                     labelText: 'Confirm Password',
                     hintText: 'Re-enter your password',
@@ -74,8 +79,7 @@ class _RegisterViewState extends State<RegisterView> {
                     controller: confirmPasswordController,
                     originalPassword: passwordController,
                   ),
-                  const SizedBox(height: 24),
-
+                  SizedBox(height: size.height * 0.03),
                   BlocConsumer<AuthCubit, AuthState>(
                     listener: (context, state) {
                       if (state is AuthError) {
@@ -107,15 +111,15 @@ class _RegisterViewState extends State<RegisterView> {
                               }
                             },
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: size.height * 0.025),
                           Text(
                             '----------------------- OR -----------------------',
                             style: theme.textTheme.labelSmall?.copyWith(
                               color: Colors.grey,
-                              fontSize: 14
+                              fontSize: size.width * 0.035,
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: size.height * 0.025),
                           CustomButton(
                             icon: FontAwesomeIcons.google,
                             backgroundColor: theme.primaryColor,
@@ -132,21 +136,25 @@ class _RegisterViewState extends State<RegisterView> {
                       );
                     },
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: size.height * 0.03),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                       Text(
+                      Text(
                         'Already have an account?',
-                        style: theme.textTheme.bodyMedium,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontSize: size.width * 0.038,
+                        ),
                       ),
                       GestureDetector(
                         onTap: () {
                           AppRouter.router.go(AppRouter.kLogin);
                         },
-                        child:  Text(
+                        child: Text(
                           '  Login',
-                          style: theme.textTheme.labelLarge,
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            fontSize: size.width * 0.038,
+                          ),
                         ),
                       ),
                     ],

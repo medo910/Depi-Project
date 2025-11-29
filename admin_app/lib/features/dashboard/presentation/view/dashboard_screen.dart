@@ -29,6 +29,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+
     return BlocBuilder<DashboardCubit, DashboardState>(
       builder: (context, state) {
         final isDarkMode =
@@ -43,8 +45,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
             title: Row(
               children: [
                 Container(
-                  width: 40,
-                  height: 40,
+                  width: size.width * 0.1,
+                  height: size.width * 0.1,
+                  constraints: const BoxConstraints(
+                    maxWidth: 45,
+                    maxHeight: 45,
+                  ),
                   decoration: BoxDecoration(
                     color: Theme.of(context).primaryColor,
                     borderRadius: BorderRadius.circular(8),
@@ -52,15 +58,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: Icon(
                     Iconsax.box_1,
                     color: Theme.of(context).colorScheme.onPrimary,
+                    size: size.width * 0.055,
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: size.width * 0.03),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Kite Admin',
-                      style: Theme.of(context).appBarTheme.titleTextStyle,
+                      style:
+                          Theme.of(context).appBarTheme.titleTextStyle
+                              ?.copyWith(fontSize: size.width * 0.045) ??
+                          TextStyle(
+                            fontSize: size.width * 0.045,
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                     Text(
                       'Admin Panel',
@@ -68,6 +81,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         color: Theme.of(
                           context,
                         ).textTheme.bodySmall?.color?.withOpacity(0.7),
+                        fontSize: size.width * 0.03,
                       ),
                     ),
                   ],
@@ -79,29 +93,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 icon: Icon(
                   isDarkMode ? Iconsax.sun_1_copy : Iconsax.moon_copy,
                   color: Theme.of(context).iconTheme.color,
+                  size: size.width * 0.06,
                 ),
                 onPressed: () {
                   context.read<DashboardCubit>().toggleTheme(isDarkMode);
                 },
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: size.width * 0.02),
             ],
           ),
-
           body: IndexedStack(index: state.tabIndex, children: _screens),
-
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: state.tabIndex,
+            selectedFontSize: size.width * 0.035,
+            unselectedFontSize: size.width * 0.03,
             onTap: (index) {
               context.read<DashboardCubit>().changeTab(index);
             },
             items: [
               BottomNavigationBarItem(
-                icon: Icon(Iconsax.box_copy),
+                icon: Icon(Iconsax.box_copy, size: size.width * 0.06),
                 label: 'Products',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Iconsax.shopping_cart_copy),
+                icon: Icon(Iconsax.shopping_cart_copy, size: size.width * 0.06),
                 label: 'Orders',
               ),
               BottomNavigationBarItem(
@@ -118,7 +133,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       label: Text('$totalUnread'),
                       backgroundColor: Colors.red,
                       textColor: Colors.white,
-                      child: const Icon(Iconsax.message_text_1_copy),
+                      child: Icon(
+                        Iconsax.message_text_1_copy,
+                        size: size.width * 0.06,
+                      ),
                     );
                   },
                 ),

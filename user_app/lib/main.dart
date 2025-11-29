@@ -29,27 +29,27 @@ class DepiApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => AuthCubit(AuthRepositoryImpl(AuthService())),),
+        BlocProvider(
+          create: (context) => AuthCubit(AuthRepositoryImpl(AuthService())),
+        ),
         BlocProvider(create: (_) => ProfileCubit()),
         BlocProvider(
           create: (context) => UserProfileCubit()..loadUserProfile(),
           child: ProfileScreen(),
         ),
         BlocProvider(create: (_) => AppSettingsCubit()),
-        BlocProvider(create: (_)=> CartCubit()..loadCart()),
+        BlocProvider(create: (_) => CartCubit()..loadCart()),
         BlocProvider(
-          create: (context) => CheckoutCubit(
-            cartCubit: context.read<CartCubit>(),
-          ),
+          create:
+              (context) => CheckoutCubit(cartCubit: context.read<CartCubit>()),
         ),
         BlocProvider<FavoritesCubit>(
           create: (context) {
             return FavoritesCubit()..loadFavorites();
           },
         ),
-
       ],
-      child:BlocBuilder<AppSettingsCubit, AppSettingsState>(
+      child: BlocBuilder<AppSettingsCubit, AppSettingsState>(
         builder: (context, state) {
           return MaterialApp.router(
             routerConfig: AppRouter.router,
@@ -64,4 +64,3 @@ class DepiApp extends StatelessWidget {
     );
   }
 }
-

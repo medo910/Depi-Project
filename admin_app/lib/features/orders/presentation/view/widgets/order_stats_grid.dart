@@ -12,13 +12,14 @@ class OrderStatsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final activeFilter = context.watch<OrderCubit>().state.selectedFilter;
+    final size = MediaQuery.sizeOf(context);
 
     return GridView.count(
       crossAxisCount: 3,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      crossAxisSpacing: 10,
-      mainAxisSpacing: 10,
+      crossAxisSpacing: size.width * 0.02,
+      mainAxisSpacing: size.width * 0.02,
       childAspectRatio: 1.1,
       children: [
         _buildStatCard(
@@ -30,6 +31,7 @@ class OrderStatsGrid extends StatelessWidget {
           iconBgColor: AppColors.pendingBG,
           status: OrderStatus.pending,
           isActive: activeFilter == OrderStatus.pending,
+          size: size,
         ),
         _buildStatCard(
           context: context,
@@ -40,6 +42,7 @@ class OrderStatsGrid extends StatelessWidget {
           iconBgColor: AppColors.processingBG,
           status: OrderStatus.processing,
           isActive: activeFilter == OrderStatus.processing,
+          size: size,
         ),
         _buildStatCard(
           context: context,
@@ -50,6 +53,7 @@ class OrderStatsGrid extends StatelessWidget {
           iconBgColor: AppColors.processingBG,
           status: OrderStatus.shipped,
           isActive: activeFilter == OrderStatus.shipped,
+          size: size,
         ),
         _buildStatCard(
           context: context,
@@ -60,6 +64,7 @@ class OrderStatsGrid extends StatelessWidget {
           iconBgColor: AppColors.completedBG,
           status: OrderStatus.delivered,
           isActive: activeFilter == OrderStatus.delivered,
+          size: size,
         ),
         _buildStatCard(
           context: context,
@@ -70,6 +75,7 @@ class OrderStatsGrid extends StatelessWidget {
           iconBgColor: AppColors.cancelledBG,
           status: OrderStatus.canceled,
           isActive: activeFilter == OrderStatus.canceled,
+          size: size,
         ),
       ],
     );
@@ -83,7 +89,8 @@ class OrderStatsGrid extends StatelessWidget {
     required Color iconColor,
     required Color iconBgColor,
     required OrderStatus status,
-    required bool isActive, // 7. بنستقبل إذا كان فعال
+    required bool isActive,
+    required Size size,
   }) {
     final textTheme = Theme.of(context).textTheme;
     final cubit = context.read<OrderCubit>();
@@ -105,28 +112,32 @@ class OrderStatsGrid extends StatelessWidget {
           cubit.filterOrdersByStatus(status);
         },
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(size.width * 0.02),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                width: 36,
-                height: 36,
+                width: size.width * 0.09,
+                height: size.width * 0.09,
                 decoration: BoxDecoration(
                   color: iconBgColor,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(icon, color: iconColor, size: 18),
+                child: Icon(icon, color: iconColor, size: size.width * 0.045),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: size.height * 0.01),
               Text(
                 count.toString(),
-                style: textTheme.titleMedium?.copyWith(fontSize: 16),
+                style: textTheme.titleMedium?.copyWith(
+                  fontSize: size.width * 0.04,
+                ),
               ),
               Text(
                 title,
-                style: textTheme.bodySmall,
+                style: textTheme.bodySmall?.copyWith(
+                  fontSize: size.width * 0.028,
+                ),
                 overflow: TextOverflow.ellipsis,
               ),
             ],

@@ -1,3 +1,82 @@
+// import 'package:depi_app/core/utils/app_router.dart';
+// import 'package:depi_app/core/utils/app_styles.dart';
+// import 'package:flutter/material.dart';
+
+// class OnboardingSlideWidget extends StatelessWidget {
+//   final IconData icon;
+//   final String title;
+//   final String subtitle;
+//   final Color color;
+
+//   const OnboardingSlideWidget({
+//     super.key,
+//     required this.icon,
+//     required this.title,
+//     required this.subtitle,
+//     required this.color,
+//   });
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return AnimatedSwitcher(
+//       duration: const Duration(milliseconds: 500),
+//       child: Padding(
+//         key: ValueKey(title),
+//         padding: const EdgeInsets.symmetric(horizontal: 32),
+//         child: Center(
+//           child: SingleChildScrollView(
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Align(
+//                   alignment: Alignment.topRight,
+//                   child: TextButton(
+//                     onPressed: () => AppRouter.router.go(AppRouter.kLogin),
+//                     child: const Text(
+//                       'Skip',
+//                       style: AppStyles.styleMedium16Dark,
+//                     ),
+//                   ),
+//                 ),
+//                 const SizedBox(height: 20),
+//                 AnimatedContainer(
+//                   duration: const Duration(milliseconds: 600),
+//                   curve: Curves.easeInOutBack,
+//                   width: 100,
+//                   height: 100,
+//                   decoration: BoxDecoration(
+//                     color: Colors.white,
+//                     shape: BoxShape.circle,
+//                     boxShadow: [
+//                       BoxShadow(
+//                         color: Colors.black.withOpacity(0.1),
+//                         blurRadius: 8,
+//                       ),
+//                     ],
+//                   ),
+//                   child: Icon(icon, size: 50, color: color),
+//                 ),
+//                 const SizedBox(height: 30),
+//                 Text(
+//                   title,
+//                   style: AppStyles.styleBold24Dark,
+//                   textAlign: TextAlign.center,
+//                 ),
+//                 const SizedBox(height: 12),
+//                 Text(
+//                   subtitle,
+//                   style: AppStyles.styleRegular16Muted,
+//                   textAlign: TextAlign.center,
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
 import 'package:depi_app/core/utils/app_router.dart';
 import 'package:depi_app/core/utils/app_styles.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +97,14 @@ class OnboardingSlideWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 500),
       child: Padding(
         key: ValueKey(title),
-        padding: const EdgeInsets.symmetric(horizontal: 32),
+        // Padding نسبي (8% من العرض)
+        padding: EdgeInsets.symmetric(horizontal: size.width * 0.08),
         child: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -38,12 +120,14 @@ class OnboardingSlideWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: size.height * 0.03),
+
+                // الدائرة بقيت نسبية (25% من عرض الشاشة)
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 600),
                   curve: Curves.easeInOutBack,
-                  width: 100,
-                  height: 100,
+                  width: size.width * 0.28,
+                  height: size.width * 0.28,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
@@ -54,18 +138,27 @@ class OnboardingSlideWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: Icon(icon, size: 50, color: color),
+                  // حجم الأيقونة (12% من عرض الشاشة)
+                  child: Icon(icon, size: size.width * 0.12, color: color),
                 ),
-                const SizedBox(height: 30),
+
+                SizedBox(height: size.height * 0.05),
+
                 Text(
                   title,
-                  style: AppStyles.styleBold24Dark,
+                  style: AppStyles.styleBold24Dark.copyWith(
+                    fontSize: size.width * 0.065, // تحكم في حجم الخط
+                  ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 12),
+
+                SizedBox(height: size.height * 0.02),
+
                 Text(
                   subtitle,
-                  style: AppStyles.styleRegular16Muted,
+                  style: AppStyles.styleRegular16Muted.copyWith(
+                    fontSize: size.width * 0.04,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ],

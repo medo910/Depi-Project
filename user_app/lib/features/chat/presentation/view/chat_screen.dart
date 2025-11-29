@@ -20,6 +20,9 @@ class _UserChatScreenState extends State<UserChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final theme = Theme.of(context);
+
     return BlocProvider(
       create:
           (context) =>
@@ -30,19 +33,27 @@ class _UserChatScreenState extends State<UserChatScreen> {
       child: Builder(
         builder: (context) {
           return Scaffold(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: theme.scaffoldBackgroundColor,
             appBar: AppBar(
-              title: const Row(
+              title: Row(
                 children: [
                   CircleAvatar(
                     backgroundColor: Colors.white24,
-                    child: Icon(Iconsax.headphone_copy, color: Colors.white),
+                    radius: size.width * 0.05,
+                    child: Icon(
+                      Iconsax.headphone_copy,
+                      color: Colors.white,
+                      size: size.width * 0.05,
+                    ),
                   ),
-                  SizedBox(width: 10),
-                  Text("Customer Support"),
+                  SizedBox(width: size.width * 0.03),
+                  Text(
+                    "Customer Support",
+                    style: TextStyle(fontSize: size.width * 0.045),
+                  ),
                 ],
               ),
-              backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: theme.primaryColor,
               foregroundColor: Colors.white,
             ),
             body: Column(
@@ -58,7 +69,7 @@ class _UserChatScreenState extends State<UserChatScreen> {
                         final messages = state.messages;
 
                         if (messages.isEmpty) {
-                          return _buildEmptyState();
+                          return _buildEmptyState(size);
                         }
 
                         return ListView.builder(
@@ -76,7 +87,7 @@ class _UserChatScreenState extends State<UserChatScreen> {
                     },
                   ),
                 ),
-                _buildInputArea(context),
+                _buildInputArea(context, size),
               ],
             ),
           );
@@ -85,36 +96,39 @@ class _UserChatScreenState extends State<UserChatScreen> {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(Size size) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
+          Icon(
             Iconsax.message_question_copy,
-            size: 80,
+            size: size.width * 0.2,
             color: Colors.grey,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: size.height * 0.02),
           Text(
             'How can we help you today?',
-            style: TextStyle(color: Colors.grey[600], fontSize: 16),
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: size.width * 0.045,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildInputArea(BuildContext context) {
+  Widget _buildInputArea(BuildContext context, Size size) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(size.width * 0.04),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black12,
             blurRadius: 5,
-            offset: const Offset(0, -2),
+            offset: Offset(0, -2),
           ),
         ],
       ),
@@ -124,29 +138,32 @@ class _UserChatScreenState extends State<UserChatScreen> {
             child: TextField(
               controller: controller,
               onSubmitted: (data) => _sendMessage(context, data),
+              style: TextStyle(fontSize: size.width * 0.04),
               decoration: InputDecoration(
                 hintText: "Type a message...",
+                hintStyle: TextStyle(fontSize: size.width * 0.035),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(25),
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
-                fillColor: Colors.white.withOpacity(0.2),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 10,
+                fillColor: Colors.grey.withOpacity(0.1),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: size.width * 0.05,
+                  vertical: size.height * 0.012,
                 ),
               ),
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: size.width * 0.02),
           CircleAvatar(
+            radius: size.width * 0.06,
             backgroundColor: Theme.of(context).primaryColor,
             child: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Iconsax.send_1_copy,
                 color: Colors.white,
-                size: 20,
+                size: size.width * 0.05,
               ),
               onPressed: () => _sendMessage(context, controller.text),
             ),

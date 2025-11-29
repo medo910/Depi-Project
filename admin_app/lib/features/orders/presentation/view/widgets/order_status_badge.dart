@@ -10,6 +10,7 @@ class OrderStatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
+    final size = MediaQuery.sizeOf(context); // 1. المقاسات
 
     String label;
     IconData icon;
@@ -47,24 +48,22 @@ class OrderStatusBadge extends StatelessWidget {
         bgColor = isDark ? AppColors.darkCancelledBG : AppColors.cancelledBG;
         fgColor = isDark ? AppColors.darkCancelledFG : AppColors.cancelledFG;
         break;
-      default:
-        label = 'Unknown';
-        icon = Iconsax.danger;
-        bgColor = Colors.grey;
-        fgColor = Colors.white;
     }
 
     return Chip(
-      avatar: Icon(icon, color: fgColor, size: 14),
+      avatar: Icon(icon, color: fgColor, size: size.width * 0.035),
       label: Text(label),
       labelStyle: TextStyle(
         color: fgColor,
-        fontSize: 11,
+        fontSize: size.width * 0.028,
         fontWeight: FontWeight.bold,
       ),
       backgroundColor: bgColor,
       side: BorderSide.none,
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
+      padding: EdgeInsets.symmetric(
+        horizontal: size.width * 0.015,
+        vertical: 0,
+      ),
     );
   }
 }
