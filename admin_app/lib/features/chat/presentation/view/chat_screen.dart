@@ -35,11 +35,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
     final String friendId = widget.chatId;
 
-<<<<<<< HEAD
-=======
     final size = MediaQuery.sizeOf(context);
 
->>>>>>> temp-fix
     return BlocProvider(
       create:
           (context) =>
@@ -55,24 +52,12 @@ class _ChatScreenState extends State<ChatScreen> {
               title: Row(
                 children: [
                   CircleAvatar(
-<<<<<<< HEAD
-=======
                     radius: size.width * 0.05,
->>>>>>> temp-fix
                     backgroundColor: Colors.grey[300],
                     child: Text(
                       widget.otherUserName.isNotEmpty
                           ? widget.otherUserName[0].toUpperCase()
                           : 'U',
-<<<<<<< HEAD
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    widget.otherUserName,
-                    style: const TextStyle(color: Colors.white, fontSize: 18),
-=======
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: size.width * 0.045,
@@ -86,7 +71,6 @@ class _ChatScreenState extends State<ChatScreen> {
                       color: Colors.white,
                       fontSize: size.width * 0.045,
                     ),
->>>>>>> temp-fix
                   ),
                 ],
               ),
@@ -129,22 +113,11 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
                 Padding(
-<<<<<<< HEAD
-                  padding: const EdgeInsets.all(16.0),
-=======
                   padding: EdgeInsets.all(size.width * 0.04),
->>>>>>> temp-fix
                   child: TextField(
                     controller: controller,
                     onSubmitted:
                         (data) => _sendMessage(context, data, currentUserId),
-<<<<<<< HEAD
-                    decoration: InputDecoration(
-                      suffixIcon: IconButton(
-                        icon: const Icon(
-                          Iconsax.send_1_copy,
-                          color: AppColors.darkPrimary,
-=======
                     style: TextStyle(fontSize: size.width * 0.04),
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(
@@ -156,7 +129,6 @@ class _ChatScreenState extends State<ChatScreen> {
                           Iconsax.send_1_copy,
                           color: AppColors.darkPrimary,
                           size: size.width * 0.06,
->>>>>>> temp-fix
                         ),
                         onPressed:
                             () => _sendMessage(
@@ -166,10 +138,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             ),
                       ),
                       hintText: "Type your message...",
-<<<<<<< HEAD
-=======
                       hintStyle: TextStyle(fontSize: size.width * 0.035),
->>>>>>> temp-fix
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),

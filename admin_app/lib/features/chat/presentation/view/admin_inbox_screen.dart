@@ -25,36 +25,22 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-=======
     final size = MediaQuery.sizeOf(context);
 
->>>>>>> temp-fix
     return Scaffold(
       appBar: AppBar(
         title: const Text('Customer Support'),
         bottom: PreferredSize(
-<<<<<<< HEAD
-          preferredSize: const Size.fromHeight(60),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-=======
           preferredSize: Size.fromHeight(size.height * 0.08),
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: size.width * 0.04,
               vertical: size.height * 0.01,
             ),
->>>>>>> temp-fix
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: 'Search users...',
-<<<<<<< HEAD
-                prefixIcon: const Icon(Iconsax.search_normal_1_copy),
-                filled: true,
-                fillColor: Colors.white,
-=======
                 hintStyle: TextStyle(fontSize: size.width * 0.035),
                 prefixIcon: Icon(
                   Iconsax.search_normal_1_copy,
@@ -65,7 +51,6 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
                 contentPadding: EdgeInsets.symmetric(
                   vertical: size.height * 0.015,
                 ),
->>>>>>> temp-fix
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide.none,
@@ -116,39 +101,28 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
                     }
                   }
                   return ListTile(
-<<<<<<< HEAD
-                    leading: CircleAvatar(
-=======
                     contentPadding: EdgeInsets.symmetric(
                       horizontal: size.width * 0.04,
                       vertical: size.height * 0.005,
                     ),
                     leading: CircleAvatar(
                       radius: size.width * 0.065,
->>>>>>> temp-fix
                       backgroundImage:
                           user['photoUrl'] != null
                               ? CachedNetworkImageProvider(user['photoUrl'])
                               : null,
                       child:
                           user['photoUrl'] == null
-<<<<<<< HEAD
-                              ? Text((user['name'] ?? 'U')[0].toUpperCase())
-=======
                               ? Text(
                                 (user['name'] ?? 'U')[0].toUpperCase(),
                                 style: TextStyle(fontSize: size.width * 0.05),
                               )
->>>>>>> temp-fix
                               : null,
                     ),
                     title: Text(
                       user['name'] ?? 'Unknown',
                       style: TextStyle(
-<<<<<<< HEAD
-=======
                         fontSize: size.width * 0.04,
->>>>>>> temp-fix
                         fontWeight:
                             unread > 0 ? FontWeight.bold : FontWeight.normal,
                       ),
@@ -158,10 +132,7 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-<<<<<<< HEAD
-=======
                         fontSize: size.width * 0.035,
->>>>>>> temp-fix
                         color:
                             hasChat
                                 ? Colors.grey[700]
@@ -177,40 +148,24 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
                         if (time != null)
                           Text(
                             DateFormat('hh:mm a').format(time.toDate()),
-<<<<<<< HEAD
-                            style: const TextStyle(
-                              fontSize: 12,
-=======
                             style: TextStyle(
                               fontSize: size.width * 0.03,
->>>>>>> temp-fix
                               color: Colors.grey,
                             ),
                           ),
                         if (unread > 0)
                           Container(
-<<<<<<< HEAD
-                            margin: const EdgeInsets.only(top: 5),
-                            padding: const EdgeInsets.all(6),
-=======
                             margin: EdgeInsets.only(top: size.height * 0.005),
                             padding: EdgeInsets.all(size.width * 0.015),
->>>>>>> temp-fix
                             decoration: const BoxDecoration(
                               color: Colors.red,
                               shape: BoxShape.circle,
                             ),
                             child: Text(
                               '$unread',
-<<<<<<< HEAD
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-=======
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: size.width * 0.025,
->>>>>>> temp-fix
                               ),
                             ),
                           ),

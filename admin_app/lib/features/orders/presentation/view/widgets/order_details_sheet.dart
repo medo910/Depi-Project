@@ -13,11 +13,8 @@ class OrderDetailsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
-<<<<<<< HEAD
-=======
     final size = MediaQuery.sizeOf(context);
 
->>>>>>> temp-fix
     final currencyFormatter = NumberFormat.currency(
       locale: 'en_US',
       symbol: 'EGP ',
@@ -37,20 +34,6 @@ class OrderDetailsSheet extends StatelessWidget {
           child: Column(
             children: [
               Padding(
-<<<<<<< HEAD
-                padding: const EdgeInsets.fromLTRB(16, 12, 8, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Order Details: ${order.id}',
-                      style: textTheme.titleMedium,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    IconButton(
-                      icon: const Icon(Iconsax.close_circle_copy),
-=======
                 padding: EdgeInsets.fromLTRB(
                   size.width * 0.04,
                   size.height * 0.015,
@@ -75,7 +58,6 @@ class OrderDetailsSheet extends StatelessWidget {
                         Iconsax.close_circle_copy,
                         size: size.width * 0.06,
                       ),
->>>>>>> temp-fix
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ],
@@ -85,16 +67,6 @@ class OrderDetailsSheet extends StatelessWidget {
               Expanded(
                 child: ListView(
                   controller: scrollController,
-<<<<<<< HEAD
-                  padding: const EdgeInsets.all(16),
-                  children: [
-                    _buildOrderSummaryCard(context),
-                    const SizedBox(height: 16),
-                    Text('Customer Information', style: textTheme.titleSmall),
-                    const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.all(12),
-=======
                   padding: EdgeInsets.all(size.width * 0.04),
                   children: [
                     _buildOrderSummaryCard(context, size),
@@ -108,7 +80,6 @@ class OrderDetailsSheet extends StatelessWidget {
                     SizedBox(height: size.height * 0.01),
                     Container(
                       padding: EdgeInsets.all(size.width * 0.03),
->>>>>>> temp-fix
                       decoration: BoxDecoration(
                         color: Theme.of(context).scaffoldBackgroundColor,
                         borderRadius: BorderRadius.circular(10),
@@ -118,43 +89,26 @@ class OrderDetailsSheet extends StatelessWidget {
                           _buildDetailRow(
                             context,
                             'Name:',
-<<<<<<< HEAD
-                            order.customerName ?? 'N/A',
-=======
                             order.customerName,
                             size,
->>>>>>> temp-fix
                           ),
                           _buildDetailRow(
                             context,
                             'Phone:',
-<<<<<<< HEAD
-                            order.customerPhone ?? 'Not Found',
-=======
                             order.customerPhone,
                             size,
->>>>>>> temp-fix
                             isLtr: true,
                           ),
                           _buildDetailRow(
                             context,
                             'Address:',
-<<<<<<< HEAD
-                            order.customerAddress ?? 'N/A',
-=======
                             order.customerAddress,
                             size,
->>>>>>> temp-fix
                             isLast: true,
                           ),
                         ],
                       ),
                     ),
-<<<<<<< HEAD
-                    const SizedBox(height: 16),
-                    Text('Order Items', style: textTheme.titleSmall),
-                    const SizedBox(height: 8),
-=======
                     SizedBox(height: size.height * 0.02),
                     Text(
                       'Order Items',
@@ -163,7 +117,6 @@ class OrderDetailsSheet extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: size.height * 0.01),
->>>>>>> temp-fix
 
                     ...order.products.map((item) {
                       final details = item.productDetails.entries
@@ -171,19 +124,11 @@ class OrderDetailsSheet extends StatelessWidget {
                           .join(', ');
 
                       return Container(
-<<<<<<< HEAD
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 8,
-                          horizontal: 12,
-                        ),
-                        margin: const EdgeInsets.only(bottom: 8),
-=======
                         padding: EdgeInsets.symmetric(
                           vertical: size.height * 0.01,
                           horizontal: size.width * 0.03,
                         ),
                         margin: EdgeInsets.only(bottom: size.height * 0.01),
->>>>>>> temp-fix
                         decoration: BoxDecoration(
                           color: Theme.of(context).scaffoldBackgroundColor,
                           borderRadius: BorderRadius.circular(10),
@@ -194,15 +139,6 @@ class OrderDetailsSheet extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                               child: CachedNetworkImage(
                                 imageUrl: item.photoURL,
-<<<<<<< HEAD
-                                width: 50,
-                                height: 50,
-                                fit: BoxFit.cover,
-                                placeholder:
-                                    (context, url) => Container(
-                                      width: 50,
-                                      height: 50,
-=======
                                 width: size.width * 0.12,
                                 height: size.width * 0.12,
                                 fit: BoxFit.cover,
@@ -210,28 +146,18 @@ class OrderDetailsSheet extends StatelessWidget {
                                     (context, url) => Container(
                                       width: size.width * 0.12,
                                       height: size.width * 0.12,
->>>>>>> temp-fix
                                       color: Colors.grey.shade200,
                                     ),
                                 errorWidget:
                                     (context, url, error) => Container(
-<<<<<<< HEAD
-                                      width: 50,
-                                      height: 50,
-=======
                                       width: size.width * 0.12,
                                       height: size.width * 0.12,
->>>>>>> temp-fix
                                       color: Colors.grey.shade200,
                                       child: const Icon(Iconsax.gallery_slash),
                                     ),
                               ),
                             ),
-<<<<<<< HEAD
-                            const SizedBox(width: 12),
-=======
                             SizedBox(width: size.width * 0.03),
->>>>>>> temp-fix
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -240,15 +166,6 @@ class OrderDetailsSheet extends StatelessWidget {
                                     item.name,
                                     style: textTheme.bodyMedium?.copyWith(
                                       fontWeight: FontWeight.bold,
-<<<<<<< HEAD
-                                    ),
-                                  ),
-                                  Text(details, style: textTheme.bodySmall),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-=======
                                       fontSize: size.width * 0.038,
                                     ),
                                   ),
@@ -262,30 +179,17 @@ class OrderDetailsSheet extends StatelessWidget {
                               ),
                             ),
                             SizedBox(width: size.width * 0.02),
->>>>>>> temp-fix
                             Text(
                               currencyFormatter.format(item.price),
                               style: textTheme.bodyMedium?.copyWith(
                                 color: colorScheme.primary,
                                 fontWeight: FontWeight.bold,
-<<<<<<< HEAD
-=======
                                 fontSize: size.width * 0.035,
->>>>>>> temp-fix
                               ),
                             ),
                           ],
                         ),
                       );
-<<<<<<< HEAD
-                    }).toList(),
-
-                    const Divider(height: 24),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Total Amount:', style: textTheme.titleMedium),
-=======
                     }),
 
                     Divider(height: size.height * 0.03),
@@ -298,16 +202,12 @@ class OrderDetailsSheet extends StatelessWidget {
                             fontSize: size.width * 0.045,
                           ),
                         ),
->>>>>>> temp-fix
                         Text(
                           currencyFormatter.format(order.totalPrice),
                           style: textTheme.titleMedium?.copyWith(
                             color: colorScheme.primary,
                             fontWeight: FontWeight.bold,
-<<<<<<< HEAD
-=======
                             fontSize: size.width * 0.045,
->>>>>>> temp-fix
                           ),
                         ),
                       ],
@@ -322,15 +222,9 @@ class OrderDetailsSheet extends StatelessWidget {
     );
   }
 
-<<<<<<< HEAD
-  Widget _buildOrderSummaryCard(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-=======
   Widget _buildOrderSummaryCard(BuildContext context, Size size) {
     return Container(
       padding: EdgeInsets.all(size.width * 0.03),
->>>>>>> temp-fix
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(10),
@@ -340,13 +234,6 @@ class OrderDetailsSheet extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-<<<<<<< HEAD
-              Text('Status:', style: Theme.of(context).textTheme.bodySmall),
-              OrderStatusBadge(status: order.status),
-            ],
-          ),
-          const SizedBox(height: 8),
-=======
               Text(
                 'Status:',
                 style: Theme.of(
@@ -357,15 +244,11 @@ class OrderDetailsSheet extends StatelessWidget {
             ],
           ),
           SizedBox(height: size.height * 0.01),
->>>>>>> temp-fix
           _buildDetailRow(
             context,
             'Payment Method:',
             order.paymentMethod.name,
-<<<<<<< HEAD
-=======
             size,
->>>>>>> temp-fix
             isLast: true,
           ),
         ],
@@ -376,19 +259,6 @@ class OrderDetailsSheet extends StatelessWidget {
   Widget _buildDetailRow(
     BuildContext context,
     String label,
-<<<<<<< HEAD
-    String value, {
-    bool isLtr = false,
-    bool isLast = false,
-  }) {
-    String displayValue = value;
-    if (value.isEmpty || value == 'Unknown User') {
-      displayValue = 'N/A';
-    }
-
-    return Padding(
-      padding: EdgeInsets.only(bottom: isLast ? 0 : 8.0),
-=======
     String value,
     Size size, {
     bool isLtr = false,
@@ -399,21 +269,10 @@ class OrderDetailsSheet extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.only(bottom: isLast ? 0 : size.height * 0.01),
->>>>>>> temp-fix
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-<<<<<<< HEAD
-          Text(label, style: Theme.of(context).textTheme.bodySmall),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Text(
-              displayValue,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-=======
           Text(
             label,
             style: Theme.of(
@@ -428,7 +287,6 @@ class OrderDetailsSheet extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: size.width * 0.035,
               ),
->>>>>>> temp-fix
               textAlign: TextAlign.right,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

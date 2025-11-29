@@ -21,15 +21,8 @@ class StockEditor extends StatefulWidget {
 
 class _StockEditorState extends State<StockEditor> {
   late TextEditingController _totalStockController;
-<<<<<<< HEAD
-
   late List<TextEditingController> _keyControllers;
   late List<TextEditingController> _valueControllers;
-
-=======
-  late List<TextEditingController> _keyControllers;
-  late List<TextEditingController> _valueControllers;
->>>>>>> temp-fix
   late List<TextEditingController> _colorControllers;
   late List<List<TextEditingController>> _sizeKeyControllers;
   late List<List<TextEditingController>> _sizeValueControllers;
@@ -87,33 +80,11 @@ class _StockEditorState extends State<StockEditor> {
 
   void _disposeControllers() {
     _totalStockController.dispose();
-<<<<<<< HEAD
-    for (var c in _keyControllers) {
-      c.dispose();
-    }
-    for (var c in _valueControllers) {
-      c.dispose();
-    }
-    for (var c in _colorControllers) {
-      c.dispose();
-    }
-    for (var list in _sizeKeyControllers) {
-      for (var c in list) {
-        c.dispose();
-      }
-    }
-    for (var list in _sizeValueControllers) {
-      for (var c in list) {
-        c.dispose();
-      }
-    }
-=======
     for (var c in _keyControllers) c.dispose();
     for (var c in _valueControllers) c.dispose();
     for (var c in _colorControllers) c.dispose();
     for (var list in _sizeKeyControllers) for (var c in list) c.dispose();
     for (var list in _sizeValueControllers) for (var c in list) c.dispose();
->>>>>>> temp-fix
   }
 
   @override
@@ -133,13 +104,7 @@ class _StockEditorState extends State<StockEditor> {
         for (int i = 0; i < _keyControllers.length; i++) {
           final key = _keyControllers[i].text.trim();
           final value = int.tryParse(_valueControllers[i].text) ?? 0;
-<<<<<<< HEAD
-          if (key.isNotEmpty) {
-            newStock[key] = value;
-          }
-=======
           if (key.isNotEmpty) newStock[key] = value;
->>>>>>> temp-fix
         }
         break;
       case ProductAttributeType.both:
@@ -151,13 +116,7 @@ class _StockEditorState extends State<StockEditor> {
               final sizeKey = _sizeKeyControllers[i][j].text.trim();
               final stockValue =
                   int.tryParse(_sizeValueControllers[i][j].text) ?? 0;
-<<<<<<< HEAD
-              if (sizeKey.isNotEmpty) {
-                sizeMap[sizeKey] = stockValue;
-              }
-=======
               if (sizeKey.isNotEmpty) sizeMap[sizeKey] = stockValue;
->>>>>>> temp-fix
             }
             newStock[colorKey] = sizeMap;
           }
@@ -195,15 +154,9 @@ class _StockEditorState extends State<StockEditor> {
       case ProductAttributeType.none:
         return _buildNoneEditor();
       case ProductAttributeType.size:
-<<<<<<< HEAD
-        return _buildSingleVariantEditor('Size', 'e.g., S, M, L...');
-      case ProductAttributeType.color:
-        return _buildSingleVariantEditor('Color', 'e.g., Red, Blue...');
-=======
         return _buildSingleVariantEditor('Size', 'e.g., S, M');
       case ProductAttributeType.color:
         return _buildSingleVariantEditor('Color', 'e.g., Red');
->>>>>>> temp-fix
       case ProductAttributeType.both:
         return _buildBothEditor();
     }
@@ -213,11 +166,7 @@ class _StockEditorState extends State<StockEditor> {
     return TextFormField(
       controller: _totalStockController,
       decoration: InputDecoration(
-<<<<<<< HEAD
-        labelText: 'Total Stock Quantity',
-=======
         labelText: 'Total Quantity',
->>>>>>> temp-fix
         prefixIcon: const Icon(Iconsax.archive_book_copy),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
         filled: true,
@@ -238,11 +187,7 @@ class _StockEditorState extends State<StockEditor> {
             child: Row(
               children: [
                 Expanded(
-<<<<<<< HEAD
-                  flex: 2,
-=======
                   flex: 3,
->>>>>>> temp-fix
                   child: _buildMiniTextField(
                     controller: _keyControllers[index],
                     label: keyName,
@@ -252,17 +197,10 @@ class _StockEditorState extends State<StockEditor> {
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-<<<<<<< HEAD
-                  flex: 1,
-                  child: _buildMiniTextField(
-                    controller: _valueControllers[index],
-                    label: 'Stock',
-=======
                   flex: 2,
                   child: _buildMiniTextField(
                     controller: _valueControllers[index],
                     label: 'Qty',
->>>>>>> temp-fix
                     hint: '0',
                     isNumber: true,
                     onChanged: (v) => _notifyParent(),
@@ -272,10 +210,6 @@ class _StockEditorState extends State<StockEditor> {
                   icon: Icon(
                     Iconsax.trash_copy,
                     color: Theme.of(context).colorScheme.error,
-<<<<<<< HEAD
-                    size: 20,
-=======
->>>>>>> temp-fix
                   ),
                   onPressed: () {
                     setState(() {
@@ -308,11 +242,6 @@ class _StockEditorState extends State<StockEditor> {
     return Column(
       children: [
         ...List.generate(_colorControllers.length, (colorIndex) {
-<<<<<<< HEAD
-          return _buildColorGroup(colorIndex);
-        }),
-        const SizedBox(height: 8),
-=======
           return Container(
             margin: const EdgeInsets.only(bottom: 12),
             padding: const EdgeInsets.all(10),
@@ -425,7 +354,6 @@ class _StockEditorState extends State<StockEditor> {
             ),
           );
         }),
->>>>>>> temp-fix
         OutlinedButton.icon(
           icon: const Icon(Iconsax.add_copy, size: 16),
           label: const Text('Add Color Group'),
@@ -441,122 +369,6 @@ class _StockEditorState extends State<StockEditor> {
     );
   }
 
-<<<<<<< HEAD
-  Widget _buildColorGroup(int colorIndex) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: Theme.of(context).scaffoldBackgroundColor,
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: _buildMiniTextField(
-                  controller: _colorControllers[colorIndex],
-                  label: 'Color Name',
-                  hint: 'e.g., Red',
-                  onChanged: (v) => _notifyParent(),
-                ),
-              ),
-              IconButton(
-                icon: Icon(
-                  Iconsax.trash_copy,
-                  color: Theme.of(context).colorScheme.error,
-                  size: 20,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _colorControllers.removeAt(colorIndex).dispose();
-
-                    List<TextEditingController> keysToDispose =
-                        _sizeKeyControllers.removeAt(colorIndex);
-                    List<TextEditingController> valuesToDispose =
-                        _sizeValueControllers.removeAt(colorIndex);
-
-                    for (var c in keysToDispose) {
-                      c.dispose();
-                    }
-                    for (var c in valuesToDispose) {
-                      c.dispose();
-                    }
-                  });
-                  _notifyParent();
-                },
-              ),
-            ],
-          ),
-          const Divider(height: 16),
-          ...List.generate(_sizeKeyControllers[colorIndex].length, (sizeIndex) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: _buildMiniTextField(
-                      controller: _sizeKeyControllers[colorIndex][sizeIndex],
-                      label: 'Size',
-                      hint: 'e.g., S',
-                      onChanged: (v) => _notifyParent(),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    flex: 1,
-                    child: _buildMiniTextField(
-                      controller: _sizeValueControllers[colorIndex][sizeIndex],
-                      label: 'Stock',
-                      hint: '0',
-                      isNumber: true,
-                      onChanged: (v) => _notifyParent(),
-                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      Iconsax.minus_cirlce_copy,
-                      color: Theme.of(context).colorScheme.error,
-                      size: 20,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _sizeKeyControllers[colorIndex]
-                            .removeAt(sizeIndex)
-                            .dispose();
-                        _sizeValueControllers[colorIndex]
-                            .removeAt(sizeIndex)
-                            .dispose();
-                      });
-                      _notifyParent();
-                    },
-                  ),
-                ],
-              ),
-            );
-          }),
-          OutlinedButton.icon(
-            icon: const Icon(Iconsax.add_copy, size: 14),
-            label: const Text('Add Size'),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-            ),
-            onPressed: () {
-              setState(() {
-                _sizeKeyControllers[colorIndex].add(TextEditingController());
-                _sizeValueControllers[colorIndex].add(TextEditingController());
-              });
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-=======
->>>>>>> temp-fix
   Widget _buildMiniTextField({
     required TextEditingController controller,
     required String label,
@@ -569,20 +381,6 @@ class _StockEditorState extends State<StockEditor> {
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-<<<<<<< HEAD
-        hintStyle: Theme.of(context).textTheme.bodySmall,
-        labelStyle: Theme.of(
-          context,
-        ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-        filled: true,
-        fillColor: Theme.of(context).colorScheme.surface,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 10,
-        ),
-      ),
-=======
         hintStyle: Theme.of(
           context,
         ).textTheme.bodySmall?.copyWith(fontSize: 10),
@@ -596,7 +394,6 @@ class _StockEditorState extends State<StockEditor> {
         contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       ),
       style: const TextStyle(fontSize: 13),
->>>>>>> temp-fix
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
       inputFormatters: isNumber ? [FilteringTextInputFormatter.digitsOnly] : [],
       onChanged: onChanged,

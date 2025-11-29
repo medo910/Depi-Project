@@ -10,11 +10,8 @@ class OrderListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-=======
     final size = MediaQuery.sizeOf(context);
 
->>>>>>> temp-fix
     return Scaffold(
       body: BlocBuilder<OrderCubit, OrderState>(
         builder: (context, state) {
@@ -32,11 +29,7 @@ class OrderListScreen extends StatelessWidget {
             child: CustomScrollView(
               slivers: [
                 SliverPadding(
-<<<<<<< HEAD
-                  padding: const EdgeInsets.all(16),
-=======
                   padding: EdgeInsets.all(size.width * 0.04),
->>>>>>> temp-fix
                   sliver: SliverToBoxAdapter(
                     child: OrderStatsGrid(counts: state.statusCounts),
                   ),
@@ -44,13 +37,6 @@ class OrderListScreen extends StatelessWidget {
                 if (state.selectedFilter != null)
                   SliverToBoxAdapter(
                     child: Padding(
-<<<<<<< HEAD
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
-                      child: ActionChip(
-                        avatar: const Icon(Iconsax.close_circle_copy, size: 16),
-                        label: Text(
-                          'Clear Filter (Showing ${state.selectedFilter!.name} only)',
-=======
                       padding: EdgeInsets.fromLTRB(
                         size.width * 0.04,
                         0,
@@ -65,7 +51,6 @@ class OrderListScreen extends StatelessWidget {
                         label: Text(
                           'Clear Filter (Showing ${state.selectedFilter!.name} only)',
                           style: TextStyle(fontSize: size.width * 0.032),
->>>>>>> temp-fix
                         ),
                         onPressed: () {
                           context.read<OrderCubit>().filterOrdersByStatus(
@@ -82,14 +67,6 @@ class OrderListScreen extends StatelessWidget {
                         state.selectedFilter != null
                             ? 'No orders found matching this status.'
                             : 'No orders found yet.',
-<<<<<<< HEAD
-                      ),
-                    ),
-                  ),
-
-                SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-=======
                         style: TextStyle(fontSize: size.width * 0.04),
                       ),
                     ),
@@ -101,16 +78,11 @@ class OrderListScreen extends StatelessWidget {
                     size.width * 0.04,
                     size.height * 0.02,
                   ),
->>>>>>> temp-fix
                   sliver: SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
                       final order = filteredList[index];
                       return Padding(
-<<<<<<< HEAD
-                        padding: const EdgeInsets.only(bottom: 12.0),
-=======
                         padding: EdgeInsets.only(bottom: size.height * 0.015),
->>>>>>> temp-fix
                         child: OrderCard(order: order),
                       );
                     }, childCount: filteredList.length),
