@@ -1,11 +1,13 @@
 class Categories {
   final List<String> categories = [
     "All",
-    "Grocery",
     "Electronics",
     "Apparel",
-    "Sports",
+    'Shoes',
+    'Furniture',
     "Books",
-    "Toys",
+    "Sports & Outdoors",
+    "Grocery",
+    'Beauty & Health',
   ];
 }
