@@ -1,5 +1,8 @@
+import 'package:depi_app/core/cubit/FavoritesCubit/favorites_cubit.dart';
 import 'package:depi_app/core/utils/app_router.dart';
 import 'package:depi_app/core/widgets/show_snack_bar.dart';
+import 'package:depi_app/features/cart/presentation/manager/cart_cubit.dart';
+import 'package:depi_app/features/profile/manager/user_profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:depi_app/features/auth/presentation/manager/auth_cubit/auth_cubit.dart';
@@ -76,6 +79,9 @@ class _LoginViewState extends State<LoginView> {
                       if (state is AuthError) {
                         showSnackBar(context, state.message, Colors.red);
                       } else if (state is AuthSuccess) {
+                        context.read<UserProfileCubit>().loadUserProfile();
+                        context.read<FavoritesCubit>().loadFavorites();
+                        context.read<CartCubit>().loadCart();
                         showSnackBar(context, "Login Successful", Colors.green);
                         AppRouter.router.go(AppRouter.kHome);
                       }
