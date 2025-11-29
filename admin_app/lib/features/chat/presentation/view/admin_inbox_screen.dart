@@ -25,20 +25,32 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Customer Support'),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(60),
+          preferredSize: Size.fromHeight(size.height * 0.08),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.symmetric(
+              horizontal: size.width * 0.04,
+              vertical: size.height * 0.01,
+            ),
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: 'Search users...',
-                prefixIcon: const Icon(Iconsax.search_normal_1_copy),
+                hintStyle: TextStyle(fontSize: size.width * 0.035),
+                prefixIcon: Icon(
+                  Iconsax.search_normal_1_copy,
+                  size: size.width * 0.05,
+                ),
                 filled: true,
                 fillColor: Colors.white,
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: size.height * 0.015,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide.none,
@@ -89,19 +101,28 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
                     }
                   }
                   return ListTile(
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: size.width * 0.04,
+                      vertical: size.height * 0.005,
+                    ),
                     leading: CircleAvatar(
+                      radius: size.width * 0.065,
                       backgroundImage:
                           user['photoUrl'] != null
                               ? CachedNetworkImageProvider(user['photoUrl'])
                               : null,
                       child:
                           user['photoUrl'] == null
-                              ? Text((user['name'] ?? 'U')[0].toUpperCase())
+                              ? Text(
+                                (user['name'] ?? 'U')[0].toUpperCase(),
+                                style: TextStyle(fontSize: size.width * 0.05),
+                              )
                               : null,
                     ),
                     title: Text(
                       user['name'] ?? 'Unknown',
                       style: TextStyle(
+                        fontSize: size.width * 0.04,
                         fontWeight:
                             unread > 0 ? FontWeight.bold : FontWeight.normal,
                       ),
@@ -111,6 +132,7 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
+                        fontSize: size.width * 0.035,
                         color:
                             hasChat
                                 ? Colors.grey[700]
@@ -126,24 +148,24 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
                         if (time != null)
                           Text(
                             DateFormat('hh:mm a').format(time.toDate()),
-                            style: const TextStyle(
-                              fontSize: 12,
+                            style: TextStyle(
+                              fontSize: size.width * 0.03,
                               color: Colors.grey,
                             ),
                           ),
                         if (unread > 0)
                           Container(
-                            margin: const EdgeInsets.only(top: 5),
-                            padding: const EdgeInsets.all(6),
+                            margin: EdgeInsets.only(top: size.height * 0.005),
+                            padding: EdgeInsets.all(size.width * 0.015),
                             decoration: const BoxDecoration(
                               color: Colors.red,
                               shape: BoxShape.circle,
                             ),
                             child: Text(
                               '$unread',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 10,
+                                fontSize: size.width * 0.025,
                               ),
                             ),
                           ),

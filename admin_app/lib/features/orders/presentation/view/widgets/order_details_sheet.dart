@@ -13,6 +13,8 @@ class OrderDetailsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
+    final size = MediaQuery.sizeOf(context);
+
     final currencyFormatter = NumberFormat.currency(
       locale: 'en_US',
       symbol: 'EGP ',
@@ -32,18 +34,30 @@ class OrderDetailsSheet extends StatelessWidget {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 8, 0),
+                padding: EdgeInsets.fromLTRB(
+                  size.width * 0.04,
+                  size.height * 0.015,
+                  size.width * 0.02,
+                  0,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Order Details: ${order.id}',
-                      style: textTheme.titleMedium,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                    Expanded(
+                      child: Text(
+                        'Order Details: ${order.id}',
+                        style: textTheme.titleMedium?.copyWith(
+                          fontSize: size.width * 0.045,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     IconButton(
-                      icon: const Icon(Iconsax.close_circle_copy),
+                      icon: Icon(
+                        Iconsax.close_circle_copy,
+                        size: size.width * 0.06,
+                      ),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ],
@@ -53,14 +67,19 @@ class OrderDetailsSheet extends StatelessWidget {
               Expanded(
                 child: ListView(
                   controller: scrollController,
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(size.width * 0.04),
                   children: [
-                    _buildOrderSummaryCard(context),
-                    const SizedBox(height: 16),
-                    Text('Customer Information', style: textTheme.titleSmall),
-                    const SizedBox(height: 8),
+                    _buildOrderSummaryCard(context, size),
+                    SizedBox(height: size.height * 0.02),
+                    Text(
+                      'Customer Information',
+                      style: textTheme.titleSmall?.copyWith(
+                        fontSize: size.width * 0.04,
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.01),
                     Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: EdgeInsets.all(size.width * 0.03),
                       decoration: BoxDecoration(
                         color: Theme.of(context).scaffoldBackgroundColor,
                         borderRadius: BorderRadius.circular(10),
@@ -70,26 +89,34 @@ class OrderDetailsSheet extends StatelessWidget {
                           _buildDetailRow(
                             context,
                             'Name:',
-                            order.customerName ?? 'N/A',
+                            order.customerName,
+                            size,
                           ),
                           _buildDetailRow(
                             context,
                             'Phone:',
-                            order.customerPhone ?? 'Not Found',
+                            order.customerPhone,
+                            size,
                             isLtr: true,
                           ),
                           _buildDetailRow(
                             context,
                             'Address:',
-                            order.customerAddress ?? 'N/A',
+                            order.customerAddress,
+                            size,
                             isLast: true,
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    Text('Order Items', style: textTheme.titleSmall),
-                    const SizedBox(height: 8),
+                    SizedBox(height: size.height * 0.02),
+                    Text(
+                      'Order Items',
+                      style: textTheme.titleSmall?.copyWith(
+                        fontSize: size.width * 0.04,
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.01),
 
                     ...order.products.map((item) {
                       final details = item.productDetails.entries
@@ -97,11 +124,11 @@ class OrderDetailsSheet extends StatelessWidget {
                           .join(', ');
 
                       return Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 8,
-                          horizontal: 12,
+                        padding: EdgeInsets.symmetric(
+                          vertical: size.height * 0.01,
+                          horizontal: size.width * 0.03,
                         ),
-                        margin: const EdgeInsets.only(bottom: 8),
+                        margin: EdgeInsets.only(bottom: size.height * 0.01),
                         decoration: BoxDecoration(
                           color: Theme.of(context).scaffoldBackgroundColor,
                           borderRadius: BorderRadius.circular(10),
@@ -112,25 +139,25 @@ class OrderDetailsSheet extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                               child: CachedNetworkImage(
                                 imageUrl: item.photoURL,
-                                width: 50,
-                                height: 50,
+                                width: size.width * 0.12,
+                                height: size.width * 0.12,
                                 fit: BoxFit.cover,
                                 placeholder:
                                     (context, url) => Container(
-                                      width: 50,
-                                      height: 50,
+                                      width: size.width * 0.12,
+                                      height: size.width * 0.12,
                                       color: Colors.grey.shade200,
                                     ),
                                 errorWidget:
                                     (context, url, error) => Container(
-                                      width: 50,
-                                      height: 50,
+                                      width: size.width * 0.12,
+                                      height: size.width * 0.12,
                                       color: Colors.grey.shade200,
                                       child: const Icon(Iconsax.gallery_slash),
                                     ),
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            SizedBox(width: size.width * 0.03),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,35 +166,48 @@ class OrderDetailsSheet extends StatelessWidget {
                                     item.name,
                                     style: textTheme.bodyMedium?.copyWith(
                                       fontWeight: FontWeight.bold,
+                                      fontSize: size.width * 0.038,
                                     ),
                                   ),
-                                  Text(details, style: textTheme.bodySmall),
+                                  Text(
+                                    details,
+                                    style: textTheme.bodySmall?.copyWith(
+                                      fontSize: size.width * 0.03,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: size.width * 0.02),
                             Text(
                               currencyFormatter.format(item.price),
                               style: textTheme.bodyMedium?.copyWith(
                                 color: colorScheme.primary,
                                 fontWeight: FontWeight.bold,
+                                fontSize: size.width * 0.035,
                               ),
                             ),
                           ],
                         ),
                       );
-                    }).toList(),
+                    }),
 
-                    const Divider(height: 24),
+                    Divider(height: size.height * 0.03),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Total Amount:', style: textTheme.titleMedium),
+                        Text(
+                          'Total Amount:',
+                          style: textTheme.titleMedium?.copyWith(
+                            fontSize: size.width * 0.045,
+                          ),
+                        ),
                         Text(
                           currencyFormatter.format(order.totalPrice),
                           style: textTheme.titleMedium?.copyWith(
                             color: colorScheme.primary,
                             fontWeight: FontWeight.bold,
+                            fontSize: size.width * 0.045,
                           ),
                         ),
                       ],
@@ -182,9 +222,9 @@ class OrderDetailsSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildOrderSummaryCard(BuildContext context) {
+  Widget _buildOrderSummaryCard(BuildContext context, Size size) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(size.width * 0.03),
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(10),
@@ -194,15 +234,21 @@ class OrderDetailsSheet extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Status:', style: Theme.of(context).textTheme.bodySmall),
+              Text(
+                'Status:',
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(fontSize: size.width * 0.032),
+              ),
               OrderStatusBadge(status: order.status),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: size.height * 0.01),
           _buildDetailRow(
             context,
             'Payment Method:',
             order.paymentMethod.name,
+            size,
             isLast: true,
           ),
         ],
@@ -213,29 +259,34 @@ class OrderDetailsSheet extends StatelessWidget {
   Widget _buildDetailRow(
     BuildContext context,
     String label,
-    String value, {
+    String value,
+    Size size, {
     bool isLtr = false,
     bool isLast = false,
   }) {
-    String displayValue = value;
-    if (value.isEmpty || value == 'Unknown User') {
-      displayValue = 'N/A';
-    }
+    String displayValue =
+        (value.isEmpty || value == 'Unknown User') ? 'N/A' : value;
 
     return Padding(
-      padding: EdgeInsets.only(bottom: isLast ? 0 : 8.0),
+      padding: EdgeInsets.only(bottom: isLast ? 0 : size.height * 0.01),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: Theme.of(context).textTheme.bodySmall),
-          const SizedBox(width: 16),
+          Text(
+            label,
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(fontSize: size.width * 0.032),
+          ),
+          SizedBox(width: size.width * 0.04),
           Expanded(
             child: Text(
               displayValue,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: size.width * 0.035,
+              ),
               textAlign: TextAlign.right,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

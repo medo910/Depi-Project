@@ -1,5 +1,8 @@
+import 'package:depi_app/core/cubit/FavoritesCubit/favorites_cubit.dart';
 import 'package:depi_app/core/utils/app_router.dart';
 import 'package:depi_app/core/widgets/show_snack_bar.dart';
+import 'package:depi_app/features/cart/presentation/manager/cart_cubit.dart';
+import 'package:depi_app/features/profile/manager/user_profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:depi_app/features/auth/presentation/manager/auth_cubit/auth_cubit.dart';
@@ -23,12 +26,18 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final theme = Theme.of(context);
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(
+              horizontal: size.width * 0.06,
+              vertical: size.height * 0.02,
+            ),
             child: Form(
               key: _formKey,
               child: Column(
@@ -37,7 +46,7 @@ class _LoginViewState extends State<LoginView> {
                   Center(
                     child: Text('Login', style: theme.textTheme.displaySmall),
                   ),
-                  const SizedBox(height: 40),
+                  SizedBox(height: size.height * 0.04),
                   CustomFormTextField(
                     labelText: 'Email',
                     hintText: 'Enter your email',
@@ -45,7 +54,7 @@ class _LoginViewState extends State<LoginView> {
                     prefixIcon: Icons.email_outlined,
                     controller: emailController,
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: size.height * 0.015),
                   CustomFormTextField(
                     labelText: 'Password',
                     hintText: 'Enter your password',
@@ -54,7 +63,7 @@ class _LoginViewState extends State<LoginView> {
                     controller: passwordController,
                     isLogin: true,
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: size.height * 0.02),
 
                   GestureDetector(
                     onTap: () {
@@ -65,17 +74,20 @@ class _LoginViewState extends State<LoginView> {
                       child: Text(
                         'Forgot Password?',
                         style: theme.textTheme.headlineLarge?.copyWith(
-                          fontSize: 15,
+                          fontSize: size.width * 0.04,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: size.height * 0.03),
                   BlocConsumer<AuthCubit, AuthState>(
                     listener: (context, state) {
                       if (state is AuthError) {
                         showSnackBar(context, state.message, Colors.red);
                       } else if (state is AuthSuccess) {
+                        context.read<UserProfileCubit>().loadUserProfile();
+                        context.read<FavoritesCubit>().loadFavorites();
+                        context.read<CartCubit>().loadCart();
                         showSnackBar(context, "Login Successful", Colors.green);
                         AppRouter.router.go(AppRouter.kHome);
                       }
@@ -84,7 +96,7 @@ class _LoginViewState extends State<LoginView> {
                       return Column(
                         children: [
                           CustomButton(
-                            backgroundColor: Theme.of(context).primaryColor,
+                            backgroundColor: theme.primaryColor,
                             text: 'Login',
                             isLoading:
                                 state is AuthLoading && !state.isGoogleLogin,
@@ -97,14 +109,15 @@ class _LoginViewState extends State<LoginView> {
                               }
                             },
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: size.height * 0.025),
                           Text(
                             '----------------------- OR -----------------------',
                             style: theme.textTheme.labelLarge?.copyWith(
                               color: Colors.grey,
+                              fontSize: size.width * 0.035,
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: size.height * 0.025),
                           CustomButton(
                             icon: FontAwesomeIcons.google,
                             backgroundColor: theme.primaryColor,
@@ -121,13 +134,15 @@ class _LoginViewState extends State<LoginView> {
                       );
                     },
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: size.height * 0.03),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         'Don\'t have an account?',
-                        style: theme.textTheme.bodyMedium,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontSize: size.width * 0.038,
+                        ),
                       ),
                       GestureDetector(
                         onTap: () {
@@ -135,7 +150,9 @@ class _LoginViewState extends State<LoginView> {
                         },
                         child: Text(
                           '  Register',
-                          style: theme.textTheme.labelLarge,
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            fontSize: size.width * 0.038,
+                          ),
                         ),
                       ),
                     ],

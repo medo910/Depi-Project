@@ -26,22 +26,26 @@ class ProductFormScreen extends StatefulWidget {
 class _ProductFormScreenState extends State<ProductFormScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  late String _id;
   late TextEditingController _nameController;
   late TextEditingController _priceController;
   late TextEditingController _brandController;
   late TextEditingController _descriptionController;
   late TextEditingController _photoUrlController;
 
+  late String _id;
   late List<String> _instructions;
   late ProductAttributeType _attributeType;
   late Map<String, dynamic> _stock;
   String? _selectedCategory;
+
   File? _selectedImageFile;
   final _imagePicker = ImagePicker();
-
-  final _supabase = Supabase.instance.client;
   bool _isUploading = false;
+
+  late List<Review> _comments;
+  late double _rate;
+  late int _reviews;
+  late Timestamp _date;
 
   final List<String> _generalCategories = [
     'Electronics',
@@ -53,11 +57,6 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     'Grocery',
     'Beauty & Health',
   ];
-
-  late List<Review> _comments;
-  late double _rate;
-  late int _reviews;
-  late Timestamp _date;
 
   bool get _isEditing => widget.product != null;
 
@@ -104,17 +103,14 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
 
   Future<String?> _uploadImageToSupabase() async {
     if (_selectedImageFile == null) return null;
-
-    setState(() {
-      _isUploading = true;
-    });
+    setState(() => _isUploading = true);
 
     try {
       final fileExtension = p.extension(_selectedImageFile!.path);
       final fileName = '${DateTime.now().millisecondsSinceEpoch}$fileExtension';
       final filePath = 'public/$fileName';
 
-      await _supabase.storage
+      await Supabase.instance.client.storage
           .from('product_images')
           .upload(
             filePath,
@@ -122,92 +118,87 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
             fileOptions: const FileOptions(upsert: true),
           );
 
-      final publicUrl = _supabase.storage
+      final publicUrl = Supabase.instance.client.storage
           .from('product_images')
           .getPublicUrl(filePath);
 
-      setState(() {
-        _isUploading = false;
-      });
+      setState(() => _isUploading = false);
       return publicUrl;
     } catch (e) {
-      setState(() {
-        _isUploading = false;
-      });
-      debugPrint('Error uploading image: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to upload image: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      setState(() => _isUploading = false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed: $e'), backgroundColor: Colors.red),
+        );
+      }
       return null;
     }
   }
 
   Future<void> _submitForm() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      if (_isUploading) return;
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    if (_isUploading) return;
 
-      String photoUrlToSave = _photoUrlController.text;
+    String photoUrlToSave = _photoUrlController.text;
 
-      if (_selectedImageFile != null) {
-        final newUrl = await _uploadImageToSupabase();
-        if (newUrl == null) {
-          return;
-        }
-        photoUrlToSave = newUrl;
-      }
+    if (_selectedImageFile != null) {
+      final newUrl = await _uploadImageToSupabase();
+      if (newUrl == null) return;
+      photoUrlToSave = newUrl;
+    }
 
-      if (photoUrlToSave.isEmpty) {
+    if (photoUrlToSave.isEmpty) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Please select an image to upload.'),
+            content: Text('Please select an image.'),
             backgroundColor: Colors.red,
           ),
         );
-        return;
       }
-
-      final newProduct = Product(
-        id: _id,
-        name: _nameController.text,
-        price: double.tryParse(_priceController.text) ?? 0,
-        brand: _brandController.text,
-        category: _selectedCategory!,
-        description: _descriptionController.text,
-        photoUrl: photoUrlToSave,
-        instruction: _instructions,
-        productAttributeType: _attributeType,
-        stock: _stock,
-        comments: _comments,
-        rate: _rate,
-        reviews: _reviews,
-        date: _date,
-      );
-
-      if (_isEditing) {
-        context.read<ProductCubit>().updateProduct(newProduct);
-      } else {
-        context.read<ProductCubit>().addProduct(newProduct);
-      }
-
-      Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            _isEditing
-                ? 'Product updated successfully'
-                : 'Product added successfully',
-          ),
-          backgroundColor: Colors.green,
-        ),
-      );
+      return;
     }
+
+    final newProduct = Product(
+      id: _id,
+      name: _nameController.text,
+      price: double.tryParse(_priceController.text) ?? 0,
+      brand: _brandController.text,
+      category: _selectedCategory!,
+      description: _descriptionController.text,
+      photoUrl: photoUrlToSave,
+      instruction: _instructions,
+      productAttributeType: _attributeType,
+      stock: _stock,
+      comments: _comments,
+      rate: _rate,
+      reviews: _reviews,
+      date: _date,
+    );
+
+    if (!mounted) return;
+
+    if (_isEditing) {
+      context.read<ProductCubit>().updateProduct(newProduct);
+    } else {
+      context.read<ProductCubit>().addProduct(newProduct);
+    }
+
+    Navigator.of(context).pop();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          _isEditing ? 'Updated successfully' : 'Added successfully',
+        ),
+        backgroundColor: Colors.green,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(_isEditing ? 'Edit Product' : 'Add New Product'),
@@ -233,72 +224,76 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       body: IgnorePointer(
         ignoring: _isUploading,
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _buildImagePicker(),
-                  const SizedBox(height: 16),
-                  _buildTextField(
-                    controller: _nameController,
-                    label: 'Product Name',
-                    icon: Iconsax.box_1_copy,
+          padding: EdgeInsets.all(size.width * 0.04),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ProductImagePicker(
+                  selectedFile: _selectedImageFile,
+                  existingUrl: _photoUrlController.text,
+                  onPickImage: _pickImage,
+                  isEditing: _isEditing,
+                ),
+                SizedBox(height: size.height * 0.02),
+
+                _buildResponsiveTextField(
+                  controller: _nameController,
+                  label: 'Product Name',
+                  icon: Iconsax.box_1_copy,
+                ),
+                _buildResponsiveTextField(
+                  controller: _priceController,
+                  label: 'Price (EGP)',
+                  icon: Iconsax.money_copy,
+                  keyboardType: TextInputType.number,
+                ),
+                _buildResponsiveTextField(
+                  controller: _brandController,
+                  label: 'Brand',
+                  icon: Iconsax.building_copy,
+                ),
+
+                _buildCategoryDropdown(),
+                SizedBox(height: size.height * 0.02),
+
+                _buildResponsiveTextField(
+                  controller: _descriptionController,
+                  label: 'Description',
+                  icon: Iconsax.document_text_copy,
+                  maxLines: 4,
+                ),
+
+                InstructionEditor(
+                  initialInstructions: _instructions,
+                  onChanged: (updatedList) => _instructions = updatedList,
+                ),
+                SizedBox(height: size.height * 0.02),
+
+                _buildAttributeSelector(),
+                SizedBox(height: size.height * 0.02),
+
+                StockEditor(
+                  attributeType: _attributeType,
+                  initialStock: _stock,
+                  onChanged: (updatedStock) => _stock = updatedStock,
+                ),
+
+                SizedBox(height: size.height * 0.04),
+                ElevatedButton.icon(
+                  onPressed: _isUploading ? null : _submitForm,
+                  icon: Icon(_isEditing ? Iconsax.edit_copy : Iconsax.add_copy),
+                  label: Text(
+                    _isUploading
+                        ? 'Uploading...'
+                        : (_isEditing ? 'Save Changes' : 'Add Product'),
                   ),
-                  _buildTextField(
-                    controller: _priceController,
-                    label: 'Price (EGP)',
-                    icon: Iconsax.money_copy,
-                    keyboardType: TextInputType.number,
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
                   ),
-                  _buildTextField(
-                    controller: _brandController,
-                    label: 'Brand',
-                    icon: Iconsax.building_copy,
-                  ),
-                  _buildCategoryDropdown(),
-                  const SizedBox(height: 16),
-                  _buildTextField(
-                    controller: _descriptionController,
-                    label: 'Description',
-                    icon: Iconsax.document_text_copy,
-                    maxLines: 4,
-                  ),
-                  InstructionEditor(
-                    initialInstructions: _instructions,
-                    onChanged: (updatedList) {
-                      _instructions = updatedList;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  _buildAttributeSelector(),
-                  const SizedBox(height: 16),
-                  StockEditor(
-                    attributeType: _attributeType,
-                    initialStock: _stock,
-                    onChanged: (updatedStock) {
-                      _stock = updatedStock;
-                    },
-                  ),
-                  const SizedBox(height: 24),
-                  ElevatedButton.icon(
-                    onPressed: _isUploading ? null : _submitForm,
-                    icon: Icon(
-                      _isEditing ? Iconsax.edit_copy : Iconsax.add_copy,
-                    ),
-                    label: Text(
-                      _isUploading
-                          ? 'Uploading Image...'
-                          : (_isEditing ? 'Save Changes' : 'Add Product'),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -306,7 +301,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     );
   }
 
-  Widget _buildTextField({
+  Widget _buildResponsiveTextField({
     required TextEditingController controller,
     required String label,
     required IconData icon,
@@ -320,17 +315,13 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
         decoration: InputDecoration(
           labelText: label,
           prefixIcon: Icon(icon),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.grey.shade300),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
           filled: true,
           fillColor: Theme.of(context).colorScheme.surface,
         ),
         keyboardType: keyboardType,
         maxLines: maxLines,
-        validator:
-            (val) => (val?.isEmpty ?? true) ? 'This field is required' : null,
+        validator: (val) => (val?.isEmpty ?? true) ? 'Required' : null,
       ),
     );
   }
@@ -346,69 +337,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
         fillColor: Theme.of(context).colorScheme.surface,
       ),
       items:
-          _generalCategories.map((category) {
-            return DropdownMenuItem(value: category, child: Text(category));
-          }).toList(),
-      onChanged: (value) {
-        setState(() {
-          _selectedCategory = value;
-        });
-      },
-      validator: (val) => (val == null) ? 'Please select a category' : null,
-    );
-  }
-
-  Widget _buildImagePicker() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Product Image', style: Theme.of(context).textTheme.titleSmall),
-        const SizedBox(height: 8),
-        Container(
-          height: 200,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Theme.of(context).dividerColor),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Builder(
-              builder: (context) {
-                if (_selectedImageFile != null) {
-                  return Image.file(_selectedImageFile!, fit: BoxFit.cover);
-                }
-                if (_isEditing && _photoUrlController.text.isNotEmpty) {
-                  return CachedNetworkImage(
-                    imageUrl: _photoUrlController.text,
-                    fit: BoxFit.cover,
-                    placeholder:
-                        (context, url) =>
-                            const Center(child: CircularProgressIndicator()),
-                    errorWidget:
-                        (context, url, error) =>
-                            const Icon(Iconsax.gallery_slash, size: 50),
-                  );
-                }
-                return const Center(child: Icon(Iconsax.gallery_add, size: 50));
-              },
-            ),
-          ),
-        ),
-        const SizedBox(height: 8),
-        Center(
-          child: OutlinedButton.icon(
-            onPressed: _pickImage,
-            icon: const Icon(Iconsax.gallery_edit_copy),
-            label: Text(
-              _selectedImageFile != null || _photoUrlController.text.isNotEmpty
-                  ? 'Change Image'
-                  : 'Select Image',
-            ),
-          ),
-        ),
-      ],
+          _generalCategories
+              .map((cat) => DropdownMenuItem(value: cat, child: Text(cat)))
+              .toList(),
+      onChanged: (val) => setState(() => _selectedCategory = val),
+      validator: (val) => val == null ? 'Select category' : null,
     );
   }
 
@@ -416,7 +349,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     return DropdownButtonFormField<ProductAttributeType>(
       value: _attributeType,
       decoration: InputDecoration(
-        labelText: 'Product Attribute Type',
+        labelText: 'Attribute Type',
         prefixIcon: const Icon(Iconsax.mirroring_screen_copy),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         filled: true,
@@ -425,7 +358,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       items: const [
         DropdownMenuItem(
           value: ProductAttributeType.none,
-          child: Text('None (Simple Product)'),
+          child: Text('None (Simple)'),
         ),
         DropdownMenuItem(
           value: ProductAttributeType.size,
@@ -437,17 +370,87 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
         ),
         DropdownMenuItem(
           value: ProductAttributeType.both,
-          child: Text('Size & Color (Nested)'),
+          child: Text('Size & Color'),
         ),
       ],
-      onChanged: (value) {
-        if (value != null) {
+      onChanged: (val) {
+        if (val != null) {
           setState(() {
-            _attributeType = value;
+            _attributeType = val;
             _stock = {};
           });
         }
       },
     );
+  }
+}
+
+class ProductImagePicker extends StatelessWidget {
+  final File? selectedFile;
+  final String existingUrl;
+  final VoidCallback onPickImage;
+  final bool isEditing;
+
+  const ProductImagePicker({
+    super.key,
+    required this.selectedFile,
+    required this.existingUrl,
+    required this.onPickImage,
+    required this.isEditing,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Product Image', style: Theme.of(context).textTheme.titleSmall),
+        const SizedBox(height: 8),
+        Container(
+          height: size.height * 0.25,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Theme.of(context).dividerColor),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: _buildImageContent(),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Center(
+          child: OutlinedButton.icon(
+            onPressed: onPickImage,
+            icon: const Icon(Iconsax.gallery_edit_copy),
+            label: Text(
+              selectedFile != null || existingUrl.isNotEmpty
+                  ? 'Change Image'
+                  : 'Select Image',
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildImageContent() {
+    if (selectedFile != null) {
+      return Image.file(selectedFile!, fit: BoxFit.cover);
+    }
+    if (isEditing && existingUrl.isNotEmpty) {
+      return CachedNetworkImage(
+        imageUrl: existingUrl,
+        fit: BoxFit.cover,
+        placeholder:
+            (_, __) => const Center(child: CircularProgressIndicator()),
+        errorWidget:
+            (_, __, ___) => const Icon(Iconsax.gallery_slash, size: 50),
+      );
+    }
+    return const Center(child: Icon(Iconsax.gallery_add, size: 50));
   }
 }

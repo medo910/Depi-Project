@@ -10,6 +10,8 @@ class OrderListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+
     return Scaffold(
       body: BlocBuilder<OrderCubit, OrderState>(
         builder: (context, state) {
@@ -27,7 +29,7 @@ class OrderListScreen extends StatelessWidget {
             child: CustomScrollView(
               slivers: [
                 SliverPadding(
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(size.width * 0.04),
                   sliver: SliverToBoxAdapter(
                     child: OrderStatsGrid(counts: state.statusCounts),
                   ),
@@ -35,11 +37,20 @@ class OrderListScreen extends StatelessWidget {
                 if (state.selectedFilter != null)
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+                      padding: EdgeInsets.fromLTRB(
+                        size.width * 0.04,
+                        0,
+                        size.width * 0.04,
+                        size.height * 0.015,
+                      ),
                       child: ActionChip(
-                        avatar: const Icon(Iconsax.close_circle_copy, size: 16),
+                        avatar: Icon(
+                          Iconsax.close_circle_copy,
+                          size: size.width * 0.04,
+                        ),
                         label: Text(
                           'Clear Filter (Showing ${state.selectedFilter!.name} only)',
+                          style: TextStyle(fontSize: size.width * 0.032),
                         ),
                         onPressed: () {
                           context.read<OrderCubit>().filterOrdersByStatus(
@@ -56,17 +67,22 @@ class OrderListScreen extends StatelessWidget {
                         state.selectedFilter != null
                             ? 'No orders found matching this status.'
                             : 'No orders found yet.',
+                        style: TextStyle(fontSize: size.width * 0.04),
                       ),
                     ),
                   ),
-
                 SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  padding: EdgeInsets.fromLTRB(
+                    size.width * 0.04,
+                    0,
+                    size.width * 0.04,
+                    size.height * 0.02,
+                  ),
                   sliver: SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
                       final order = filteredList[index];
                       return Padding(
-                        padding: const EdgeInsets.only(bottom: 12.0),
+                        padding: EdgeInsets.only(bottom: size.height * 0.015),
                         child: OrderCard(order: order),
                       );
                     }, childCount: filteredList.length),

@@ -14,6 +14,8 @@ class OrderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final size = MediaQuery.sizeOf(context);
+
     final currencyFormatter = NumberFormat.currency(
       locale: 'en_US',
       symbol: 'EGP ',
@@ -31,57 +33,68 @@ class OrderCard extends StatelessWidget {
         },
         borderRadius: BorderRadius.circular(10),
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: EdgeInsets.all(size.width * 0.03),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    order.id,
-                    style: textTheme.titleSmall,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  Expanded(
+                    child: Text(
+                      order.id,
+                      style: textTheme.titleSmall?.copyWith(
+                        fontSize: size.width * 0.035,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   OrderStatusBadge(status: order.status),
                 ],
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: size.height * 0.005),
               Text(
                 dateFormatter.format(order.date.toDate()),
-                style: textTheme.bodySmall,
+                style: textTheme.bodySmall?.copyWith(
+                  fontSize: size.width * 0.03,
+                ),
               ),
-              const Divider(height: 20),
+              Divider(height: size.height * 0.025),
+
               _buildInfoRow(
                 context,
                 Iconsax.user_copy,
                 'Customer:',
-                order.customerName ?? 'N/A',
+                order.customerName,
+                size,
               ),
               _buildInfoRow(
                 context,
                 Iconsax.call_copy,
                 'Phone:',
-                order.customerPhone ?? 'Not Found',
+                order.customerPhone,
+                size,
                 isLtr: true,
               ),
               _buildInfoRow(
                 context,
                 Iconsax.location_copy,
                 'Address:',
-                order.customerAddress ?? 'N/A',
+                order.customerAddress,
+                size,
               ),
               _buildInfoRow(
                 context,
                 Iconsax.money_recive_copy,
                 'Total:',
                 currencyFormatter.format(order.totalPrice),
+                size,
                 isPrimary: true,
               ),
 
-              const SizedBox(height: 12),
-              _buildActionButtons(context),
+              SizedBox(height: size.height * 0.015),
+              _buildActionButtons(context, size),
             ],
           ),
         ),
@@ -93,24 +106,33 @@ class OrderCard extends StatelessWidget {
     BuildContext context,
     IconData icon,
     String label,
-    String value, {
+    String value,
+    Size size, {
     bool isLtr = false,
     bool isPrimary = false,
   }) {
     final textTheme = Theme.of(context).textTheme;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 6.0),
+      padding: EdgeInsets.only(bottom: size.height * 0.008),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 14, color: textTheme.bodySmall?.color),
-          const SizedBox(width: 6),
-          Text(label, style: textTheme.bodySmall),
+          Icon(
+            icon,
+            size: size.width * 0.035,
+            color: textTheme.bodySmall?.color,
+          ),
+          SizedBox(width: size.width * 0.015),
+          Text(
+            label,
+            style: textTheme.bodySmall?.copyWith(fontSize: size.width * 0.032),
+          ),
           Expanded(
             child: Text(
               value,
               style: textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w600,
+                fontSize: size.width * 0.035,
                 color: isPrimary ? Theme.of(context).primaryColor : null,
               ),
               textAlign: TextAlign.right,
@@ -123,7 +145,7 @@ class OrderCard extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context) {
+  Widget _buildActionButtons(BuildContext context, Size size) {
     final cubit = context.read<OrderCubit>();
     List<Widget> buttons = [];
 
@@ -134,6 +156,7 @@ class OrderCard extends StatelessWidget {
             context,
             'Start Processing',
             () => cubit.updateOrderStatus(order.id, OrderStatus.processing),
+            size,
             isPrimary: true,
           ),
         );
@@ -144,6 +167,7 @@ class OrderCard extends StatelessWidget {
             context,
             'Mark as Shipped',
             () => cubit.updateOrderStatus(order.id, OrderStatus.shipped),
+            size,
             isPrimary: true,
           ),
         );
@@ -154,27 +178,26 @@ class OrderCard extends StatelessWidget {
             context,
             'Mark as Delivered',
             () => cubit.updateOrderStatus(order.id, OrderStatus.delivered),
+            size,
             isPrimary: true,
           ),
         );
         break;
-      case OrderStatus.delivered:
-      case OrderStatus.canceled:
-        // لا يوجد أزرار للحالات المنتهية
-        return const SizedBox.shrink();
+      default:
+        break;
     }
 
-    // زرار الإلغاء (متاح طول ما الأوردر مش ملغي أو متسلم)
     if (order.status != OrderStatus.delivered &&
         order.status != OrderStatus.canceled) {
       if (buttons.isNotEmpty) {
-        buttons.add(const SizedBox(width: 10));
+        buttons.add(SizedBox(width: size.width * 0.025));
       }
       buttons.add(
         _buildButton(
           context,
           'Cancel Order',
           () => cubit.updateOrderStatus(order.id, OrderStatus.canceled),
+          size,
           isPrimary: false,
         ),
       );
@@ -186,23 +209,38 @@ class OrderCard extends StatelessWidget {
   Widget _buildButton(
     BuildContext context,
     String label,
-    VoidCallback onPressed, {
+    VoidCallback onPressed,
+    Size size, {
     bool isPrimary = true,
   }) {
     return Expanded(
-      child:
-          isPrimary
-              ? ElevatedButton(onPressed: onPressed, child: Text(label))
-              : OutlinedButton(
-                onPressed: onPressed,
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Theme.of(context).colorScheme.error,
-                  side: BorderSide(
-                    color: Theme.of(context).colorScheme.error.withOpacity(0.4),
+      child: SizedBox(
+        height: size.height * 0.05,
+        child:
+            isPrimary
+                ? ElevatedButton(
+                  onPressed: onPressed,
+                  child: Text(
+                    label,
+                    style: TextStyle(fontSize: size.width * 0.032),
+                  ),
+                )
+                : OutlinedButton(
+                  onPressed: onPressed,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Theme.of(context).colorScheme.error,
+                    side: BorderSide(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.error.withOpacity(0.4),
+                    ),
+                  ),
+                  child: Text(
+                    label,
+                    style: TextStyle(fontSize: size.width * 0.032),
                   ),
                 ),
-                child: Text(label),
-              ),
+      ),
     );
   }
 }
