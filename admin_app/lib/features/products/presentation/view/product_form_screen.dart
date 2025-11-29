@@ -26,23 +26,43 @@ class ProductFormScreen extends StatefulWidget {
 class _ProductFormScreenState extends State<ProductFormScreen> {
   final _formKey = GlobalKey<FormState>();
 
+<<<<<<< HEAD
   late String _id;
+=======
+>>>>>>> temp-fix
   late TextEditingController _nameController;
   late TextEditingController _priceController;
   late TextEditingController _brandController;
   late TextEditingController _descriptionController;
   late TextEditingController _photoUrlController;
 
+<<<<<<< HEAD
+=======
+  late String _id;
+>>>>>>> temp-fix
   late List<String> _instructions;
   late ProductAttributeType _attributeType;
   late Map<String, dynamic> _stock;
   String? _selectedCategory;
+<<<<<<< HEAD
   File? _selectedImageFile;
   final _imagePicker = ImagePicker();
 
   final _supabase = Supabase.instance.client;
   bool _isUploading = false;
 
+=======
+
+  File? _selectedImageFile;
+  final _imagePicker = ImagePicker();
+  bool _isUploading = false;
+
+  late List<Review> _comments;
+  late double _rate;
+  late int _reviews;
+  late Timestamp _date;
+
+>>>>>>> temp-fix
   final List<String> _generalCategories = [
     'Electronics',
     'Apparel',
@@ -54,11 +74,14 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     'Beauty & Health',
   ];
 
+<<<<<<< HEAD
   late List<Review> _comments;
   late double _rate;
   late int _reviews;
   late Timestamp _date;
 
+=======
+>>>>>>> temp-fix
   bool get _isEditing => widget.product != null;
 
   @override
@@ -104,17 +127,25 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
 
   Future<String?> _uploadImageToSupabase() async {
     if (_selectedImageFile == null) return null;
+<<<<<<< HEAD
 
     setState(() {
       _isUploading = true;
     });
+=======
+    setState(() => _isUploading = true);
+>>>>>>> temp-fix
 
     try {
       final fileExtension = p.extension(_selectedImageFile!.path);
       final fileName = '${DateTime.now().millisecondsSinceEpoch}$fileExtension';
       final filePath = 'public/$fileName';
 
+<<<<<<< HEAD
       await _supabase.storage
+=======
+      await Supabase.instance.client.storage
+>>>>>>> temp-fix
           .from('product_images')
           .upload(
             filePath,
@@ -122,6 +153,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
             fileOptions: const FileOptions(upsert: true),
           );
 
+<<<<<<< HEAD
       final publicUrl = _supabase.storage
           .from('product_images')
           .getPublicUrl(filePath);
@@ -141,11 +173,27 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
           backgroundColor: Colors.red,
         ),
       );
+=======
+      final publicUrl = Supabase.instance.client.storage
+          .from('product_images')
+          .getPublicUrl(filePath);
+
+      setState(() => _isUploading = false);
+      return publicUrl;
+    } catch (e) {
+      setState(() => _isUploading = false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed: $e'), backgroundColor: Colors.red),
+        );
+      }
+>>>>>>> temp-fix
       return null;
     }
   }
 
   Future<void> _submitForm() async {
+<<<<<<< HEAD
     if (_formKey.currentState?.validate() ?? false) {
       if (_isUploading) return;
 
@@ -204,10 +252,74 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
         ),
       );
     }
+=======
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    if (_isUploading) return;
+
+    String photoUrlToSave = _photoUrlController.text;
+
+    if (_selectedImageFile != null) {
+      final newUrl = await _uploadImageToSupabase();
+      if (newUrl == null) return;
+      photoUrlToSave = newUrl;
+    }
+
+    if (photoUrlToSave.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please select an image.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      return;
+    }
+
+    final newProduct = Product(
+      id: _id,
+      name: _nameController.text,
+      price: double.tryParse(_priceController.text) ?? 0,
+      brand: _brandController.text,
+      category: _selectedCategory!,
+      description: _descriptionController.text,
+      photoUrl: photoUrlToSave,
+      instruction: _instructions,
+      productAttributeType: _attributeType,
+      stock: _stock,
+      comments: _comments,
+      rate: _rate,
+      reviews: _reviews,
+      date: _date,
+    );
+
+    if (!mounted) return;
+
+    if (_isEditing) {
+      context.read<ProductCubit>().updateProduct(newProduct);
+    } else {
+      context.read<ProductCubit>().addProduct(newProduct);
+    }
+
+    Navigator.of(context).pop();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          _isEditing ? 'Updated successfully' : 'Added successfully',
+        ),
+        backgroundColor: Colors.green,
+      ),
+    );
+>>>>>>> temp-fix
   }
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
+=======
+    final size = MediaQuery.sizeOf(context);
+
+>>>>>>> temp-fix
     return Scaffold(
       appBar: AppBar(
         title: Text(_isEditing ? 'Edit Product' : 'Add New Product'),
@@ -233,6 +345,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       body: IgnorePointer(
         ignoring: _isUploading,
         child: SingleChildScrollView(
+<<<<<<< HEAD
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Form(
@@ -299,6 +412,78 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                   ),
                 ],
               ),
+=======
+          padding: EdgeInsets.all(size.width * 0.04),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ProductImagePicker(
+                  selectedFile: _selectedImageFile,
+                  existingUrl: _photoUrlController.text,
+                  onPickImage: _pickImage,
+                  isEditing: _isEditing,
+                ),
+                SizedBox(height: size.height * 0.02),
+
+                _buildResponsiveTextField(
+                  controller: _nameController,
+                  label: 'Product Name',
+                  icon: Iconsax.box_1_copy,
+                ),
+                _buildResponsiveTextField(
+                  controller: _priceController,
+                  label: 'Price (EGP)',
+                  icon: Iconsax.money_copy,
+                  keyboardType: TextInputType.number,
+                ),
+                _buildResponsiveTextField(
+                  controller: _brandController,
+                  label: 'Brand',
+                  icon: Iconsax.building_copy,
+                ),
+
+                _buildCategoryDropdown(),
+                SizedBox(height: size.height * 0.02),
+
+                _buildResponsiveTextField(
+                  controller: _descriptionController,
+                  label: 'Description',
+                  icon: Iconsax.document_text_copy,
+                  maxLines: 4,
+                ),
+
+                InstructionEditor(
+                  initialInstructions: _instructions,
+                  onChanged: (updatedList) => _instructions = updatedList,
+                ),
+                SizedBox(height: size.height * 0.02),
+
+                _buildAttributeSelector(),
+                SizedBox(height: size.height * 0.02),
+
+                StockEditor(
+                  attributeType: _attributeType,
+                  initialStock: _stock,
+                  onChanged: (updatedStock) => _stock = updatedStock,
+                ),
+
+                SizedBox(height: size.height * 0.04),
+                ElevatedButton.icon(
+                  onPressed: _isUploading ? null : _submitForm,
+                  icon: Icon(_isEditing ? Iconsax.edit_copy : Iconsax.add_copy),
+                  label: Text(
+                    _isUploading
+                        ? 'Uploading...'
+                        : (_isEditing ? 'Save Changes' : 'Add Product'),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
+                  ),
+                ),
+              ],
+>>>>>>> temp-fix
             ),
           ),
         ),
@@ -306,7 +491,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     );
   }
 
+<<<<<<< HEAD
   Widget _buildTextField({
+=======
+  Widget _buildResponsiveTextField({
+>>>>>>> temp-fix
     required TextEditingController controller,
     required String label,
     required IconData icon,
@@ -320,17 +509,25 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
         decoration: InputDecoration(
           labelText: label,
           prefixIcon: Icon(icon),
+<<<<<<< HEAD
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(color: Colors.grey.shade300),
           ),
+=======
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+>>>>>>> temp-fix
           filled: true,
           fillColor: Theme.of(context).colorScheme.surface,
         ),
         keyboardType: keyboardType,
         maxLines: maxLines,
+<<<<<<< HEAD
         validator:
             (val) => (val?.isEmpty ?? true) ? 'This field is required' : null,
+=======
+        validator: (val) => (val?.isEmpty ?? true) ? 'Required' : null,
+>>>>>>> temp-fix
       ),
     );
   }
@@ -346,6 +543,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
         fillColor: Theme.of(context).colorScheme.surface,
       ),
       items:
+<<<<<<< HEAD
           _generalCategories.map((category) {
             return DropdownMenuItem(value: category, child: Text(category));
           }).toList(),
@@ -409,6 +607,13 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
           ),
         ),
       ],
+=======
+          _generalCategories
+              .map((cat) => DropdownMenuItem(value: cat, child: Text(cat)))
+              .toList(),
+      onChanged: (val) => setState(() => _selectedCategory = val),
+      validator: (val) => val == null ? 'Select category' : null,
+>>>>>>> temp-fix
     );
   }
 
@@ -416,7 +621,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     return DropdownButtonFormField<ProductAttributeType>(
       value: _attributeType,
       decoration: InputDecoration(
+<<<<<<< HEAD
         labelText: 'Product Attribute Type',
+=======
+        labelText: 'Attribute Type',
+>>>>>>> temp-fix
         prefixIcon: const Icon(Iconsax.mirroring_screen_copy),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         filled: true,
@@ -425,7 +634,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       items: const [
         DropdownMenuItem(
           value: ProductAttributeType.none,
+<<<<<<< HEAD
           child: Text('None (Simple Product)'),
+=======
+          child: Text('None (Simple)'),
+>>>>>>> temp-fix
         ),
         DropdownMenuItem(
           value: ProductAttributeType.size,
@@ -437,6 +650,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
         ),
         DropdownMenuItem(
           value: ProductAttributeType.both,
+<<<<<<< HEAD
           child: Text('Size & Color (Nested)'),
         ),
       ],
@@ -444,6 +658,15 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
         if (value != null) {
           setState(() {
             _attributeType = value;
+=======
+          child: Text('Size & Color'),
+        ),
+      ],
+      onChanged: (val) {
+        if (val != null) {
+          setState(() {
+            _attributeType = val;
+>>>>>>> temp-fix
             _stock = {};
           });
         }
@@ -451,3 +674,76 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     );
   }
 }
+<<<<<<< HEAD
+=======
+
+class ProductImagePicker extends StatelessWidget {
+  final File? selectedFile;
+  final String existingUrl;
+  final VoidCallback onPickImage;
+  final bool isEditing;
+
+  const ProductImagePicker({
+    super.key,
+    required this.selectedFile,
+    required this.existingUrl,
+    required this.onPickImage,
+    required this.isEditing,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Product Image', style: Theme.of(context).textTheme.titleSmall),
+        const SizedBox(height: 8),
+        Container(
+          height: size.height * 0.25,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Theme.of(context).dividerColor),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: _buildImageContent(),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Center(
+          child: OutlinedButton.icon(
+            onPressed: onPickImage,
+            icon: const Icon(Iconsax.gallery_edit_copy),
+            label: Text(
+              selectedFile != null || existingUrl.isNotEmpty
+                  ? 'Change Image'
+                  : 'Select Image',
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildImageContent() {
+    if (selectedFile != null) {
+      return Image.file(selectedFile!, fit: BoxFit.cover);
+    }
+    if (isEditing && existingUrl.isNotEmpty) {
+      return CachedNetworkImage(
+        imageUrl: existingUrl,
+        fit: BoxFit.cover,
+        placeholder:
+            (_, __) => const Center(child: CircularProgressIndicator()),
+        errorWidget:
+            (_, __, ___) => const Icon(Iconsax.gallery_slash, size: 50),
+      );
+    }
+    return const Center(child: Icon(Iconsax.gallery_add, size: 50));
+  }
+}
+>>>>>>> temp-fix

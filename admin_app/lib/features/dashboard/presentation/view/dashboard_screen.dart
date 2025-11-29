@@ -29,6 +29,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
+=======
+    final size = MediaQuery.sizeOf(context);
+
+>>>>>>> temp-fix
     return BlocBuilder<DashboardCubit, DashboardState>(
       builder: (context, state) {
         final isDarkMode =
@@ -43,8 +48,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
             title: Row(
               children: [
                 Container(
+<<<<<<< HEAD
                   width: 40,
                   height: 40,
+=======
+                  width: size.width * 0.1,
+                  height: size.width * 0.1,
+                  constraints: const BoxConstraints(
+                    maxWidth: 45,
+                    maxHeight: 45,
+                  ),
+>>>>>>> temp-fix
                   decoration: BoxDecoration(
                     color: Theme.of(context).primaryColor,
                     borderRadius: BorderRadius.circular(8),
@@ -52,15 +66,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: Icon(
                     Iconsax.box_1,
                     color: Theme.of(context).colorScheme.onPrimary,
+<<<<<<< HEAD
                   ),
                 ),
                 const SizedBox(width: 12),
+=======
+                    size: size.width * 0.055,
+                  ),
+                ),
+                SizedBox(width: size.width * 0.03),
+>>>>>>> temp-fix
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Kite Admin',
+<<<<<<< HEAD
                       style: Theme.of(context).appBarTheme.titleTextStyle,
+=======
+                      style:
+                          Theme.of(context).appBarTheme.titleTextStyle
+                              ?.copyWith(fontSize: size.width * 0.045) ??
+                          TextStyle(
+                            fontSize: size.width * 0.045,
+                            fontWeight: FontWeight.bold,
+                          ),
+>>>>>>> temp-fix
                     ),
                     Text(
                       'Admin Panel',
@@ -68,6 +99,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         color: Theme.of(
                           context,
                         ).textTheme.bodySmall?.color?.withOpacity(0.7),
+<<<<<<< HEAD
+=======
+                        fontSize: size.width * 0.03,
+>>>>>>> temp-fix
                       ),
                     ),
                   ],
@@ -79,11 +114,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 icon: Icon(
                   isDarkMode ? Iconsax.sun_1_copy : Iconsax.moon_copy,
                   color: Theme.of(context).iconTheme.color,
+<<<<<<< HEAD
+=======
+                  size: size.width * 0.06,
+>>>>>>> temp-fix
                 ),
                 onPressed: () {
                   context.read<DashboardCubit>().toggleTheme(isDarkMode);
                 },
               ),
+<<<<<<< HEAD
               const SizedBox(width: 8),
             ],
           ),
@@ -92,16 +132,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: state.tabIndex,
+=======
+              SizedBox(width: size.width * 0.02),
+            ],
+          ),
+          body: IndexedStack(index: state.tabIndex, children: _screens),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: state.tabIndex,
+            selectedFontSize: size.width * 0.035,
+            unselectedFontSize: size.width * 0.03,
+>>>>>>> temp-fix
             onTap: (index) {
               context.read<DashboardCubit>().changeTab(index);
             },
             items: [
               BottomNavigationBarItem(
+<<<<<<< HEAD
                 icon: Icon(Iconsax.box_copy),
                 label: 'Products',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Iconsax.shopping_cart_copy),
+=======
+                icon: Icon(Iconsax.box_copy, size: size.width * 0.06),
+                label: 'Products',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Iconsax.shopping_cart_copy, size: size.width * 0.06),
+>>>>>>> temp-fix
                 label: 'Orders',
               ),
               BottomNavigationBarItem(
@@ -118,7 +176,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       label: Text('$totalUnread'),
                       backgroundColor: Colors.red,
                       textColor: Colors.white,
+<<<<<<< HEAD
                       child: const Icon(Iconsax.message_text_1_copy),
+=======
+                      child: Icon(
+                        Iconsax.message_text_1_copy,
+                        size: size.width * 0.06,
+                      ),
+>>>>>>> temp-fix
                     );
                   },
                 ),

@@ -12,15 +12,31 @@ class ChatBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final timeStr = DateFormat('hh:mm a').format(message.timestamp.toDate());
+<<<<<<< HEAD
+=======
+    final size = MediaQuery.sizeOf(context);
+>>>>>>> temp-fix
 
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
+<<<<<<< HEAD
         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width * 0.75,
         ),
+=======
+        margin: EdgeInsets.symmetric(
+          vertical: size.height * 0.005,
+          horizontal: size.width * 0.03,
+        ),
+        padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.04,
+          vertical: size.height * 0.012,
+        ),
+        constraints: BoxConstraints(maxWidth: size.width * 0.75),
+>>>>>>> temp-fix
         decoration: BoxDecoration(
           color: isMe ? AppColors.lightPrimary : Colors.grey[300],
           borderRadius: BorderRadius.only(
@@ -38,10 +54,17 @@ class ChatBubble extends StatelessWidget {
               message.message,
               style: TextStyle(
                 color: isMe ? Colors.white : Colors.black87,
+<<<<<<< HEAD
                 fontSize: 16,
               ),
             ),
             const SizedBox(height: 4),
+=======
+                fontSize: size.width * 0.04,
+              ),
+            ),
+            SizedBox(height: size.height * 0.005),
+>>>>>>> temp-fix
             Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.end,
@@ -50,12 +73,21 @@ class ChatBubble extends StatelessWidget {
                   timeStr,
                   style: TextStyle(
                     color: isMe ? Colors.white70 : Colors.black54,
+<<<<<<< HEAD
                     fontSize: 10,
                   ),
                 ),
                 if (isMe) ...[
                   const SizedBox(width: 4),
                   _buildStatusIcon(message.status),
+=======
+                    fontSize: size.width * 0.028,
+                  ),
+                ),
+                if (isMe) ...[
+                  SizedBox(width: size.width * 0.01),
+                  _buildStatusIcon(message.status, size),
+>>>>>>> temp-fix
                 ],
               ],
             ),
@@ -65,7 +97,11 @@ class ChatBubble extends StatelessWidget {
     );
   }
 
+<<<<<<< HEAD
   Widget _buildStatusIcon(String status) {
+=======
+  Widget _buildStatusIcon(String status, Size size) {
+>>>>>>> temp-fix
     IconData icon = Icons.done;
     Color color = Colors.white60;
 
@@ -75,6 +111,10 @@ class ChatBubble extends StatelessWidget {
       color = Colors.blueAccent.shade100;
     }
 
+<<<<<<< HEAD
     return Icon(icon, size: 14, color: color);
+=======
+    return Icon(icon, size: size.width * 0.04, color: color);
+>>>>>>> temp-fix
   }
 }

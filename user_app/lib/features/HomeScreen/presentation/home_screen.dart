@@ -104,12 +104,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       Spacer(),
+<<<<<<< HEAD
                       IconButton(
                         icon: const Icon(Iconsax.setting_2_copy),
                         onPressed: () {
                           GoRouter.of(context).push(AppRouter.kSettings);
                         },
                       ),
+=======
+                      // IconButton(
+                      //   icon: const Icon(Iconsax.setting_2_copy),
+                      //   onPressed: () {
+                      //     GoRouter.of(context).push(AppRouter.kSettings);
+                      //   },
+                      // ),
+>>>>>>> temp-fix
                       StreamBuilder<int>(
                         stream: ChatRepository().getUnreadCountStream(),
                         builder: (context, snapshot) {

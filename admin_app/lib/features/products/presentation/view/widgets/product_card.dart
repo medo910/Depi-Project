@@ -16,6 +16,10 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
+<<<<<<< HEAD
+=======
+    final size = MediaQuery.sizeOf(context);
+>>>>>>> temp-fix
 
     final currencyFormatter = NumberFormat.currency(
       locale: 'en_US',
@@ -23,6 +27,7 @@ class ProductCard extends StatelessWidget {
     );
 
     final int totalStock = product.totalQuantity;
+<<<<<<< HEAD
 
     final Color stockColor;
     if (totalStock == 0) {
@@ -36,6 +41,18 @@ class ProductCard extends StatelessWidget {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12.0),
+=======
+    final Color stockColor =
+        totalStock == 0
+            ? colorScheme.error
+            : (totalStock <= 20 ? AppColors.stockYellow : AppColors.stockGreen);
+
+    final double imageSize = size.width * 0.22;
+
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(size.width * 0.03),
+>>>>>>> temp-fix
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -46,6 +63,7 @@ class ProductCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   child: CachedNetworkImage(
                     imageUrl: product.photoUrl,
+<<<<<<< HEAD
                     width: 80,
                     height: 80,
                     fit: BoxFit.cover,
@@ -53,28 +71,52 @@ class ProductCard extends StatelessWidget {
                         (context, url) => Container(
                           width: 80,
                           height: 80,
+=======
+                    width: imageSize,
+                    height: imageSize,
+                    fit: BoxFit.cover,
+                    placeholder:
+                        (context, url) => Container(
+                          width: imageSize,
+                          height: imageSize,
+>>>>>>> temp-fix
                           color: Colors.grey.shade200,
                           child: const Icon(Iconsax.gallery),
                         ),
                     errorWidget:
                         (context, url, error) => Container(
+<<<<<<< HEAD
                           width: 80,
                           height: 80,
                           color: Colors.grey.shade200,
                           child: const Icon(
                             Iconsax.gallery_slash,
                             color: AppColors.lightDestructive,
+=======
+                          width: imageSize,
+                          height: imageSize,
+                          color: Colors.grey.shade200,
+                          child: Icon(
+                            Iconsax.gallery_slash,
+                            color: AppColors.lightDestructive,
+                            size: imageSize * 0.4,
+>>>>>>> temp-fix
                           ),
                         ),
                   ),
                 ),
+<<<<<<< HEAD
                 const SizedBox(width: 12),
+=======
+                SizedBox(width: size.width * 0.03),
+>>>>>>> temp-fix
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         product.name,
+<<<<<<< HEAD
                         style: textTheme.titleSmall,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -87,6 +129,24 @@ class ProductCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 8),
+=======
+                        style: textTheme.titleSmall?.copyWith(
+                          fontSize: size.width * 0.04,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: size.height * 0.005),
+                      Text(
+                        'Brand: ${product.brand} | Category: ${product.category}',
+                        style: textTheme.bodySmall?.copyWith(
+                          fontSize: size.width * 0.03,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: size.height * 0.01),
+>>>>>>> temp-fix
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -95,6 +155,10 @@ class ProductCard extends StatelessWidget {
                             style: textTheme.titleSmall?.copyWith(
                               color: colorScheme.primary,
                               fontWeight: FontWeight.bold,
+<<<<<<< HEAD
+=======
+                              fontSize: size.width * 0.038,
+>>>>>>> temp-fix
                             ),
                           ),
                           Text(
@@ -104,6 +168,10 @@ class ProductCard extends StatelessWidget {
                             style: textTheme.bodySmall?.copyWith(
                               color: stockColor,
                               fontWeight: FontWeight.bold,
+<<<<<<< HEAD
+=======
+                              fontSize: size.width * 0.03,
+>>>>>>> temp-fix
                             ),
                           ),
                         ],
@@ -113,6 +181,7 @@ class ProductCard extends StatelessWidget {
                 ),
               ],
             ),
+<<<<<<< HEAD
             const SizedBox(height: 12),
             Text(
               product.description,
@@ -128,6 +197,27 @@ class ProductCard extends StatelessWidget {
                     icon: const Icon(Iconsax.edit_copy, size: 16),
                     label: const Text('Edit'),
                     onPressed: () {
+=======
+            SizedBox(height: size.height * 0.015),
+            Text(
+              product.description,
+              style: textTheme.bodySmall?.copyWith(
+                fontSize: size.width * 0.032,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Divider(height: size.height * 0.03),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildActionButton(
+                    context,
+                    'Edit',
+                    Iconsax.edit_copy,
+                    colorScheme.primary,
+                    () {
+>>>>>>> temp-fix
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (ctx) => ProductFormScreen(product: product),
@@ -136,6 +226,7 @@ class ProductCard extends StatelessWidget {
                     },
                   ),
                 ),
+<<<<<<< HEAD
                 const SizedBox(width: 10),
                 Expanded(
                   child: OutlinedButton.icon(
@@ -156,6 +247,16 @@ class ProductCard extends StatelessWidget {
                     onPressed: () {
                       _showDeleteDialog(context, product.id);
                     },
+=======
+                SizedBox(width: size.width * 0.03),
+                Expanded(
+                  child: _buildActionButton(
+                    context,
+                    'Delete',
+                    Iconsax.trash_copy,
+                    colorScheme.error,
+                    () => _showDeleteDialog(context, product.id),
+>>>>>>> temp-fix
                   ),
                 ),
               ],
@@ -166,6 +267,26 @@ class ProductCard extends StatelessWidget {
     );
   }
 
+<<<<<<< HEAD
+=======
+  Widget _buildActionButton(
+    BuildContext context,
+    String label,
+    IconData icon,
+    Color color,
+    VoidCallback onTap,
+  ) {
+    return OutlinedButton.icon(
+      icon: Icon(icon, size: 16, color: color),
+      label: Text(label, style: TextStyle(color: color)),
+      style: OutlinedButton.styleFrom(
+        side: BorderSide(color: color.withOpacity(0.4)),
+      ),
+      onPressed: onTap,
+    );
+  }
+
+>>>>>>> temp-fix
   void _showDeleteDialog(BuildContext context, String productId) {
     showDialog(
       context: context,

@@ -14,28 +14,89 @@ class OnboardingView extends StatefulWidget {
 class _OnboardingViewState extends State<OnboardingView> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
-  late final theme=Theme.of(context);
+  List<OnboardingSlideWidget> get _slides {
+    final theme = Theme.of(context);
+    return [
+      OnboardingSlideWidget(
+        icon: Icons.shopping_bag_outlined,
+        title: 'Shop Easily',
+        subtitle: 'Browse thousands of products with just a few taps',
+        color: theme.primaryColor,
+      ),
+      OnboardingSlideWidget(
+        icon: Icons.shield_outlined,
+        title: 'Secure Payments',
+        subtitle: 'Your payments are safe and protected with us',
+        color: theme.primaryColor,
+      ),
+      OnboardingSlideWidget(
+        icon: Icons.chat_bubble_outline,
+        title: 'Live Support',
+        subtitle: 'Get help from our team anytime you need it',
+        color: theme.primaryColor,
+      ),
+    ];
+  }
 
-  late final List<OnboardingSlideWidget> _slides =  [
-    OnboardingSlideWidget(
-      icon: Icons.shopping_bag_outlined,
-      title: 'Shop Easily',
-      subtitle: 'Browse thousands of products with just a few taps',
-      color: theme.primaryColor,
-    ),
-    OnboardingSlideWidget(
-      icon: Icons.shield_outlined,
-      title: 'Secure Payments',
-      subtitle: 'Your payments are safe and protected with us',
-      color: theme.primaryColor,
-    ),
-    OnboardingSlideWidget(
-      icon: Icons.chat_bubble_outline,
-      title: 'Live Support',
-      subtitle: 'Get help from our team anytime you need it',
-      color: theme.primaryColor,
-    ),
-  ];
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final theme = Theme.of(context);
+
+    return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
+      body: SafeArea(
+        child: Column(
+          children: [
+            SizedBox(height: size.height * 0.03),
+            PageIndicatorsWidget(total: _slides.length, current: _currentPage),
+
+            SizedBox(height: size.height * 0.04),
+
+            Expanded(
+              child: PageView.builder(
+                controller: _pageController,
+                itemCount: _slides.length,
+                onPageChanged: (index) => setState(() => _currentPage = index),
+                itemBuilder: (_, index) => _slides[index],
+              ),
+            ),
+
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: size.width * 0.06,
+                vertical: size.height * 0.03,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (_currentPage > 0)
+                    TextButton.icon(
+                      onPressed: _prevPage,
+                      icon: Icon(Icons.arrow_back_ios, size: size.width * 0.04),
+                      label: Text(
+                        'Back',
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          fontSize: size.width * 0.04,
+                        ),
+                      ),
+                    )
+                  else
+                    SizedBox(width: size.width * 0.15),
+
+                  CustomElevatedButton(
+                    onPressed: _nextPage,
+                    slides: _slides.length,
+                    currentPage: _currentPage,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   void _nextPage() {
     if (_currentPage < _slides.length - 1) {
@@ -58,56 +119,4 @@ class _OnboardingViewState extends State<OnboardingView> {
   }
 
   void _skip() => AppRouter.router.go(AppRouter.kLogin);
-
-  @override
-  Widget build(BuildContext context) {
-    late final theme=Theme.of(context);
-    return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 24),
-            PageIndicatorsWidget(total: _slides.length, current: _currentPage),
-            const SizedBox(height: 30),
-            Expanded(
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: _slides.length,
-                onPageChanged: (index) => setState(() => _currentPage = index),
-                itemBuilder: (_, index) => _slides[index],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (_currentPage > 0)
-                    TextButton.icon(
-                      onPressed: _prevPage,
-                      icon: const Icon(
-                        Icons.arrow_back_ios,
-                        size: 16,
-                      ),
-                      label:  Text(
-                        'Back',
-                        style: theme.textTheme.bodyLarge,
-                      ),
-                    )
-                  else
-                    const SizedBox(width: 64),
-                  CustomElevatedButton(
-                    onPressed: _nextPage,
-                    slides: _slides.length,
-                    currentPage: _currentPage,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

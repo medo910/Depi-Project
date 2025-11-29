@@ -33,7 +33,9 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
 
   @override
   Widget build(BuildContext context) {
-    late final theme = Theme.of(context);
+    final size = MediaQuery.sizeOf(context);
+    final theme = Theme.of(context);
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -52,63 +54,74 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         title: Text('Reset Password', style: theme.textTheme.headlineMedium),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24),
-        child: Column(
-          children: [
-            CircleAvatar(
-              radius: 40,
-              backgroundColor: theme.primaryColor.withOpacity(0.1),
-              child: Icon(
-                Icons.mail_outline,
-                color: theme.primaryColor,
-                size: 40,
+      body: Center(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(
+            horizontal: size.width * 0.06,
+            vertical: size.height * 0.03,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: size.width * 0.1,
+                backgroundColor: theme.primaryColor.withOpacity(0.1),
+                child: Icon(
+                  Icons.mail_outline,
+                  color: theme.primaryColor,
+                  size: size.width * 0.1,
+                ),
               ),
-            ),
-            const SizedBox(height: 30),
-            Text("Reset your password", style: theme.textTheme.headlineMedium),
-            const SizedBox(height: 8),
-            Text(
-              'Enter your email and we will send you a link to reset your password.',
-              style: theme.textTheme.bodyMedium?.copyWith(fontSize: 14),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 28),
-            Form(
-              key: _formKey,
-              child: CustomFormTextField(
-                labelText: 'Email',
-                hintText: 'Enter your email',
-                fieldType: FieldType.email,
-                prefixIcon: Icons.email_outlined,
-                controller: _emailCtrl,
+              SizedBox(height: size.height * 0.03),
+              Text(
+                "Reset your password",
+                style: theme.textTheme.headlineMedium,
               ),
-            ),
-            const SizedBox(height: 20),
-            BlocConsumer<AuthCubit, AuthState>(
-              listener: (context, state) {
-                if (state is AuthError) {
-                  showSnackBar(context, state.message, Colors.red);
-                } else if (state is AuthPasswordReset) {
-                  showCustomAlertDialog(context, _emailCtrl.text.trim());
-                }
-              },
-              builder: (context, state) {
-                final isLoading = state is AuthLoading;
-                return Column(
-                  children: [
-                    CustomButton(
-                      backgroundColor: theme.primaryColor,
-                      text: "Send reset email",
-                      onPressed: _submit,
-                      isLoading: isLoading,
-                    ),
-                    const SizedBox(height: 12),
-                  ],
-                );
-              },
-            ),
-          ],
+              SizedBox(height: size.height * 0.01),
+              Text(
+                'Enter your email and we will send you a link to reset your password.',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontSize: size.width * 0.035,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: size.height * 0.04),
+              Form(
+                key: _formKey,
+                child: CustomFormTextField(
+                  labelText: 'Email',
+                  hintText: 'Enter your email',
+                  fieldType: FieldType.email,
+                  prefixIcon: Icons.email_outlined,
+                  controller: _emailCtrl,
+                ),
+              ),
+              SizedBox(height: size.height * 0.03),
+              BlocConsumer<AuthCubit, AuthState>(
+                listener: (context, state) {
+                  if (state is AuthError) {
+                    showSnackBar(context, state.message, Colors.red);
+                  } else if (state is AuthPasswordReset) {
+                    showCustomAlertDialog(context, _emailCtrl.text.trim());
+                  }
+                },
+                builder: (context, state) {
+                  final isLoading = state is AuthLoading;
+                  return Column(
+                    children: [
+                      CustomButton(
+                        backgroundColor: theme.primaryColor,
+                        text: "Send reset email",
+                        onPressed: _submit,
+                        isLoading: isLoading,
+                      ),
+                      SizedBox(height: size.height * 0.02),
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

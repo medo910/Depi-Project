@@ -11,6 +11,11 @@ class ProductListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
+=======
+    final size = MediaQuery.sizeOf(context); // 1. مقاسات
+
+>>>>>>> temp-fix
     return Scaffold(
       body: BlocBuilder<ProductCubit, ProductState>(
         builder: (context, state) {
@@ -27,12 +32,20 @@ class ProductListScreen extends StatelessWidget {
           return RefreshIndicator(
             onRefresh: () => context.read<ProductCubit>().fetchProducts(),
             child: ListView.builder(
+<<<<<<< HEAD
               padding: const EdgeInsets.all(16),
+=======
+              padding: EdgeInsets.all(size.width * 0.04),
+>>>>>>> temp-fix
               itemCount: state.products.length,
               itemBuilder: (context, index) {
                 final product = state.products[index];
                 return Padding(
+<<<<<<< HEAD
                   padding: const EdgeInsets.only(bottom: 12.0),
+=======
+                  padding: EdgeInsets.only(bottom: size.height * 0.015),
+>>>>>>> temp-fix
                   child: ProductCard(product: product),
                 );
               },

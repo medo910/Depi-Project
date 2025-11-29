@@ -2,6 +2,7 @@ import 'package:depi_app/features/auth/presentation/manager/auth_cubit/auth_cubi
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -669,6 +670,26 @@ class ProfileScreen extends StatelessWidget {
                                 scale: 0.7,
                                 child: Switch(value: true, onChanged: (v) {}),
                               ),
+                            ),
+                            const Divider(),
+                            ListTile(
+                              leading: Icon(
+                                Iconsax.lock_copy,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              title: Text(
+                                "Reset Password",
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                              trailing: const Icon(
+                                Icons.arrow_forward_ios,
+                                size: 16,
+                              ),
+                              onTap: () {
+                                GoRouter.of(
+                                  context,
+                                ).push(AppRouter.kResetPassword);
+                              },
                             ),
 
                             const Divider(),
