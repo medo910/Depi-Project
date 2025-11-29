@@ -10,16 +10,13 @@ class CartCubit extends Cubit<CartState> {
 
   final TextEditingController couponController = TextEditingController();
 
-  // متغيرات للـ UI
   double withoutTax = 0;
   double tax = 0;
   double shipping = 20;
   double total = 0;
 
-  // نسبة الخصم (0.0 = لا خصم)
   double discountPercent = 0;
 
-  // جلب الكارت من Firebase
   Future<void> loadCart() async {
     emit(const CartState(products: [], totalPrice: 0, isLoading: true));
 
@@ -57,7 +54,6 @@ class CartCubit extends Cubit<CartState> {
     _calculateTotals(items);
   }
 
-  // تحديث Firestore
   Future<void> _updateFirestore(List<ProductSelected> items) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
@@ -66,7 +62,6 @@ class CartCubit extends Cubit<CartState> {
     await FirebaseFirestore.instance.collection('users').doc(user.uid).update({'cart': cartMapped});
   }
 
-  // زيادة الكمية
   Future<void> increaseQty(int index) async {
     final updated = List<ProductSelected>.from(state.products);
     final item = updated[index];
@@ -113,14 +108,12 @@ class CartCubit extends Cubit<CartState> {
     await _updateFirestore(updated);
   }
 
-  // حذف منتج
   Future<void> removeItem(int index) async {
     final updated = List<ProductSelected>.from(state.products)..removeAt(index);
     _calculateTotals(updated);
     await _updateFirestore(updated);
   }
 
-  // تطبيق كوبون
   void applyCoupon(BuildContext context) {
     final code = couponController.text.trim();
     if (code.isEmpty) {
@@ -135,7 +128,7 @@ class CartCubit extends Cubit<CartState> {
     }
 
     if (code.toUpperCase() == 'SAVE1') {
-      discountPercent = 0.10; // خصم 10%
+      discountPercent = 0.10;
       _calculateTotals(state.products);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -153,10 +146,9 @@ class CartCubit extends Cubit<CartState> {
       );
     }
 
-    _calculateTotals(state.products); // إعادة الحساب مع الخصم
+    _calculateTotals(state.products); 
   }
 
-  // حساب الأسعار مع الخصم
   void _calculateTotals(List<ProductSelected> items) {
     double newWithoutTax = 0;
     double shipping = 20;
@@ -177,7 +169,6 @@ class CartCubit extends Cubit<CartState> {
       totalBeforeDiscount = newWithoutTax + tax + shipping;
     }
 
-    // تطبيق الخصم
     total = totalBeforeDiscount - (totalBeforeDiscount * discountPercent);
 
     this.withoutTax = newWithoutTax;
@@ -188,16 +179,13 @@ class CartCubit extends Cubit<CartState> {
   }
 
   Future<void> clearCart() async {
-    // تصفير الـ state
     emit(const CartState(products: [], totalPrice: 0, isLoading: false));
 
-    // إعادة تصفير المتغيرات الحسابية
     withoutTax = 0;
     tax = 0;
     shipping = 20;
     total = 0;
 
-    // تحديث Firestore
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       await FirebaseFirestore.instance
