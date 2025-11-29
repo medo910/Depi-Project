@@ -22,8 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String selectedCategory = 'All';
   List<Product> allProducts = [];
   final user = FirebaseAuth.instance.currentUser;
-  final double maxPrice = 2000;
-  RangeValues _currentRangeValues = const RangeValues(0, 2000);
+  final double maxPrice = 100000;
+  RangeValues _currentRangeValues = const RangeValues(0, 100000);
   String? selectedValue;
   static const String _sortKey = 'selected_sort_value';
   static const String _minPriceKey = 'min_price_value';
@@ -72,8 +72,8 @@ class _HomeScreenState extends State<HomeScreen> {
       selectedValue = sort ?? "Newest";
 
       _currentRangeValues = RangeValues(
-        minPrice ?? 0.0,
-        maxPriceFromPrefs ?? maxPrice,
+        (minPrice ?? 0.0).clamp(0, maxPrice),
+        (maxPriceFromPrefs ?? maxPrice).clamp(0, maxPrice),
       );
     });
   }
@@ -326,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     values: _currentRangeValues,
                     min: 0,
                     max: maxPrice,
-                    divisions: 200,
+                    divisions: 500,
                     activeColor: theme.primaryColor,
                     inactiveColor: theme.primaryColor.withOpacity(0.3),
                     onChanged: (RangeValues values) {

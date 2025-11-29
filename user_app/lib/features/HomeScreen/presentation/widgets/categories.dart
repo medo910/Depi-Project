@@ -4,8 +4,10 @@ class Categories {
     "Grocery",
     "Electronics",
     "Apparel",
-    "Sports",
+    "Sports & Outdoors",
     "Books",
-    "Toys",
+    'Beauty & Health',
+    'Shoes',
+    'Furniture',
   ];
 }

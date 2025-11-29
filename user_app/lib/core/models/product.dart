@@ -16,7 +16,7 @@ class Product {
   final String description;
   final List<String> instruction;
   final ProductAttributeType productAttributeType;
-  final dynamic stock;
+  final Map<String, dynamic> stock;
   final Timestamp date;
 
   Product({
