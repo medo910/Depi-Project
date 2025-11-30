@@ -35,9 +35,9 @@ class OnboardingSlideWidget extends StatelessWidget {
                   alignment: Alignment.topRight,
                   child: TextButton(
                     onPressed: () => AppRouter.router.go(AppRouter.kLogin),
-                    child: const Text(
+                    child: Text(
                       'Skip',
-                      style: AppStyles.styleMedium16Dark,
+                      style: AppStyles.styleMedium16Dark(context),
                     ),
                   ),
                 ),
@@ -68,7 +68,7 @@ class OnboardingSlideWidget extends StatelessWidget {
 
                 Text(
                   title,
-                  style: AppStyles.styleBold24Dark.copyWith(
+                  style: AppStyles.styleBold24Dark(context).copyWith(
                     fontSize: size.width * 0.065, // تحكم في حجم الخط
                   ),
                   textAlign: TextAlign.center,
@@ -78,7 +78,7 @@ class OnboardingSlideWidget extends StatelessWidget {
 
                 Text(
                   subtitle,
-                  style: AppStyles.styleRegular16Muted.copyWith(
+                  style: AppStyles.styleRegular16Muted(context).copyWith(
                     fontSize: size.width * 0.04,
                   ),
                   textAlign: TextAlign.center,

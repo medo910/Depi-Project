@@ -129,17 +129,29 @@ class ProfileScreen extends StatelessWidget {
                                         Theme.of(
                                           context,
                                         ).textTheme.headlineSmall,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
                                   ),
                                   const SizedBox(height: 3),
                                   Text(
                                     state.email,
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodySmall?.copyWith(
+                                      fontSize: screenWidth * 0.025,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
                                   ),
                                   Text(
                                     "Member since ${DateFormat('d MMMM yyyy', 'en_US').format(state.createdAt)}",
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodySmall?.copyWith(
+                                      fontSize: screenWidth * 0.025,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
                                   ),
                                 ],
                               ),
@@ -467,11 +479,6 @@ class ProfileScreen extends StatelessWidget {
                                                         ),
                                                       )
                                                       : const SizedBox(),
-
-                                                  SizedBox(
-                                                    width: screenWidth * 0.01,
-                                                  ),
-
                                                   // main details
                                                   Expanded(
                                                     child: buildOrderItem(
@@ -480,7 +487,7 @@ class ProfileScreen extends StatelessWidget {
                                                       date:
                                                           "${DateFormat('yyyy-MM-dd').format(date)} • ${products.length} items",
                                                       price:
-                                                          "\$${order.totalPrice.toStringAsFixed(2)}",
+                                                          "\$${order.totalPrice.toStringAsFixed(1)}",
                                                       status:
                                                           order.status
                                                               .toString()

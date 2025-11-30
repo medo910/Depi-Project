@@ -143,7 +143,7 @@ class _RegisterViewState extends State<RegisterView> {
                       Text(
                         'Already have an account?',
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          fontSize: size.width * 0.038,
+                          fontSize: size.width * 0.032,
                         ),
                       ),
                       GestureDetector(
@@ -153,7 +153,7 @@ class _RegisterViewState extends State<RegisterView> {
                         child: Text(
                           '  Login',
                           style: theme.textTheme.labelLarge?.copyWith(
-                            fontSize: size.width * 0.038,
+                            fontSize: size.width * 0.032,
                           ),
                         ),
                       ),

@@ -15,14 +15,14 @@ Widget buildOrderItem({
     children: [
       ListTile(
         contentPadding: EdgeInsets.zero,
-        title: Text('#$id', style: Theme.of(context).textTheme.headlineSmall),
-        subtitle: Text(date),
+        title: Text('#$id', style: Theme.of(context).textTheme.labelSmall),
+        subtitle: Text(date, style: Theme.of(context).textTheme.bodySmall),
         trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Container(
               padding: EdgeInsets.symmetric(
-                horizontal: screenWidth * 0.02,
+                horizontal: screenWidth * 0.01,
                 vertical: 4,
               ),
               decoration: BoxDecoration(
@@ -35,7 +35,7 @@ Widget buildOrderItem({
               ),
             ),
             const SizedBox(height: 5),
-            Text(price, style: Theme.of(context).textTheme.bodyLarge),
+            Text(price, style: Theme.of(context).textTheme.bodySmall),
           ],
         ),
       ),

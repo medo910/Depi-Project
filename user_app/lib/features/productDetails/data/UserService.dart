@@ -5,8 +5,23 @@ import 'package:flutter/foundation.dart';
 
 class CartService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Future<void> _ensureCartExists(String userId) async {
+    DocumentSnapshot userDoc =
+        await _firestore.collection('users').doc(userId).get();
+
+    if (!userDoc.exists) {
+      await _firestore.collection('users').doc(userId).set({'cart': []});
+    } else {
+      Map<String, dynamic>? data = userDoc.data() as Map<String, dynamic>?;
+      if (data == null || !data.containsKey('cart')) {
+        await _firestore.collection('users').doc(userId).update({'cart': []});
+      }
+    }
+  }
 
   Future<void> addToCart(String userId, ProductSelected product) async {
+    await _ensureCartExists(userId);
+
     bool exists = await isProductInCart(userId, product);
     if (exists) {
       await increeseProductQuantity(

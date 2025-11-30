@@ -141,7 +141,7 @@ class _LoginViewState extends State<LoginView> {
                       Text(
                         'Don\'t have an account?',
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          fontSize: size.width * 0.038,
+                          fontSize: size.width * 0.032,
                         ),
                       ),
                       GestureDetector(
@@ -151,7 +151,7 @@ class _LoginViewState extends State<LoginView> {
                         child: Text(
                           '  Register',
                           style: theme.textTheme.labelLarge?.copyWith(
-                            fontSize: size.width * 0.038,
+                            fontSize: size.width * 0.032,
                           ),
                         ),
                       ),
