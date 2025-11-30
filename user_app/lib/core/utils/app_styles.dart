@@ -3,144 +3,122 @@ import 'package:flutter/widgets.dart';
 abstract class AppStyles {
   static const String _fontFamily = 'Montserrat';
 
-  // Helper method للحصول على scale factor بناءً على عرض الشاشة
-  static double getResponsiveScale(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    
-    // Base width للمقارنة (375 للموبايل)
-    const baseWidth = 375.0;
-    
-    // احسب النسبة
-    double scale = width / baseWidth;
-    
-    // حدد الـ scale في نطاق معقول
-    if (scale < 0.8) scale = 0.8;
-    if (scale > 1.3) scale = 1.3;
-    
-    return scale;
-  }
-
-  // Helper method للحصول على font size responsive
-  static double getResponsiveFontSize(BuildContext context, double fontSize) {
-    return fontSize * getResponsiveScale(context);
-  }
-
-  // 12px - Responsive
-  static TextStyle styleRegular12Muted(BuildContext context) => TextStyle(
-    fontSize: getResponsiveFontSize(context, 12),
+  // 12px
+  static const TextStyle styleRegular12Muted = TextStyle(
+    fontSize: 12,
     fontWeight: FontWeight.w400,
     fontFamily: _fontFamily,
-    color: const Color(0xFF4B5563),
+    color: Color(0xFF4B5563), // muted
   );
 
-  static TextStyle styleMedium12Dark(BuildContext context) => TextStyle(
-    fontSize: getResponsiveFontSize(context, 12),
+  static const TextStyle styleMedium12Dark = TextStyle(
+    fontSize: 12,
     fontWeight: FontWeight.w500,
     fontFamily: _fontFamily,
-    color: const Color(0xFF1A1A1A),
+    color: Color(0xFF1A1A1A), // foreground
   );
 
-  static TextStyle styleSemiBold12Red(BuildContext context) => TextStyle(
-    fontSize: getResponsiveFontSize(context, 12),
+  static const TextStyle styleSemiBold12Red = TextStyle(
+    fontSize: 12,
     fontWeight: FontWeight.w600,
     fontFamily: _fontFamily,
-    color: const Color(0xFFDC2626),
+    color: Color(0xFFDC2626), // destructive
   );
 
-  // 14px - Responsive
-  static TextStyle styleRegular14Muted(BuildContext context) => TextStyle(
-    fontSize: getResponsiveFontSize(context, 14),
+  // 14px
+  static const TextStyle styleRegular14Muted = TextStyle(
+    fontSize: 14,
     fontWeight: FontWeight.w400,
     fontFamily: _fontFamily,
-    color: const Color(0xFF4B5563),
+    color: Color(0xFF4B5563), // muted
   );
 
-  static TextStyle styleMedium14Dark(BuildContext context) => TextStyle(
-    fontSize: getResponsiveFontSize(context, 14),
+  static const TextStyle styleMedium14Dark = TextStyle(
+    fontSize: 14,
     fontWeight: FontWeight.w500,
     fontFamily: _fontFamily,
-    color: const Color(0xFF1A1A1A),
+    color: Color(0xFF1A1A1A), // foreground
   );
 
-  static TextStyle styleMedium14Primary(BuildContext context) => TextStyle(
-    fontSize: getResponsiveFontSize(context, 14),
+  static const TextStyle styleMedium14Primary = TextStyle(
+    fontSize: 14,
     fontWeight: FontWeight.w500,
     fontFamily: _fontFamily,
-    color: const Color(0xFF80AF81),
+    color: Color(0xFF80AF81), // primary
   );
 
-  // 16px - Responsive
-  static TextStyle styleMedium16Dark(BuildContext context) => TextStyle(
-    fontSize: getResponsiveFontSize(context, 16),
+  // 16px
+  static const TextStyle styleMedium16Dark = TextStyle(
+    fontSize: 16,
     fontWeight: FontWeight.w500,
     fontFamily: _fontFamily,
-    color: const Color(0xFF1A1A1A),
+    color: Color(0xFF1A1A1A), // foreground
   );
 
-  static TextStyle styleRegular16Muted(BuildContext context) => TextStyle(
-    fontSize: getResponsiveFontSize(context, 16),
+  static const TextStyle styleRegular16Muted = TextStyle(
+    fontSize: 16,
     fontWeight: FontWeight.w400,
     fontFamily: _fontFamily,
-    color: const Color(0xFF4B5563),
+    color: Color(0xFF4B5563), // muted
   );
 
-  static TextStyle styleMedium16Green(BuildContext context) => TextStyle(
-    fontSize: getResponsiveFontSize(context, 16),
+  static const TextStyle styleMedium16Green = TextStyle(
+    fontSize: 16,
     fontWeight: FontWeight.w500,
     fontFamily: _fontFamily,
-    color: const Color(0xFF16A34A),
+    color: Color(0xFF16A34A), // success
   );
 
-  // 18px - Responsive
-  static TextStyle styleSemiBold18Dark(BuildContext context) => TextStyle(
-    fontSize: getResponsiveFontSize(context, 18),
+  // 18px
+  static const TextStyle styleSemiBold18Dark = TextStyle(
+    fontSize: 18,
     fontWeight: FontWeight.w600,
     fontFamily: _fontFamily,
-    color: const Color(0xFF1A1A1A),
+    color: Color(0xFF1A1A1A), // foreground
   );
 
-  static TextStyle styleMedium18Muted(BuildContext context) => TextStyle(
-    fontSize: getResponsiveFontSize(context, 18),
+  static const TextStyle styleMedium18Muted = TextStyle(
+    fontSize: 18,
     fontWeight: FontWeight.w500,
     fontFamily: _fontFamily,
-    color: const Color(0xFF4B5563),
+    color: Color(0xFF4B5563), // muted
   );
 
-  // 20px - Responsive
-  static TextStyle styleSemiBold20Dark(BuildContext context) => TextStyle(
-    fontSize: getResponsiveFontSize(context, 20),
+  // 20px
+  static const TextStyle styleSemiBold20Dark = TextStyle(
+    fontSize: 20,
     fontWeight: FontWeight.w600,
     fontFamily: _fontFamily,
-    color: const Color(0xFF1A1A1A),
+    color: Color(0xFF1A1A1A), // foreground
   );
 
-  static TextStyle styleBold20Primary(BuildContext context) => TextStyle(
-    fontSize: getResponsiveFontSize(context, 20),
+  static const TextStyle styleBold20Primary = TextStyle(
+    fontSize: 20,
     fontWeight: FontWeight.w700,
     fontFamily: _fontFamily,
-    color: const Color(0xFF80AF81),
+    color: Color(0xFF80AF81), // primary
   );
 
-  // 24px - Responsive
-  static TextStyle styleSemiBold24Dark(BuildContext context) => TextStyle(
-    fontSize: getResponsiveFontSize(context, 24),
+  // 24px
+  static const TextStyle styleSemiBold24Dark = TextStyle(
+    fontSize: 24,
     fontWeight: FontWeight.w600,
     fontFamily: _fontFamily,
-    color: const Color(0xFF1A1A1A),
+    color: Color(0xFF1A1A1A),
   );
 
-  static TextStyle styleBold24Dark(BuildContext context) => TextStyle(
-    fontSize: getResponsiveFontSize(context, 24),
+  static const TextStyle styleBold24Dark = TextStyle(
+    fontSize: 24,
     fontWeight: FontWeight.w700,
     fontFamily: _fontFamily,
-    color: const Color(0xFF1A1A1A),
+    color: Color(0xFF1A1A1A),
   );
 
-  // 30px - Responsive
-  static TextStyle styleBold30Primary(BuildContext context) => TextStyle(
-    fontSize: getResponsiveFontSize(context, 30),
+  // 30px
+  static const TextStyle styleBold30Primary = TextStyle(
+    fontSize: 30,
     fontWeight: FontWeight.w700,
     fontFamily: _fontFamily,
-    color: const Color(0xFF80AF81),
+    color: Color(0xFF80AF81),
   );
 }
