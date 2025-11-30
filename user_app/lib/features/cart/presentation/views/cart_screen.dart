@@ -12,8 +12,10 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = context.watch<CartCubit>();
     final cart = cubit.state.products;
-    late final theme=Theme.of(context);
-
+    late final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
+    final screenWidth = size.width;
+    final screenHeight = size.height;
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
@@ -21,8 +23,8 @@ class CartScreen extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.shopping_cart,color: Theme.of(context).primaryColor,),
-            const SizedBox(width: 10,),
+            Icon(Icons.shopping_cart, color: Theme.of(context).primaryColor),
+            SizedBox(width: screenWidth * 0.02),
             Text(
               'Shopping Cart (${cubit.state.products.length})',
               style: theme.textTheme.headlineMedium,
@@ -38,7 +40,7 @@ class CartScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("🛒", style: TextStyle(fontSize: 100)),
+                    Text("🛒", style: TextStyle(fontSize: screenWidth * 0.3)),
                     const SizedBox(height: 8),
                     Text(
                       "Your cart is empty",
@@ -51,25 +53,30 @@ class CartScreen extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        AppRouter.router.go(AppRouter.kHome);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor,
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                    Container(
+                      color: theme.scaffoldBackgroundColor,
+                      padding: EdgeInsets.all(screenWidth * 0.02),
+                      width: screenWidth * 0.5,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          AppRouter.router.go(AppRouter.kHome);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).primaryColor,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 8,
+                          ),
                         ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 8,
+                        child: Text(
+                          "Start Shopping",
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
-                      ),
-                      child: Text(
-                        "Start Shopping",
-                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ),
                   ],
@@ -93,8 +100,10 @@ class CartScreen extends StatelessWidget {
                               final color = item.productDetails['color'];
 
                               return Container(
-                                margin: const EdgeInsets.symmetric(vertical: 8),
-                                padding: const EdgeInsets.all(12),
+                                margin: EdgeInsets.symmetric(
+                                  vertical: screenHeight * 0.01,
+                                ),
+                                padding: EdgeInsets.all(screenWidth * 0.02),
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).cardColor,
                                   borderRadius: BorderRadius.circular(12),
@@ -103,8 +112,8 @@ class CartScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
-                                      width: 70,
-                                      height: 70,
+                                      width: screenWidth * 0.18,
+                                      height: screenHeight * 0.08,
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(10),
@@ -116,18 +125,18 @@ class CartScreen extends StatelessWidget {
                                                     BorderRadius.circular(10),
                                                 child: Image.network(
                                                   item.photoURL,
-                                                  width: 70,
-                                                  height: 70,
+                                                  width: screenWidth * 0.18,
+                                                  height: screenHeight * 0.08,
                                                   fit: BoxFit.cover,
                                                 ),
                                               )
-                                              : const Icon(
+                                              : Icon(
                                                 Icons.image,
                                                 color: Colors.white,
-                                                size: 36,
+                                                size: screenWidth * 0.1,
                                               ),
                                     ),
-                                    const SizedBox(width: 12),
+                                    SizedBox(width: screenWidth * 0.04),
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
@@ -216,7 +225,7 @@ class CartScreen extends StatelessWidget {
                                                       Theme.of(
                                                         context,
                                                       ).primaryColor,
-                                                  fontSize: 16,
+                                                  fontSize: screenWidth * 0.04,
                                                   fontWeight: FontWeight.w600,
                                                 ),
                                               ),
@@ -243,7 +252,7 @@ class CartScreen extends StatelessWidget {
                                                     child: Row(
                                                       children: [
                                                         IconButton(
-                                                          icon: const Icon(
+                                                          icon: Icon(
                                                             Icons.remove,
                                                           ),
                                                           onPressed: () {
@@ -253,7 +262,9 @@ class CartScreen extends StatelessWidget {
                                                               );
                                                             }
                                                           },
-                                                          iconSize: 18,
+                                                          iconSize:
+                                                              screenWidth *
+                                                              0.04,
                                                         ),
                                                         Text(
                                                           qty.toString(),
@@ -263,20 +274,22 @@ class CartScreen extends StatelessWidget {
                                                                   .bodyMedium,
                                                         ),
                                                         IconButton(
-                                                          icon: const Icon(
-                                                            Icons.add,
-                                                          ),
+                                                          icon: Icon(Icons.add),
                                                           onPressed:
                                                               () => cubit
                                                                   .increaseQty(
                                                                     index,
                                                                   ),
-                                                          iconSize: 18,
+                                                          iconSize:
+                                                              screenWidth *
+                                                              0.04,
                                                         ),
                                                       ],
                                                     ),
                                                   ),
-                                                  const SizedBox(width: 8),
+                                                  SizedBox(
+                                                    width: screenWidth * 0.02,
+                                                  ),
                                                   IconButton(
                                                     icon: const Icon(
                                                       Icons.delete_outline,
@@ -307,7 +320,7 @@ class CartScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.all(12.0),
+                              padding: EdgeInsets.all(screenWidth * 0.03),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -317,7 +330,7 @@ class CartScreen extends StatelessWidget {
                                         Icons.discount_outlined,
                                         color: Theme.of(context).primaryColor,
                                       ),
-                                      const SizedBox(width: 6),
+                                      SizedBox(width: screenWidth * 0.02),
                                       Text(
                                         "Discount Coupon",
                                         style: Theme.of(
@@ -362,7 +375,7 @@ class CartScreen extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(width: 8),
+                                      SizedBox(width: screenWidth * 0.009),
                                       Flexible(
                                         flex: 0,
                                         child: CustomButton(
@@ -518,126 +531,204 @@ class CartScreen extends StatelessWidget {
                         if (insufficientItems.isNotEmpty) {
                           showDialog(
                             context: context,
-                            builder: (context) => AlertDialog(
-                              backgroundColor: Theme.of(context).cardColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              elevation: 8,
-                              titlePadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
-                              contentPadding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
-                              actionsPadding: const EdgeInsets.fromLTRB(0, 0, 12, 12),
-
-                              title: Row(
-                                children: [
-                                  Icon(Icons.error_outline, color: Colors.red, size: 28),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    "Insufficient Stock",
-                                    style: theme.textTheme.displayMedium?.copyWith(fontSize: 22),
+                            builder:
+                                (context) => AlertDialog(
+                                  backgroundColor: Theme.of(context).cardColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
-                                ],
-                              ),
+                                  elevation: 8,
+                                  titlePadding: EdgeInsets.all(
+                                    screenWidth * 0.05,
+                                  ),
+                                  contentPadding: EdgeInsets.all(
+                                    screenWidth * 0.03,
+                                  ),
+                                  actionsPadding: EdgeInsets.all(
+                                    screenWidth * 0.04,
+                                  ),
 
-                              content: SizedBox(
-                                width: double.maxFinite,
-                                child: ListView(
-                                  shrinkWrap: true,
-                                  children: insufficientItems.map((item) {
-                                    return Container(
-                                      margin: const EdgeInsets.symmetric(vertical: 6),
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        color: theme.cardColor,
-                                        borderRadius: BorderRadius.circular(16),
-                                        border: Border.all(color: Colors.grey.shade300),
+                                  title: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.error_outline,
+                                        color: Colors.red,
+                                        size: screenWidth * 0.08,
                                       ),
-
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            item['name'],
-                                            style: theme.textTheme.headlineMedium?.copyWith(
-                                              fontSize: 18,
+                                      SizedBox(width: screenWidth * 0.02),
+                                      Text(
+                                        "Insufficient Stock",
+                                        style: theme.textTheme.displayMedium
+                                            ?.copyWith(
+                                              fontSize: screenWidth * 0.05,
                                             ),
-                                          ),
-                                          SizedBox(height: 4),
+                                      ),
+                                    ],
+                                  ),
 
-                                          if (item['color'] != null && item['size'] != null)
-                                            Text(
-                                              "(${item['color']} • ${item['size']})",
-                                              style: TextStyle(color: Colors.grey.shade700),
-                                            ),
-
-                                          if (item['color'] != null && item['size'] == null)
-                                            Text(
-                                              "Color: ${item['color']}",
-                                              style: TextStyle(color: Colors.grey.shade700),
-                                            ),
-
-                                          if (item['size'] != null && item['color'] == null)
-                                            Text(
-                                              "Size: ${item['size']}",
-                                              style: TextStyle(color: Colors.grey.shade700),
-                                            ),
-
-                                          SizedBox(height: 10),
-
-                                          Row(
-                                            children: [
-                                              Container(
-                                                padding:
-                                                EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.red.withOpacity(.1),
-                                                  borderRadius: BorderRadius.circular(8),
-                                                ),
-                                                child: Text(
-                                                  "Requested: ${item['requested']}",
-                                                  style: TextStyle(color: Colors.red),
+                                  content: SizedBox(
+                                    width: double.maxFinite,
+                                    child: ListView(
+                                      shrinkWrap: true,
+                                      children:
+                                          insufficientItems.map((item) {
+                                            return Container(
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                    vertical: 6,
+                                                  ),
+                                              padding: EdgeInsets.all(
+                                                screenWidth * 0.03,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: theme.cardColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
+                                                border: Border.all(
+                                                  color: Colors.grey.shade300,
                                                 ),
                                               ),
-                                              SizedBox(width: 10),
-                                              Container(
-                                                padding:
-                                                EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.green.withOpacity(.1),
-                                                  borderRadius: BorderRadius.circular(8),
-                                                ),
-                                                child: Text(
-                                                  "Available: ${item['available']}",
-                                                  style: TextStyle(color: Colors.green),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
 
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  style: TextButton.styleFrom(
-                                    foregroundColor: Colors.white,
-                                    backgroundColor: Colors.black87,
-                                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    item['name'],
+                                                    style: theme
+                                                        .textTheme
+                                                        .headlineMedium
+                                                        ?.copyWith(
+                                                          fontSize:
+                                                              screenWidth *
+                                                              0.045,
+                                                        ),
+                                                  ),
+                                                  SizedBox(height: 4),
+
+                                                  if (item['color'] != null &&
+                                                      item['size'] != null)
+                                                    Text(
+                                                      "(${item['color']} • ${item['size']})",
+                                                      style: TextStyle(
+                                                        color:
+                                                            Colors
+                                                                .grey
+                                                                .shade700,
+                                                      ),
+                                                    ),
+
+                                                  if (item['color'] != null &&
+                                                      item['size'] == null)
+                                                    Text(
+                                                      "Color: ${item['color']}",
+                                                      style: TextStyle(
+                                                        color:
+                                                            Colors
+                                                                .grey
+                                                                .shade700,
+                                                      ),
+                                                    ),
+
+                                                  if (item['size'] != null &&
+                                                      item['color'] == null)
+                                                    Text(
+                                                      "Size: ${item['size']}",
+                                                      style: TextStyle(
+                                                        color:
+                                                            Colors
+                                                                .grey
+                                                                .shade700,
+                                                      ),
+                                                    ),
+
+                                                  SizedBox(height: 10),
+
+                                                  Row(
+                                                    children: [
+                                                      Container(
+                                                        padding:
+                                                            EdgeInsets.symmetric(
+                                                              horizontal:
+                                                                  screenWidth *
+                                                                  0.03,
+                                                              vertical: 4,
+                                                            ),
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.red
+                                                              .withOpacity(.1),
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                8,
+                                                              ),
+                                                        ),
+                                                        child: Text(
+                                                          "Requested: ${item['requested']}",
+                                                          style: TextStyle(
+                                                            color: Colors.red,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width:
+                                                            screenWidth * 0.02,
+                                                      ),
+                                                      Container(
+                                                        padding:
+                                                            EdgeInsets.symmetric(
+                                                              horizontal:
+                                                                  screenWidth *
+                                                                  0.03,
+                                                              vertical: 4,
+                                                            ),
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.green
+                                                              .withOpacity(.1),
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                8,
+                                                              ),
+                                                        ),
+                                                        child: Text(
+                                                          "Available: ${item['available']}",
+                                                          style: TextStyle(
+                                                            color: Colors.green,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }).toList(),
                                     ),
                                   ),
-                                  child: Text("OK", style: TextStyle(fontSize: 16)),
+
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      style: TextButton.styleFrom(
+                                        foregroundColor: Colors.white,
+                                        backgroundColor: Colors.black87,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: screenWidth * 0.05,
+                                          vertical: 10,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        "OK",
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
                           );
-
-
                         } else {
                           await stockService.decreaseStockForcart(cart);
                           AppRouter.router.go(AppRouter.kCheckout);
@@ -645,7 +736,7 @@ class CartScreen extends StatelessWidget {
                       },
                       text: 'Checkout • \$${cubit.total.toStringAsFixed(2)}',
                       backgroundColor: Theme.of(context).primaryColor,
-                      size: 18,
+                      size: screenWidth * 0.045,
                       textColor: Colors.white,
                     ),
                   ),

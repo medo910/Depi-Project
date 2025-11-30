@@ -17,12 +17,15 @@ class FavoritesScreen extends StatefulWidget {
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
   final user = FirebaseAuth.instance.currentUser;
-  late final theme=Theme.of(context);
+  late final theme = Theme.of(context);
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final screenWidth = size.width;
+    final screenHeight = size.height;
     return Scaffold(
-      backgroundColor:theme.scaffoldBackgroundColor,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: BlocBuilder<FavoritesCubit, FavoritesState>(
         builder: (context, state) {
           if (state.loading && state.favorites.isEmpty) {
@@ -42,26 +45,26 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 15),
+                        padding: EdgeInsets.only(bottom: screenHeight * 0.02),
                         child: Container(
                           decoration: BoxDecoration(color: theme.cardColor),
-                          height: 90,
+                          height: screenHeight * 0.12,
 
                           child: Padding(
-                            padding: const EdgeInsets.all(25.0),
+                            padding: EdgeInsets.all(screenWidth * 0.04),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                 Icon(
+                                Icon(
                                   Icons.favorite,
-                                  color:theme.primaryColor,
+                                  color: theme.primaryColor,
                                   size: 26,
                                 ),
-                                const SizedBox(width: 12),
+                                SizedBox(width: screenWidth * 0.03),
                                 Text(
                                   'Favorites',
-                                  style: theme.textTheme.headlineMedium
+                                  style: theme.textTheme.headlineMedium,
                                 ),
                               ],
                             ),
@@ -70,39 +73,43 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                       ),
                       Lottie.asset(
                         'assets/animations/Like.json',
-                        width: 400,
-                        height: 300,
+                        width: screenWidth * 0.7,
+                        height: screenHeight * 0.4,
                       ),
                       Text(
                         'No favorites yet',
                         style: theme.textTheme.displaySmall,
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: screenHeight * 0.02),
                       Text(
                         'Save items you love to your favorites list',
                         style: theme.textTheme.titleMedium,
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: screenHeight * 0.02),
 
                       Container(
                         color: theme.scaffoldBackgroundColor,
-                        padding: const EdgeInsets.all(16),
-                        width: 250,
+                        padding: EdgeInsets.all(screenWidth * 0.02),
+                        width: screenWidth * 0.5,
                         child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:theme.primaryColor,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          onPressed: () async {
+                          onPressed: () {
                             AppRouter.router.go(AppRouter.kHome);
                           },
-
-                          child: const Text(
-                            'Start Shopping',
-                            style: TextStyle(fontSize: 18, color: Colors.white),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 8,
+                            ),
+                          ),
+                          child: Text(
+                            "Start Shopping",
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
                         ),
                       ),
@@ -117,18 +124,18 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 25),
+                    padding: EdgeInsets.only(bottom: screenHeight * 0.02),
                     child: Container(
-                      decoration: BoxDecoration(color:theme.cardColor),
-                      height: 90,
+                      decoration: BoxDecoration(color: theme.cardColor),
+                      height: screenHeight * 0.12,
 
                       child: Padding(
-                        padding: const EdgeInsets.all(15.0),
+                        padding: EdgeInsets.all(screenWidth * 0.04),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                             Icon(
+                            Icon(
                               Icons.favorite,
                               color: theme.primaryColor,
                               size: 26,
@@ -178,10 +185,13 @@ class FavoriteProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late final theme=Theme.of(context);
+    late final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
+    final screenWidth = size.width;
+    final screenHeight = size.height;
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(bottom: screenHeight * 0.02),
+      padding: EdgeInsets.all(screenWidth * 0.03),
       decoration: BoxDecoration(
         color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
@@ -196,10 +206,10 @@ class FavoriteProductCard extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 80,
-            height: 80,
+            width: screenWidth * 0.2,
+            height: screenHeight * 0.1,
             decoration: BoxDecoration(
-              color:  Colors.white,
+              color: Colors.white,
               borderRadius: BorderRadius.circular(12),
             ),
             child: ClipRRect(
@@ -208,16 +218,16 @@ class FavoriteProductCard extends StatelessWidget {
                 product.photoUrl,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return const Icon(
+                  return Icon(
                     Icons.image_not_supported,
-                    size: 40,
+                    size: screenWidth * 0.1,
                     color: Colors.grey,
                   );
                 },
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: screenWidth * 0.04),
 
           Expanded(
             child: Column(
@@ -232,17 +242,18 @@ class FavoriteProductCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Text(
-                      product.brand,
-                      style: theme.textTheme.labelSmall,
-                    ),
+                    Text(product.brand, style: theme.textTheme.labelSmall),
                     const Text(' 😊'),
                   ],
                 ),
                 const SizedBox(height: 6),
                 Row(
                   children: [
-                    const Icon(Icons.star, color: Colors.amber, size: 16),
+                    Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                      size: screenWidth * 0.04,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       '${product.rate.toStringAsFixed(1)}(${product.reviews})',
@@ -253,7 +264,9 @@ class FavoriteProductCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   '\$${product.price.toStringAsFixed(0)}',
-                  style:theme.textTheme.headlineSmall?.copyWith(color: theme.primaryColor),
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    color: theme.primaryColor,
+                  ),
                 ),
               ],
             ),
@@ -288,7 +301,7 @@ class FavoriteProductCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: IconButton(
-                  icon:  Icon(Icons.shopping_cart,color: theme.primaryColor,),
+                  icon: Icon(Icons.shopping_cart, color: theme.primaryColor),
                   onPressed: () {
                     AppRouter.router.go(
                       AppRouter.kProductDetails,

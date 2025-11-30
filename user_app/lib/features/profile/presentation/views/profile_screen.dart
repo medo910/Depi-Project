@@ -27,6 +27,9 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const String _fontFamily = 'Montserrat';
+    final size = MediaQuery.of(context).size;
+    final screenWidth = size.width;
+    final screenHeight = size.height;
 
     return BlocListener<UserProfileCubit, UserProfileState>(
       listener: (context, state) {
@@ -74,7 +77,7 @@ class ProfileScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         children: [
-                          const SizedBox(height: 30),
+                          SizedBox(height: screenHeight * 0.04),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -91,13 +94,13 @@ class ProfileScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: screenHeight * 0.02),
                           Row(
                             children: [
                               state.photoUrl != null &&
                                       state.photoUrl!.isNotEmpty
                                   ? CircleAvatar(
-                                    radius: 30,
+                                    radius: screenWidth * 0.072,
                                     backgroundImage: NetworkImage(
                                       state.photoUrl!,
                                     ),
@@ -105,18 +108,18 @@ class ProfileScreen extends StatelessWidget {
                                         Theme.of(context).primaryColor,
                                   )
                                   : CircleAvatar(
-                                    radius: 30,
+                                    radius: screenWidth * 0.072,
                                     backgroundColor:
                                         Theme.of(context).primaryColor,
                                     child: Text(
                                       getFirstAndLastInitial(state.name),
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 20,
+                                        fontSize: screenWidth * 0.050,
                                       ),
                                     ),
                                   ),
-                              const SizedBox(width: 15),
+                              SizedBox(width: screenWidth * 0.03),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -146,9 +149,11 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
 
-                    const SizedBox(height: 10),
+                    SizedBox(height: screenHeight * 0.01),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.03,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -197,15 +202,15 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
 
-                    const SizedBox(height: 10),
+                    SizedBox(height: screenHeight * 0.015),
 
                     Padding(
-                      padding: const EdgeInsets.all(12.0),
+                      padding: EdgeInsets.all(screenWidth * 0.03),
                       child: Card(
                         color: Theme.of(context).cardColor,
                         elevation: 0.5,
                         child: Padding(
-                          padding: const EdgeInsets.all(12.0),
+                          padding: EdgeInsets.all(screenWidth * 0.02),
                           child: Column(
                             children: [
                               Row(
@@ -240,7 +245,7 @@ class ProfileScreen extends StatelessWidget {
                                                 context,
                                               ).textTheme.bodyMedium,
                                         ),
-                                        SizedBox(width: 8),
+                                        SizedBox(width: screenWidth * 0.02),
                                         Icon(Icons.arrow_forward_ios, size: 10),
                                       ],
                                     ),
@@ -255,7 +260,10 @@ class ProfileScreen extends StatelessWidget {
                                   if (!snapshot.hasData ||
                                       snapshot.data!.isEmpty) {
                                     return Padding(
-                                      padding: EdgeInsets.all(20),
+                                      padding: EdgeInsets.all(
+                                        screenWidth *
+                                            0.3, // -----------------------
+                                      ),
                                       child: Text(
                                         "No Orders Yet",
                                         style: Theme.of(
@@ -293,7 +301,9 @@ class ProfileScreen extends StatelessWidget {
                                               );
                                             },
                                             child: Container(
-                                              padding: const EdgeInsets.all(16),
+                                              padding: EdgeInsets.all(
+                                                screenWidth * 0.02,
+                                              ),
                                               decoration: BoxDecoration(
                                                 color:
                                                     Theme.of(context).cardColor,
@@ -329,14 +339,15 @@ class ProfileScreen extends StatelessWidget {
                                                                 shape: RoundedRectangleBorder(
                                                                   borderRadius:
                                                                       BorderRadius.circular(
-                                                                        20,
+                                                                        screenWidth *
+                                                                            0.03,
                                                                       ),
                                                                 ),
                                                                 child: Padding(
-                                                                  padding:
-                                                                      const EdgeInsets.all(
-                                                                        20,
-                                                                      ),
+                                                                  padding: EdgeInsets.all(
+                                                                    screenWidth *
+                                                                        0.03,
+                                                                  ),
                                                                   child: Column(
                                                                     mainAxisSize:
                                                                         MainAxisSize
@@ -350,10 +361,10 @@ class ProfileScreen extends StatelessWidget {
                                                                           shape:
                                                                               BoxShape.circle,
                                                                         ),
-                                                                        padding:
-                                                                            const EdgeInsets.all(
-                                                                              15,
-                                                                            ),
+                                                                        padding: EdgeInsets.all(
+                                                                          screenWidth *
+                                                                              0.03,
+                                                                        ),
                                                                         child: const Icon(
                                                                           Icons
                                                                               .delete_forever,
@@ -363,9 +374,10 @@ class ProfileScreen extends StatelessWidget {
                                                                               Colors.redAccent,
                                                                         ),
                                                                       ),
-                                                                      const SizedBox(
+                                                                      SizedBox(
                                                                         height:
-                                                                            20,
+                                                                            screenHeight *
+                                                                            0.03,
                                                                       ),
 
                                                                       Text(
@@ -375,9 +387,10 @@ class ProfileScreen extends StatelessWidget {
                                                                               context,
                                                                             ).textTheme.displayMedium,
                                                                       ),
-                                                                      const SizedBox(
+                                                                      SizedBox(
                                                                         height:
-                                                                            10,
+                                                                            screenHeight *
+                                                                            0.03,
                                                                       ),
                                                                       Text(
                                                                         "Are you sure you want to delete your order?",
@@ -388,9 +401,10 @@ class ProfileScreen extends StatelessWidget {
                                                                               context,
                                                                             ).textTheme.titleMedium,
                                                                       ),
-                                                                      const SizedBox(
+                                                                      SizedBox(
                                                                         height:
-                                                                            25,
+                                                                            screenHeight *
+                                                                            0.03,
                                                                       ),
                                                                       Row(
                                                                         children: [
@@ -454,7 +468,9 @@ class ProfileScreen extends StatelessWidget {
                                                       )
                                                       : const SizedBox(),
 
-                                                  const SizedBox(width: 8),
+                                                  SizedBox(
+                                                    width: screenWidth * 0.01,
+                                                  ),
 
                                                   // main details
                                                   Expanded(
@@ -511,7 +527,9 @@ class ProfileScreen extends StatelessWidget {
                     ),
 
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.03,
+                      ),
                       child: Card(
                         color: Theme.of(context).cardColor,
                         shape: RoundedRectangleBorder(
@@ -540,9 +558,9 @@ class ProfileScreen extends StatelessWidget {
                               subtitle: const Text("English"),
                               trailing: InkWell(
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: screenWidth * 0.03,
+                                    vertical: screenHeight * 0.01,
                                   ),
                                   decoration: BoxDecoration(
                                     color:
@@ -724,10 +742,14 @@ class ProfileScreen extends StatelessWidget {
                                   builder: (context) {
                                     return Dialog(
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
+                                        borderRadius: BorderRadius.circular(
+                                          screenWidth * 0.03,
+                                        ),
                                       ),
                                       child: Padding(
-                                        padding: const EdgeInsets.all(20),
+                                        padding: EdgeInsets.all(
+                                          screenWidth * 0.03,
+                                        ),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
@@ -736,14 +758,18 @@ class ProfileScreen extends StatelessWidget {
                                                 color: Color(0xFFFAE3E3),
                                                 shape: BoxShape.circle,
                                               ),
-                                              padding: const EdgeInsets.all(15),
-                                              child: const Icon(
+                                              padding: EdgeInsets.all(
+                                                screenWidth * 0.02,
+                                              ),
+                                              child: Icon(
                                                 Icons.logout,
-                                                size: 45,
+                                                size: screenWidth * 0.12,
                                                 color: Colors.red,
                                               ),
                                             ),
-                                            const SizedBox(height: 20),
+                                            SizedBox(
+                                              height: screenHeight * 0.03,
+                                            ),
 
                                             Text(
                                               "Logout",
@@ -752,7 +778,9 @@ class ProfileScreen extends StatelessWidget {
                                                     context,
                                                   ).textTheme.displayMedium,
                                             ),
-                                            const SizedBox(height: 10),
+                                            SizedBox(
+                                              height: screenHeight * 0.02,
+                                            ),
                                             Text(
                                               "Are you sure you want to logout?",
                                               textAlign: TextAlign.center,
@@ -761,7 +789,9 @@ class ProfileScreen extends StatelessWidget {
                                                     context,
                                                   ).textTheme.titleMedium,
                                             ),
-                                            const SizedBox(height: 25),
+                                            SizedBox(
+                                              height: screenHeight * 0.03,
+                                            ),
                                             Row(
                                               children: [
                                                 Expanded(

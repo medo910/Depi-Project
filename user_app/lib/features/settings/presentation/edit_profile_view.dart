@@ -75,6 +75,9 @@ class _EditProfileViewState extends State<EditProfileView> {
   @override
   Widget build(BuildContext context) {
     late final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
+    final screenWidth = size.width;
+    final screenHeight = size.height;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Edit Profile"),
@@ -89,7 +92,7 @@ class _EditProfileViewState extends State<EditProfileView> {
           _isLoadingData
               ? const Center(child: CircularProgressIndicator())
               : Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(screenWidth * 0.05),
                 child: Form(
                   key: _formKey,
                   child: ListView(
@@ -101,7 +104,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                         prefixIcon: Iconsax.user_copy,
                         fieldType: FieldType.name,
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: screenHeight * 0.01),
                       CustomFormTextField(
                         controller: _emailController,
                         labelText: "Email",
@@ -109,7 +112,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                         prefixIcon: Iconsax.sms_copy,
                         fieldType: FieldType.email,
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: screenHeight * 0.01),
                       CustomFormTextField(
                         controller: _phoneController,
                         labelText: "Phone Number",
@@ -117,7 +120,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                         prefixIcon: Iconsax.call_copy,
                         fieldType: FieldType.phone,
                       ),
-                      const SizedBox(height: 24),
+                      SizedBox(height: screenHeight * 0.03),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -141,7 +144,7 @@ class _EditProfileViewState extends State<EditProfileView> {
 
                       ...List.generate(_addressControllers.length, (index) {
                         return Padding(
-                          padding: const EdgeInsets.only(bottom: 12.0),
+                          padding: EdgeInsets.only(bottom: screenHeight * 0.02),
                           child: Row(
                             children: [
                               Expanded(
@@ -166,7 +169,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                         );
                       }),
 
-                      const SizedBox(height: 30),
+                      SizedBox(height: screenHeight * 0.04),
 
                       BlocConsumer<AuthCubit, AuthState>(
                         listener: (context, state) {

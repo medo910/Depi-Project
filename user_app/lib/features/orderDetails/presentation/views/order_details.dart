@@ -10,6 +10,9 @@ class OrderDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final products = order.products;
+    final size = MediaQuery.of(context).size;
+    final screenWidth = size.width;
+    final screenHeight = size.height;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -22,7 +25,7 @@ class OrderDetailsScreen extends StatelessWidget {
         ),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(screenWidth * 0.04),
         children: [
           ...products.map((p) => _productCard(context, p)),
           const SizedBox(height: 20),
@@ -33,8 +36,11 @@ class OrderDetailsScreen extends StatelessWidget {
   }
 
   Widget _productCard(BuildContext context, product) {
+    final size = MediaQuery.of(context).size;
+    final screenWidth = size.width;
+    final screenHeight = size.height;
     return Container(
-      margin: const EdgeInsets.only(bottom: 14),
+      margin: EdgeInsets.only(bottom: screenHeight * 0.02),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(18),
@@ -43,11 +49,11 @@ class OrderDetailsScreen extends StatelessWidget {
             color: Colors.black.withOpacity(0.06),
             blurRadius: 12,
             offset: const Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.all(14),
+        contentPadding: EdgeInsets.all(screenWidth * 0.04),
         leading: ClipRRect(
           borderRadius: BorderRadius.circular(14),
           child: Container(
@@ -62,10 +68,9 @@ class OrderDetailsScreen extends StatelessWidget {
         ),
         title: Text(
           product.name,
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium
-              ?.copyWith(fontWeight: FontWeight.w600),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
         ),
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 4),
@@ -78,7 +83,7 @@ class OrderDetailsScreen extends StatelessWidget {
           "\$${product.price.toStringAsFixed(2)}",
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
-            color: Theme.of(context).primaryColor
+            color: Theme.of(context).primaryColor,
           ),
         ),
       ),
@@ -86,11 +91,15 @@ class OrderDetailsScreen extends StatelessWidget {
   }
 
   Widget _summaryCard(BuildContext context) {
-    final formattedDate =
-    DateFormat('d MMM yyyy').format(order.date.toDate());
-
+    final formattedDate = DateFormat('d MMM yyyy').format(order.date.toDate());
+    final size = MediaQuery.of(context).size;
+    final screenWidth = size.width;
+    final screenHeight = size.height;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
+      padding: EdgeInsets.symmetric(
+        horizontal: screenWidth * 0.03,
+        vertical: screenHeight * 0.02,
+      ),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(18),
@@ -104,7 +113,11 @@ class OrderDetailsScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _summaryRow(context, "Total", "\$${order.totalPrice.toStringAsFixed(2)}"),
+          _summaryRow(
+            context,
+            "Total",
+            "\$${order.totalPrice.toStringAsFixed(2)}",
+          ),
           Divider(height: 28),
           _summaryRow(context, "Payment", order.paymentMethodFriendly),
           Divider(height: 28),
@@ -129,9 +142,9 @@ class OrderDetailsScreen extends StatelessWidget {
         Expanded(
           child: Text(
             label,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
           ),
         ),
         Expanded(

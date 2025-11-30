@@ -83,6 +83,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     late final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
+    final screenWidth = size.width;
+    final screenHeight = size.height;
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: Column(
@@ -91,11 +94,11 @@ class _HomeScreenState extends State<HomeScreen> {
             color: theme.cardColor,
             child: Column(
               children: [
-                const SizedBox(height: 16),
+                SizedBox(height: screenHeight * 0.04),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16.0,
-                    horizontal: 15.0,
+                  padding: EdgeInsets.symmetric(
+                    vertical: screenHeight * 0.01,
+                    horizontal: screenWidth * 0.05,
                   ),
                   child: Row(
                     children: [
@@ -131,7 +134,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Expanded(
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.03,
+                        ),
                         decoration: BoxDecoration(
                           color: theme.cardColor,
                           borderRadius: BorderRadius.circular(8),
@@ -199,7 +204,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+              padding: EdgeInsets.fromLTRB(
+                screenWidth * 0.02,
+                0,
+                screenWidth * 0.02,
+                12,
+              ),
               child: StreamBuilder<List<Product>>(
                 stream: ProductService().getProductsStream(),
                 builder: (context, snapshot) {
@@ -261,13 +271,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
 
                   return GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.60,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                        ),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.60,
+                      crossAxisSpacing: screenWidth * 0.02,
+                      mainAxisSpacing: screenHeight * 0.02,
+                    ),
                     itemCount: filteredProducts.length,
                     itemBuilder: (context, index) {
                       final product = filteredProducts[index];

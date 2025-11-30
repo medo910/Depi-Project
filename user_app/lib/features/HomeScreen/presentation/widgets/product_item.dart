@@ -29,7 +29,10 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late final theme=Theme.of(context);
+    late final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
+    final screenWidth = size.width;
+    final screenHeight = size.height;
     return GestureDetector(
       onTap: onTap,
       child: Card(
@@ -50,13 +53,13 @@ class ProductItem extends StatelessWidget {
                     child: Image.network(
                       productImage,
                       fit: BoxFit.fill,
-                      height: 140,
+                      height: screenHeight * 0.18,
                       width: double.infinity,
                       errorBuilder: (context, error, _) {
                         return Container(
-                          height: 140,
+                          height: screenHeight * 0.18,
                           color: Colors.grey[200],
-                          child: const Icon(Icons.image, size: 50),
+                          child: Icon(Icons.image, size: screenWidth * 0.2),
                         );
                       },
                     ),
@@ -93,28 +96,33 @@ class ProductItem extends StatelessWidget {
             ),
 
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(screenWidth * 0.03),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     productName,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                      fontSize: screenWidth * 0.04,
                     ),
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
 
                   Row(
                     children: [
-                      const Icon(Icons.star, color: Colors.amber, size: 16),
+                      Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                        size: screenWidth * 0.04,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         "${productRating.toStringAsFixed(1)} ($productReviews reviews)",
-                        style: theme.textTheme.labelSmall),
+                        style: theme.textTheme.labelSmall,
+                      ),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -122,13 +130,11 @@ class ProductItem extends StatelessWidget {
                   Text(
                     "\$${productPrice.toStringAsFixed(2)}",
                     style: theme.textTheme.titleSmall,
+                  
                   ),
                   const SizedBox(height: 2),
 
-                  Text(
-                    productType,
-                    style: theme.textTheme.labelSmall,
-                  ),
+                  Text(productType, style: theme.textTheme.labelSmall),
                 ],
               ),
             ),

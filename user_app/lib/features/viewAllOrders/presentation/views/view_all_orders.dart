@@ -14,7 +14,7 @@ class ViewAllOrders extends StatelessWidget {
   Widget build(BuildContext context) {
     final checkoutCubit = context.read<CheckoutCubit>();
     const String _fontFamily = 'Montserrat';
-
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -30,11 +30,11 @@ class ViewAllOrders extends StatelessWidget {
       ),
 
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(screenWidth * 0.02),
         child: Card(
           color: Theme.of(context).cardColor,
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(screenWidth * 0.02),
             child: Column(
               children: [
                 Text(
@@ -49,7 +49,7 @@ class ViewAllOrders extends StatelessWidget {
                         return Container(
                           alignment: Alignment.center,
                           child: Padding(
-                            padding: EdgeInsets.all(20),
+                            padding: EdgeInsets.all(screenWidth * 0.05),
                             child: Text(
                               "No Orders Yet",
                               style: Theme.of(context).textTheme.titleSmall
@@ -72,7 +72,7 @@ class ViewAllOrders extends StatelessWidget {
 
                           return Column(
                             children: [
-                              const SizedBox(height: 8),
+                              SizedBox(height: screenWidth * 0.02),
                               InkWell(
                                 borderRadius: BorderRadius.circular(16),
                                 onTap: () {
@@ -112,14 +112,13 @@ class ViewAllOrders extends StatelessWidget {
                                                     shape: RoundedRectangleBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                            20,
+                                                            screenWidth * 0.05,
                                                           ),
                                                     ),
                                                     child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                            20,
-                                                          ),
+                                                      padding: EdgeInsets.all(
+                                                        screenWidth * 0.05,
+                                                      ),
                                                       child: Column(
                                                         mainAxisSize:
                                                             MainAxisSize.min,
@@ -135,20 +134,25 @@ class ViewAllOrders extends StatelessWidget {
                                                                           .circle,
                                                                 ),
                                                             padding:
-                                                                const EdgeInsets.all(
-                                                                  15,
+                                                                EdgeInsets.all(
+                                                                  screenWidth *
+                                                                      0.04,
                                                                 ),
-                                                            child: const Icon(
+                                                            child: Icon(
                                                               Icons
                                                                   .delete_forever,
-                                                              size: 45,
+                                                              size:
+                                                                  screenWidth *
+                                                                  0.1,
                                                               color:
                                                                   Colors
                                                                       .redAccent,
                                                             ),
                                                           ),
-                                                          const SizedBox(
-                                                            height: 20,
+                                                          SizedBox(
+                                                            height:
+                                                                screenWidth *
+                                                                0.05,
                                                           ),
 
                                                           Text(
@@ -160,8 +164,10 @@ class ViewAllOrders extends StatelessWidget {
                                                                     .textTheme
                                                                     .displayMedium,
                                                           ),
-                                                          const SizedBox(
-                                                            height: 10,
+                                                          SizedBox(
+                                                            height:
+                                                                screenWidth *
+                                                                0.03,
                                                           ),
                                                           Text(
                                                             "Are you sure you want to delete your order?",
@@ -175,8 +181,10 @@ class ViewAllOrders extends StatelessWidget {
                                                                     .textTheme
                                                                     .titleMedium,
                                                           ),
-                                                          const SizedBox(
-                                                            height: 25,
+                                                          SizedBox(
+                                                            height:
+                                                                screenWidth *
+                                                                0.07,
                                                           ),
                                                           Row(
                                                             children: [

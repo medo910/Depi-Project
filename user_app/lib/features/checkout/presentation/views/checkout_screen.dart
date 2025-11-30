@@ -22,6 +22,9 @@ class CheckoutScreen extends StatelessWidget {
       builder: (context, state) {
         final cubit = context.read<CheckoutCubit>();
         final cartCubit = context.read<CartCubit>();
+        final size = MediaQuery.of(context).size;
+        final screenWidth = size.width;
+        final screenHeight = size.height;
 
         return Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -36,14 +39,14 @@ class CheckoutScreen extends StatelessWidget {
             ),
           ),
           body: Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: EdgeInsets.all(screenWidth * 0.03),
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   Card(
                     color: Theme.of(context).cardColor,
                     child: Padding(
-                      padding: const EdgeInsets.all(14.0),
+                      padding: EdgeInsets.all(screenWidth * 0.04),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -87,7 +90,9 @@ class CheckoutScreen extends StatelessWidget {
                                     children: [
                                       if (!hasNoAddresses)
                                         Padding(
-                                          padding: const EdgeInsets.all(12.0),
+                                          padding: EdgeInsets.all(
+                                            screenWidth * 0.02,
+                                          ),
                                           child: GridView.builder(
                                             shrinkWrap: true,
                                             physics:
@@ -96,10 +101,12 @@ class CheckoutScreen extends StatelessWidget {
                                                 addresses.length +
                                                 1, // + button
                                             gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                                SliverGridDelegateWithFixedCrossAxisCount(
                                                   crossAxisCount: 2,
-                                                  crossAxisSpacing: 12,
-                                                  mainAxisSpacing: 12,
+                                                  crossAxisSpacing:
+                                                      screenWidth * 0.04,
+                                                  mainAxisSpacing:
+                                                      screenWidth * 0.04,
                                                   childAspectRatio: 0.9,
                                                 ),
                                             itemBuilder: (context, i) {
@@ -204,8 +211,8 @@ class CheckoutScreen extends StatelessWidget {
                                                       ),
                                                     ],
                                                   ),
-                                                  padding: const EdgeInsets.all(
-                                                    12,
+                                                  padding: EdgeInsets.all(
+                                                    screenWidth * 0.03,
                                                   ),
                                                   child: Column(
                                                     crossAxisAlignment:
@@ -358,7 +365,7 @@ class CheckoutScreen extends StatelessWidget {
                   Card(
                     color: Theme.of(context).cardColor,
                     child: Padding(
-                      padding: const EdgeInsets.all(14.0),
+                      padding: EdgeInsets.all(screenWidth * 0.04),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -381,7 +388,7 @@ class CheckoutScreen extends StatelessWidget {
                                   PaymentMethod.cash,
                                 ),
                             child: Container(
-                              padding: const EdgeInsets.all(12),
+                              padding: EdgeInsets.all(screenWidth * 0.03),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.circular(12),
@@ -401,11 +408,13 @@ class CheckoutScreen extends StatelessWidget {
                                       color: Theme.of(context).primaryColor,
                                       size: 10,
                                     ),
-                                  const Text(
+                                  Text(
                                     '  💵',
-                                    style: TextStyle(fontSize: 20),
+                                    style: TextStyle(
+                                      fontSize: screenWidth * 0.05,
+                                    ),
                                   ),
-                                  const SizedBox(width: 15),
+                                  SizedBox(width: screenWidth * 0.03),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
@@ -428,7 +437,7 @@ class CheckoutScreen extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(width: 15),
+                                  SizedBox(width: screenWidth * 0.03),
                                   Expanded(
                                     child: Text(
                                       '• Delivery in 3-5 business days',
@@ -449,7 +458,7 @@ class CheckoutScreen extends StatelessWidget {
                                   PaymentMethod.visa,
                                 ),
                             child: Container(
-                              padding: const EdgeInsets.all(12),
+                              padding: EdgeInsets.all(screenWidth * 0.03),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.circular(12),
@@ -469,11 +478,13 @@ class CheckoutScreen extends StatelessWidget {
                                       color: Theme.of(context).primaryColor,
                                       size: 10,
                                     ),
-                                  const Text(
+                                  Text(
                                     '  💳',
-                                    style: TextStyle(fontSize: 20),
+                                    style: TextStyle(
+                                      fontSize: screenWidth * 0.05,
+                                    ),
                                   ),
-                                  const SizedBox(width: 15),
+                                  SizedBox(width: screenWidth * 0.03),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
@@ -496,7 +507,7 @@ class CheckoutScreen extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(width: 15),
+                                  SizedBox(width: screenWidth * 0.03),
                                   Expanded(
                                     child: Text(
                                       '• Fast delivery in 1-2 business days',
@@ -555,7 +566,7 @@ class CheckoutScreen extends StatelessWidget {
                   Card(
                     color: Theme.of(context).cardColor,
                     child: Padding(
-                      padding: const EdgeInsets.all(14.0),
+                      padding: EdgeInsets.all(screenWidth * 0.04),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -690,7 +701,7 @@ class CheckoutScreen extends StatelessWidget {
             ),
           ),
           bottomNavigationBar: Container(
-            padding: const EdgeInsets.all(15),
+            padding: EdgeInsets.all(screenWidth * 0.04),
             decoration: BoxDecoration(color: Theme.of(context).cardColor),
             child: SafeArea(
               child: MyButton(

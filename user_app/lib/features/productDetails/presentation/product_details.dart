@@ -41,6 +41,10 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final screenWidth = size.width;
+    final screenHeight = size.height;
+
     late final theme = Theme.of(context);
     if (widget.product.productAttributeType == ProductAttributeType.none) {
       canAddToCart = true;
@@ -65,9 +69,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             AppRouter.router.go(AppRouter.kHome);
           },
         ),
-        // backgroundColor: Colors.white,
         elevation: 0,
-        // iconTheme: const IconThemeData(color: Colors.black),
         actions: [
           FavoriteButton(
             productId: widget.product.id,
@@ -81,15 +83,15 @@ class _ProductDetailsState extends State<ProductDetails> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15),
+          padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01),
           child: Column(
             children: [
               AspectRatio(
-                aspectRatio: 1,
+                aspectRatio: screenHeight / screenWidth * 0.5,
                 child: Image.network(widget.product.photoUrl, fit: BoxFit.fill),
               ),
               Padding(
-                padding: const EdgeInsets.all(15.0),
+                padding: EdgeInsets.all(screenWidth * 0.04),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -163,7 +165,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         color: theme.primaryColor,
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: screenHeight * 0.02),
 
                     ProductOptionsSelector(
                       sizeColorBoth: sizeColorBoth!,
@@ -180,7 +182,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         });
                       },
                     ),
-                    const SizedBox(height: 25),
+                    SizedBox(height: screenHeight * 0.03),
                     Text("Quantity", style: theme.textTheme.headlineSmall),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -192,7 +194,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         },
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: screenHeight * 0.015),
                     ProductDetailsExpandable(
                       description: widget.product.description,
                       instruction: widget.product.instruction,
@@ -211,12 +213,12 @@ class _ProductDetailsState extends State<ProductDetails> {
         ),
       ),
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(screenWidth * 0.04),
         width: double.infinity,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: canAddToCart ? theme.primaryColor : Colors.grey,
-            padding: const EdgeInsets.symmetric(vertical: 14),
+            padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
@@ -301,9 +303,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                   }
                   : null,
 
-          child: const Text(
+          child: Text(
             'Add to Cart',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(fontSize: screenWidth * 0.05, color: Colors.white),
           ),
         ),
       ),

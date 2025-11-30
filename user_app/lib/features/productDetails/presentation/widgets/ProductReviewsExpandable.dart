@@ -49,6 +49,9 @@ class _ProductReviewsExpandableFullState
       barrierDismissible: false,
       builder: (context) {
         late final theme = Theme.of(context);
+        final size = MediaQuery.of(context).size;
+        final screenWidth = size.width;
+        final screenHeight = size.height;
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return Dialog(
@@ -86,7 +89,7 @@ class _ProductReviewsExpandableFullState
                     children: [
                       // Header with icon
                       Container(
-                        padding: const EdgeInsets.all(12),
+                        padding: EdgeInsets.all(screenWidth * 0.03),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
@@ -94,7 +97,9 @@ class _ProductReviewsExpandableFullState
                               theme.primaryColor.withOpacity(0.05),
                             ],
                           ),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(
+                            screenWidth * 0.03,
+                          ),
                         ),
                         child: Row(
                           children: [
@@ -104,10 +109,10 @@ class _ProductReviewsExpandableFullState
                                 color: theme.primaryColor,
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.rate_review_rounded,
                                 color: Colors.white,
-                                size: 20,
+                                size: screenWidth * 0.03,
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -130,12 +135,12 @@ class _ProductReviewsExpandableFullState
                           ],
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: screenHeight * 0.03),
 
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12,
-                          horizontal: 12,
+                        padding: EdgeInsets.symmetric(
+                          vertical: screenWidth * 0.03,
+                          horizontal: screenHeight * 0.01,
                         ),
                         decoration: BoxDecoration(
                           color: theme.cardColor,
@@ -198,7 +203,7 @@ class _ProductReviewsExpandableFullState
                         ),
                       ),
 
-                      const SizedBox(height: 16),
+                      SizedBox(height: screenHeight * 0.03),
 
                       Container(
                         decoration: BoxDecoration(
@@ -238,7 +243,7 @@ class _ProductReviewsExpandableFullState
                         ),
                       ),
 
-                      const SizedBox(height: 16),
+                      SizedBox(height: screenHeight * 0.03),
 
                       // Action Buttons
                       Row(
@@ -250,8 +255,8 @@ class _ProductReviewsExpandableFullState
                                 _commentController.clear();
                               },
                               style: OutlinedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 12,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: screenWidth * 0.03,
                                 ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
@@ -378,8 +383,8 @@ class _ProductReviewsExpandableFullState
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 12,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: screenWidth * 0.03,
                                 ),
                                 backgroundColor: theme.primaryColor,
                                 foregroundColor: Colors.white,

@@ -16,13 +16,16 @@ class HorizontalCategoryButtons extends StatefulWidget {
 
 class _HorizontalCategoryButtonsState extends State<HorizontalCategoryButtons> {
   final List<String> categories = Categories().categories;
-  late final theme=Theme.of(context);
+  late final theme = Theme.of(context);
 
   int? selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final screenWidth = size.width;
+    final screenHeight = size.height;
     return Container(
-      height: 50,
+      height: screenHeight * 0.055,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: categories.length,
@@ -30,10 +33,12 @@ class _HorizontalCategoryButtonsState extends State<HorizontalCategoryButtons> {
           bool isSelected = selectedIndex == index;
 
           Color bgColor =
-              isSelected ? theme.primaryColor : theme.canvasColor.withOpacity(0.5);
+              isSelected
+                  ? theme.primaryColor
+                  : theme.canvasColor.withOpacity(0.5);
 
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
             child: GestureDetector(
               onTap: () {
                 setState(() {
@@ -43,7 +48,10 @@ class _HorizontalCategoryButtonsState extends State<HorizontalCategoryButtons> {
               },
               child: AnimatedContainer(
                 duration: Duration(milliseconds: 200),
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth * 0.03,
+                  vertical: screenHeight * 0.01,
+                ),
                 decoration: BoxDecoration(
                   color: bgColor,
                   borderRadius: BorderRadius.circular(12),
