@@ -88,7 +88,7 @@ class ProfileScreen extends StatelessWidget {
                               ),
                               IconButton(
                                 onPressed: () {
-                                  AppRouter.router.go(AppRouter.kEditProfile);
+                                  AppRouter.router.push(AppRouter.kEditProfile);
                                 },
                                 icon: Icon(Icons.edit),
                               ),

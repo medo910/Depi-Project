@@ -96,10 +96,8 @@ class CheckoutScreen extends StatelessWidget {
                                           child: GridView.builder(
                                             shrinkWrap: true,
                                             physics:
-                                                NeverScrollableScrollPhysics(),
-                                            itemCount:
-                                                addresses.length +
-                                                1, // + button
+                                                const NeverScrollableScrollPhysics(),
+                                            itemCount: addresses.length + 1,
                                             gridDelegate:
                                                 SliverGridDelegateWithFixedCrossAxisCount(
                                                   crossAxisCount: 2,
@@ -107,7 +105,7 @@ class CheckoutScreen extends StatelessWidget {
                                                       screenWidth * 0.04,
                                                   mainAxisSpacing:
                                                       screenWidth * 0.04,
-                                                  childAspectRatio: 0.9,
+                                                  childAspectRatio: 0.75,
                                                 ),
                                             itemBuilder: (context, i) {
                                               if (i == addresses.length) {
@@ -117,9 +115,6 @@ class CheckoutScreen extends StatelessWidget {
                                                       showFields = !showFields;
                                                       selectedIndex = i;
                                                     });
-                                                    // cubit.updateName('');
-                                                    // cubit.updatePhone('');
-                                                    // cubit.updateAddress('');
                                                   },
                                                   child: Container(
                                                     decoration: BoxDecoration(
@@ -168,7 +163,6 @@ class CheckoutScreen extends StatelessWidget {
                                                     showFields = false;
                                                     selectedIndex = i;
                                                   });
-
                                                   cubit.updateName(
                                                     item["name"],
                                                   );
@@ -180,6 +174,9 @@ class CheckoutScreen extends StatelessWidget {
                                                   );
                                                 },
                                                 child: Container(
+                                                  padding: EdgeInsets.all(
+                                                    screenWidth * 0.03,
+                                                  ),
                                                   decoration: BoxDecoration(
                                                     color:
                                                         Theme.of(
@@ -203,7 +200,7 @@ class CheckoutScreen extends StatelessWidget {
                                                               ? 2
                                                               : 1,
                                                     ),
-                                                    boxShadow: [
+                                                    boxShadow: const [
                                                       BoxShadow(
                                                         color: Colors.black12,
                                                         blurRadius: 4,
@@ -211,13 +208,13 @@ class CheckoutScreen extends StatelessWidget {
                                                       ),
                                                     ],
                                                   ),
-                                                  padding: EdgeInsets.all(
-                                                    screenWidth * 0.03,
-                                                  ),
                                                   child: Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
                                                             .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
                                                     children: [
                                                       Column(
                                                         crossAxisAlignment:
@@ -227,28 +224,41 @@ class CheckoutScreen extends StatelessWidget {
                                                           Text(
                                                             'Full Name:',
                                                             style: TextStyle(
-                                                              fontSize: 16,
+                                                              fontSize: 14,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold,
                                                               fontFamily:
                                                                   _fontFamily,
+                                                              color:
+                                                                  Colors
+                                                                      .grey[600],
                                                             ),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 2,
                                                           ),
                                                           Text(
                                                             item["name"],
+                                                            maxLines: 1,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
                                                             style: TextStyle(
                                                               fontSize: 16,
                                                               fontWeight:
                                                                   FontWeight
-                                                                      .normal,
+                                                                      .w600,
                                                               fontFamily:
                                                                   _fontFamily,
                                                             ),
                                                           ),
                                                         ],
                                                       ),
-                                                      SizedBox(height: 6),
+                                                      SizedBox(
+                                                        height:
+                                                            screenHeight * 0.01,
+                                                      ),
 
                                                       Column(
                                                         crossAxisAlignment:
@@ -264,10 +274,20 @@ class CheckoutScreen extends StatelessWidget {
                                                                       .bold,
                                                               fontFamily:
                                                                   _fontFamily,
+                                                              color:
+                                                                  Colors
+                                                                      .grey[600],
                                                             ),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 2,
                                                           ),
                                                           Text(
                                                             item["phone"],
+                                                            maxLines: 1,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
                                                             style: TextStyle(
                                                               fontSize: 14,
                                                               fontWeight:
@@ -279,36 +299,52 @@ class CheckoutScreen extends StatelessWidget {
                                                           ),
                                                         ],
                                                       ),
-                                                      SizedBox(height: 8),
+                                                      SizedBox(
+                                                        height:
+                                                            screenHeight * 0.01,
+                                                      ),
 
-                                                      Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            'Address:',
-                                                            style: TextStyle(
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontFamily:
-                                                                  _fontFamily,
+                                                      Expanded(
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              'Address:',
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontFamily:
+                                                                    _fontFamily,
+                                                                color:
+                                                                    Colors
+                                                                        .grey[600],
+                                                              ),
                                                             ),
-                                                          ),
-                                                          Text(
-                                                            item["address"],
-                                                            style: TextStyle(
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .normal,
-                                                              fontFamily:
-                                                                  _fontFamily,
+                                                            const SizedBox(
+                                                              height: 2,
                                                             ),
-                                                          ),
-                                                        ],
+                                                            Text(
+                                                              item["address"],
+                                                              maxLines: 2,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis, // ✅
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal,
+                                                                fontFamily:
+                                                                    _fontFamily,
+                                                                height: 1.2,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
@@ -317,7 +353,6 @@ class CheckoutScreen extends StatelessWidget {
                                             },
                                           ),
                                         ),
-
                                       if (showFields) ...[
                                         const SizedBox(height: 15),
                                         buildTextField(

@@ -19,9 +19,8 @@ class PageIndicatorsWidget extends StatelessWidget {
         return AnimatedContainer(
           duration: const Duration(milliseconds: 300),
 
-          // المسافة بينهم نسبية بسيطة
           margin: const EdgeInsets.symmetric(horizontal: 4),
-          width: isActive ? 12 : 8, // الحجم الثابت هنا مقبول للـ indicators
+          width: isActive ? 12 : 8,
           height: isActive ? 12 : 8,
           decoration: BoxDecoration(
             color:

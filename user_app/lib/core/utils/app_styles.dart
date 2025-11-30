@@ -1,124 +1,127 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // لازم تعمل import
 
 abstract class AppStyles {
   static const String _fontFamily = 'Montserrat';
 
+  // ملاحظة: شيلنا const وبقينا نستخدم .sp
+
   // 12px
-  static const TextStyle styleRegular12Muted = TextStyle(
-    fontSize: 12,
+  static TextStyle styleRegular12Muted = TextStyle(
+    fontSize: 12.sp, // هنا السحر، الخط بيكبر ويصغر حسب الشاشة
     fontWeight: FontWeight.w400,
     fontFamily: _fontFamily,
-    color: Color(0xFF4B5563), // muted
+    color: const Color(0xFF4B5563),
   );
 
-  static const TextStyle styleMedium12Dark = TextStyle(
-    fontSize: 12,
+  static TextStyle styleMedium12Dark = TextStyle(
+    fontSize: 12.sp,
     fontWeight: FontWeight.w500,
     fontFamily: _fontFamily,
-    color: Color(0xFF1A1A1A), // foreground
+    color: const Color(0xFF1A1A1A),
   );
 
-  static const TextStyle styleSemiBold12Red = TextStyle(
-    fontSize: 12,
+  static TextStyle styleSemiBold12Red = TextStyle(
+    fontSize: 12.sp,
     fontWeight: FontWeight.w600,
     fontFamily: _fontFamily,
-    color: Color(0xFFDC2626), // destructive
+    color: const Color(0xFFDC2626),
   );
 
   // 14px
-  static const TextStyle styleRegular14Muted = TextStyle(
-    fontSize: 14,
+  static TextStyle styleRegular14Muted = TextStyle(
+    fontSize: 14.sp,
     fontWeight: FontWeight.w400,
     fontFamily: _fontFamily,
-    color: Color(0xFF4B5563), // muted
+    color: const Color(0xFF4B5563),
   );
 
-  static const TextStyle styleMedium14Dark = TextStyle(
-    fontSize: 14,
+  static TextStyle styleMedium14Dark = TextStyle(
+    fontSize: 14.sp,
     fontWeight: FontWeight.w500,
     fontFamily: _fontFamily,
-    color: Color(0xFF1A1A1A), // foreground
+    color: const Color(0xFF1A1A1A),
   );
 
-  static const TextStyle styleMedium14Primary = TextStyle(
-    fontSize: 14,
+  static TextStyle styleMedium14Primary = TextStyle(
+    fontSize: 14.sp,
     fontWeight: FontWeight.w500,
     fontFamily: _fontFamily,
-    color: Color(0xFF80AF81), // primary
+    color: const Color(0xFF80AF81),
   );
 
   // 16px
-  static const TextStyle styleMedium16Dark = TextStyle(
-    fontSize: 16,
+  static TextStyle styleMedium16Dark = TextStyle(
+    fontSize: 16.sp,
     fontWeight: FontWeight.w500,
     fontFamily: _fontFamily,
-    color: Color(0xFF1A1A1A), // foreground
+    color: const Color(0xFF1A1A1A),
   );
 
-  static const TextStyle styleRegular16Muted = TextStyle(
-    fontSize: 16,
+  static TextStyle styleRegular16Muted = TextStyle(
+    fontSize: 16.sp,
     fontWeight: FontWeight.w400,
     fontFamily: _fontFamily,
-    color: Color(0xFF4B5563), // muted
+    color: const Color(0xFF4B5563),
   );
 
-  static const TextStyle styleMedium16Green = TextStyle(
-    fontSize: 16,
+  static TextStyle styleMedium16Green = TextStyle(
+    fontSize: 16.sp,
     fontWeight: FontWeight.w500,
     fontFamily: _fontFamily,
-    color: Color(0xFF16A34A), // success
+    color: const Color(0xFF16A34A),
   );
 
   // 18px
-  static const TextStyle styleSemiBold18Dark = TextStyle(
-    fontSize: 18,
+  static TextStyle styleSemiBold18Dark = TextStyle(
+    fontSize: 18.sp,
     fontWeight: FontWeight.w600,
     fontFamily: _fontFamily,
-    color: Color(0xFF1A1A1A), // foreground
+    color: const Color(0xFF1A1A1A),
   );
 
-  static const TextStyle styleMedium18Muted = TextStyle(
-    fontSize: 18,
+  static TextStyle styleMedium18Muted = TextStyle(
+    fontSize: 18.sp,
     fontWeight: FontWeight.w500,
     fontFamily: _fontFamily,
-    color: Color(0xFF4B5563), // muted
+    color: const Color(0xFF4B5563),
   );
 
   // 20px
-  static const TextStyle styleSemiBold20Dark = TextStyle(
-    fontSize: 20,
+  static TextStyle styleSemiBold20Dark = TextStyle(
+    fontSize: 20.sp,
     fontWeight: FontWeight.w600,
     fontFamily: _fontFamily,
-    color: Color(0xFF1A1A1A), // foreground
+    color: const Color(0xFF1A1A1A),
   );
 
-  static const TextStyle styleBold20Primary = TextStyle(
-    fontSize: 20,
+  static TextStyle styleBold20Primary = TextStyle(
+    fontSize: 20.sp,
     fontWeight: FontWeight.w700,
     fontFamily: _fontFamily,
-    color: Color(0xFF80AF81), // primary
+    color: const Color(0xFF80AF81),
   );
 
   // 24px
-  static const TextStyle styleSemiBold24Dark = TextStyle(
-    fontSize: 24,
+  static TextStyle styleSemiBold24Dark = TextStyle(
+    fontSize: 24.sp,
     fontWeight: FontWeight.w600,
     fontFamily: _fontFamily,
-    color: Color(0xFF1A1A1A),
+    color: const Color(0xFF1A1A1A),
   );
 
-  static const TextStyle styleBold24Dark = TextStyle(
-    fontSize: 24,
+  static TextStyle styleBold24Dark = TextStyle(
+    fontSize: 24.sp,
     fontWeight: FontWeight.w700,
     fontFamily: _fontFamily,
-    color: Color(0xFF1A1A1A),
+    color: const Color(0xFF1A1A1A),
   );
 
   // 30px
-  static const TextStyle styleBold30Primary = TextStyle(
-    fontSize: 30,
+  static TextStyle styleBold30Primary = TextStyle(
+    fontSize: 30.sp,
     fontWeight: FontWeight.w700,
     fontFamily: _fontFamily,
-    color: Color(0xFF80AF81),
+    color: const Color(0xFF80AF81),
   );
 }

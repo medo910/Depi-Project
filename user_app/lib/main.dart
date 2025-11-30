@@ -7,6 +7,7 @@ import 'package:depi_app/features/checkout/presentation/manager/checkout_cubit.d
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'core/manager/app_settings_cubit.dart';
 import 'core/manager/app_settings_state.dart';
 import 'core/theme/app_theme.dart';
@@ -51,13 +52,28 @@ class DepiApp extends StatelessWidget {
       ],
       child: BlocBuilder<AppSettingsCubit, AppSettingsState>(
         builder: (context, state) {
-          return MaterialApp.router(
-            routerConfig: AppRouter.router,
-            debugShowCheckedModeBanner: false,
-            title: 'Kite Shopping',
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: state.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+          return ScreenUtilInit(
+            designSize: const Size(375, 812),
+            minTextAdapt: true,
+            splitScreenMode: true,
+            builder: (context, child) {
+              return MaterialApp.router(
+                routerConfig: AppRouter.router,
+                debugShowCheckedModeBanner: false,
+                title: 'Kite Shopping',
+                theme: AppTheme.lightTheme,
+                darkTheme: AppTheme.darkTheme,
+                themeMode: state.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+              );
+            },
+            // child: MaterialApp.router(
+            //   routerConfig: AppRouter.router,
+            //   debugShowCheckedModeBanner: false,
+            //   title: 'Kite Shopping',
+            //   theme: AppTheme.lightTheme,
+            //   darkTheme: AppTheme.darkTheme,
+            //   themeMode: state.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            // ),
           );
         },
       ),

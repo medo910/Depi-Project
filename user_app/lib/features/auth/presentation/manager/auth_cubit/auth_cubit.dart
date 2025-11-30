@@ -1,19 +1,25 @@
 import 'package:bloc/bloc.dart';
+import 'package:depi_app/core/errors/failures.dart';
 import 'package:depi_app/features/auth/data/repos/auth_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // 1. لازم للتعرف على FirebaseAuthException
 import 'package:meta/meta.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final AuthRepository _authRepository;
+
   AuthCubit(this._authRepository) : super(AuthInitial());
+
   Future<void> signIn(String email, String password) async {
     emit(AuthLoading());
     try {
       await _authRepository.signIn(email: email, password: password);
       emit(AuthSuccess());
+    } on FirebaseAuthException catch (e) {
+      emit(AuthError(ServerFailure.fromFirebaseAuth(e).errmessage));
     } catch (e) {
-      emit(AuthError(e.toString()));
+      emit(AuthError(ServerFailure(e.toString()).errmessage));
     }
   }
 
@@ -26,8 +32,10 @@ class AuthCubit extends Cubit<AuthState> {
         fullName: fullName,
       );
       emit(AuthSuccess());
+    } on FirebaseAuthException catch (e) {
+      emit(AuthError(ServerFailure.fromFirebaseAuth(e).errmessage));
     } catch (e) {
-      emit(AuthError(e.toString()));
+      emit(AuthError(ServerFailure(e.toString()).errmessage));
     }
   }
 
@@ -36,8 +44,10 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       await _authRepository.resetPassword(email: email);
       emit(AuthPasswordReset());
+    } on FirebaseAuthException catch (e) {
+      emit(AuthError(ServerFailure.fromFirebaseAuth(e).errmessage));
     } catch (e) {
-      emit(AuthError(e.toString()));
+      emit(AuthError(ServerFailure(e.toString()).errmessage));
     }
   }
 
@@ -47,7 +57,11 @@ class AuthCubit extends Cubit<AuthState> {
       await _authRepository.signOut();
       emit(AuthSignedOut());
     } catch (e) {
-      emit(AuthError(e.toString()));
+      if (e is FirebaseAuthException) {
+        emit(AuthError(ServerFailure.fromFirebaseAuth(e).errmessage));
+      } else {
+        emit(AuthError(ServerFailure(e.toString()).errmessage));
+      }
     }
   }
 
@@ -60,8 +74,10 @@ class AuthCubit extends Cubit<AuthState> {
         return;
       }
       emit(AuthSuccess());
+    } on FirebaseAuthException catch (e) {
+      emit(AuthError(ServerFailure.fromFirebaseAuth(e).errmessage));
     } catch (e) {
-      emit(AuthError(e.toString()));
+      emit(AuthError(ServerFailure(e.toString()).errmessage));
     }
   }
 
@@ -82,8 +98,10 @@ class AuthCubit extends Cubit<AuthState> {
         addresses: addresses,
       );
       emit(AuthSuccess());
+    } on FirebaseAuthException catch (e) {
+      emit(AuthError(ServerFailure.fromFirebaseAuth(e).errmessage));
     } catch (e) {
-      emit(AuthError(e.toString()));
+      emit(AuthError(ServerFailure(e.toString()).errmessage));
     }
   }
 }

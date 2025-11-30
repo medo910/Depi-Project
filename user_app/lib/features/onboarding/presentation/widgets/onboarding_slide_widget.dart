@@ -35,16 +35,11 @@ class OnboardingSlideWidget extends StatelessWidget {
                   alignment: Alignment.topRight,
                   child: TextButton(
                     onPressed: () => AppRouter.router.go(AppRouter.kLogin),
-                    child: const Text(
-                      'Skip',
-                      style: AppStyles.styleMedium16Dark,
-                    ),
+                    child: Text('Skip', style: AppStyles.styleMedium16Dark),
                   ),
                 ),
 
                 SizedBox(height: size.height * 0.03),
-
-                // الدائرة بقيت نسبية (25% من عرض الشاشة)
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 600),
                   curve: Curves.easeInOutBack,
@@ -69,7 +64,7 @@ class OnboardingSlideWidget extends StatelessWidget {
                 Text(
                   title,
                   style: AppStyles.styleBold24Dark.copyWith(
-                    fontSize: size.width * 0.065, // تحكم في حجم الخط
+                    fontSize: size.width * 0.065,
                   ),
                   textAlign: TextAlign.center,
                 ),
