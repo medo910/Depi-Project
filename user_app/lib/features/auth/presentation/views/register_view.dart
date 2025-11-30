@@ -85,40 +85,11 @@ class _RegisterViewState extends State<RegisterView> {
                       if (state is AuthError) {
                         showSnackBar(context, state.message, Colors.red);
                       } else if (state is AuthSuccess) {
-                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            behavior: SnackBarBehavior.floating,
-                            elevation: 8,
-                            backgroundColor: Colors.green,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 10,
-                            ),
-                            content: Row(
-                              children: const [
-                                Icon(
-                                  Icons.check_circle,
-                                  color: Colors.white,
-                                  size: 28,
-                                ),
-                                SizedBox(width: 12),
-                                Text(
-                                  "Registration Successful",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            duration: Duration(milliseconds: 1500),
-                          ),
+                        showSnackBar(
+                          context,
+                          "Registration Successful",
+                          Colors.green,
                         );
-
                         AppRouter.router.go(AppRouter.kLogin);
                       }
                     },
