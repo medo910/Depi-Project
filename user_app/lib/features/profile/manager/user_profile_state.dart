@@ -12,6 +12,7 @@ class UserProfileLoaded extends UserProfileState {
   final DateTime createdAt;
   final List<Map>? cart;
   final List<String>? favorite;
+  final String? photoUrl;
 
   UserProfileLoaded({
     required this.name,
@@ -19,6 +20,7 @@ class UserProfileLoaded extends UserProfileState {
     required this.createdAt,
      this.cart,
     this.favorite,
+    this.photoUrl,
   });
 }
 

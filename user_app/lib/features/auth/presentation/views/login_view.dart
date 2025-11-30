@@ -88,7 +88,39 @@ class _LoginViewState extends State<LoginView> {
                         context.read<UserProfileCubit>().loadUserProfile();
                         context.read<FavoritesCubit>().loadFavorites();
                         context.read<CartCubit>().loadCart();
-                        showSnackBar(context, "Login Successful", Colors.green);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            elevation: 8,
+                            backgroundColor: Colors.green,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 10,
+                            ),
+                            content: Row(
+                              children: const [
+                                Icon(
+                                  Icons.check_circle,
+                                  color: Colors.white,
+                                  size: 28,
+                                ),
+                                SizedBox(width: 12),
+                                Text(
+                                  "Login Successful",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            duration: Duration(milliseconds: 1500),
+                          ),
+                        );
                         AppRouter.router.go(AppRouter.kHome);
                       }
                     },

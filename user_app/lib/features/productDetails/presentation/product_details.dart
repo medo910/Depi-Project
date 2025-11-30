@@ -41,7 +41,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   @override
   Widget build(BuildContext context) {
-    late final theme=Theme.of(context);
+    late final theme = Theme.of(context);
     if (widget.product.productAttributeType == ProductAttributeType.none) {
       canAddToCart = true;
     } else if ((widget.product.productAttributeType ==
@@ -98,7 +98,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                       style: theme.textTheme.bodyMedium,
                     ),
                     const SizedBox(height: 4),
-                    Text(widget.product.name, style: theme.textTheme.displayMedium),
+                    Text(
+                      widget.product.name,
+                      style: theme.textTheme.displayMedium,
+                    ),
                     const SizedBox(height: 8),
 
                     StreamBuilder<Product>(
@@ -156,7 +159,9 @@ class _ProductDetailsState extends State<ProductDetails> {
 
                     Text(
                       '\$${widget.product.price}',
-                      style: theme.textTheme.displayMedium?.copyWith(color: theme.primaryColor),
+                      style: theme.textTheme.displayMedium?.copyWith(
+                        color: theme.primaryColor,
+                      ),
                     ),
                     const SizedBox(height: 16),
 
@@ -261,7 +266,37 @@ class _ProductDetailsState extends State<ProductDetails> {
                     await CartService().addToCart(user.uid, productToAdd);
                     context.read<CartCubit>().loadCart();
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Added to cart")),
+                      SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        elevation: 8,
+                        backgroundColor: Colors.black87,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
+                        content: Row(
+                          children: const [
+                            Icon(
+                              Icons.check_circle,
+                              color: Colors.greenAccent,
+                              size: 28,
+                            ),
+                            SizedBox(width: 12),
+                            Text(
+                              "Added to cart",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        duration: Duration(milliseconds: 1500),
+                      ),
                     );
                   }
                   : null,

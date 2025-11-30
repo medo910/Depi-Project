@@ -19,10 +19,8 @@ class UserProfileCubit extends Cubit<UserProfileState> {
 
       final uid = currentUser.uid;
 
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .get();
+      final doc =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
       if (!doc.exists) {
         emit(UserProfileError("User Data Not Found"));
@@ -36,12 +34,12 @@ class UserProfileCubit extends Cubit<UserProfileState> {
       }
       List<Map<String, dynamic>> cart = [];
       List<String> favorite = [];
-
+      String? photoUrl;
 
       if (data['cart'] != null && data['cart'] is List) {
         cart = List<Map<String, dynamic>>.from(
           (data['cart'] as List).map(
-                (e) => Map<String, dynamic>.from(e as Map),
+            (e) => Map<String, dynamic>.from(e as Map),
           ),
         );
       }
@@ -52,13 +50,20 @@ class UserProfileCubit extends Cubit<UserProfileState> {
         );
       }
 
-      emit(UserProfileLoaded(
-        name: data['fullName'] ?? 'Unknown',
-        email: data['email'] ?? '',
-        createdAt: (data['createdAt'] as Timestamp).toDate(),
-        cart: cart,
-        favorite: favorite,
-      ));
+      if (data['photoUrl'] != null) {
+        photoUrl = data['photoUrl'].toString();
+      }
+
+      emit(
+        UserProfileLoaded(
+          name: data['fullName'] ?? 'Unknown',
+          email: data['email'] ?? '',
+          createdAt: (data['createdAt'] as Timestamp).toDate(),
+          cart: cart,
+          favorite: favorite,
+          photoUrl: photoUrl,
+        ),
+      );
     } on FirebaseAuthException catch (e) {
       emit(UserProfileError("Authentication Error ${e.message}"));
     } on FirebaseException catch (e) {
@@ -66,8 +71,8 @@ class UserProfileCubit extends Cubit<UserProfileState> {
     } catch (e) {
       emit(UserProfileError("Unexpected Error ${e.toString()}"));
     }
-
   }
+
   Stream<int> getUserFavoriteCountStream() {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return Stream.value(0);
@@ -77,18 +82,17 @@ class UserProfileCubit extends Cubit<UserProfileState> {
         .doc(user.uid)
         .snapshots()
         .map((snapshot) {
-      final data = snapshot.data();
-      if (data == null) return 0;
+          final data = snapshot.data();
+          if (data == null) return 0;
 
-      final fav = data['favorite'];
-      if (fav is List) {
-        return fav.length;
-      } else {
-        return 0;
-      }
-    });
+          final fav = data['favorite'];
+          if (fav is List) {
+            return fav.length;
+          } else {
+            return 0;
+          }
+        });
   }
-
 
   Stream<int> getUserCartCountStream() {
     final user = FirebaseAuth.instance.currentUser;
@@ -99,16 +103,15 @@ class UserProfileCubit extends Cubit<UserProfileState> {
         .doc(user.uid)
         .snapshots()
         .map((snapshot) {
-      final data = snapshot.data();
-      if (data == null) return 0;
+          final data = snapshot.data();
+          if (data == null) return 0;
 
-      final cart = data['cart'];
-      if (cart is List) {
-        return cart.length;
-      } else {
-        return 0;
-      }
-    });
+          final cart = data['cart'];
+          if (cart is List) {
+            return cart.length;
+          } else {
+            return 0;
+          }
+        });
   }
-
 }

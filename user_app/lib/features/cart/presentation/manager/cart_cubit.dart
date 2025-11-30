@@ -6,7 +6,8 @@ import 'cart_state.dart';
 import 'package:depi_app/core/models/selectedProduct.dart';
 
 class CartCubit extends Cubit<CartState> {
-  CartCubit() : super(const CartState(products: [], totalPrice: 0, isLoading: true));
+  CartCubit()
+    : super(const CartState(products: [], totalPrice: 0, isLoading: true));
 
   final TextEditingController couponController = TextEditingController();
 
@@ -29,7 +30,11 @@ class CartCubit extends Cubit<CartState> {
       return;
     }
 
-    final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+    final doc =
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
     final data = doc.data();
 
     if (data == null || data['cart'] == null) {
@@ -52,7 +57,10 @@ class CartCubit extends Cubit<CartState> {
       cartList = entries.map((e) => e.value).toList();
     }
 
-    final items = cartList.map((e) => ProductSelected.fromMap(Map<String, dynamic>.from(e))).toList();
+    final items =
+        cartList
+            .map((e) => ProductSelected.fromMap(Map<String, dynamic>.from(e)))
+            .toList();
 
     _calculateTotals(items);
   }
@@ -63,7 +71,9 @@ class CartCubit extends Cubit<CartState> {
     if (user == null) return;
 
     final cartMapped = items.map((e) => e.toMap()).toList();
-    await FirebaseFirestore.instance.collection('users').doc(user.uid).update({'cart': cartMapped});
+    await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+      'cart': cartMapped,
+    });
   }
 
   // زيادة الكمية
@@ -127,10 +137,31 @@ class CartCubit extends Cubit<CartState> {
       discountPercent = 0;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Please enter a coupon code'),
+          behavior: SnackBarBehavior.floating,
+          elevation: 8,
           backgroundColor: Colors.red.shade400,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          content: Row(
+            children: const [
+              Icon(Icons.error_outline, color: Colors.white, size: 28),
+              SizedBox(width: 12),
+              Text(
+                "Please enter a coupon code",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          duration: Duration(milliseconds: 1600),
         ),
       );
+
       return;
     }
 
@@ -139,16 +170,56 @@ class CartCubit extends Cubit<CartState> {
       _calculateTotals(state.products);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Coupon applied: 10% off'),
+          behavior: SnackBarBehavior.floating,
+          elevation: 8,
           backgroundColor: Colors.green.shade400,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          content: Row(
+            children: const [
+              Icon(Icons.check_circle_outline, color: Colors.white, size: 28),
+              SizedBox(width: 12),
+              Text(
+                "Coupon applied: 10% off",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          duration: Duration(milliseconds: 1600),
         ),
       );
     } else {
       discountPercent = 0;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Invalid coupon'),
+          behavior: SnackBarBehavior.floating,
+          elevation: 8,
           backgroundColor: Colors.red.shade400,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          content: Row(
+            children: const [
+              Icon(Icons.error_outline, color: Colors.white, size: 28),
+              SizedBox(width: 12),
+              Text(
+                "Invalid coupon",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          duration: Duration(milliseconds: 1600),
         ),
       );
     }
@@ -200,10 +271,9 @@ class CartCubit extends Cubit<CartState> {
     // تحديث Firestore
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .update({'cart': []});
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).update(
+        {'cart': []},
+      );
     }
   }
 
@@ -216,15 +286,15 @@ class CartCubit extends Cubit<CartState> {
         .doc(user.uid)
         .snapshots()
         .map((snapshot) {
-      final data = snapshot.data();
-      if (data == null) return [];
-      final cart = data['cart'];
-      if (cart is List) {
-        return cart.map((item) => Map<String, dynamic>.from(item)).toList();
-      } else {
-        return [];
-      }
-    });
+          final data = snapshot.data();
+          if (data == null) return [];
+          final cart = data['cart'];
+          if (cart is List) {
+            return cart.map((item) => Map<String, dynamic>.from(item)).toList();
+          } else {
+            return [];
+          }
+        });
   }
 
   void startCartListener() {
@@ -234,8 +304,7 @@ class CartCubit extends Cubit<CartState> {
     });
   }
 
-
-// Future<void> updateCart(List<ProductSelected> cart) async {
+  // Future<void> updateCart(List<ProductSelected> cart) async {
   //   final user = FirebaseAuth.instance.currentUser;
   //   if (user == null) return;
   //   await FirebaseFirestore.instance
@@ -243,6 +312,4 @@ class CartCubit extends Cubit<CartState> {
   //       .doc(user.uid)
   //       .update({'cart': cart});
   // }
-
-
 }

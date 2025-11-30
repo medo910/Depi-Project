@@ -17,10 +17,16 @@ class ViewAllOrders extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-          title:  Text("All Orders",style: Theme.of(context).textTheme.displayMedium,),
-      leading:IconButton(onPressed: (){
-        AppRouter.router.go(AppRouter.kProfile);
-      }, icon: Icon(Icons.arrow_back)) ,
+        title: Text(
+          "All Orders",
+          style: Theme.of(context).textTheme.displayMedium,
+        ),
+        leading: IconButton(
+          onPressed: () {
+            AppRouter.router.go(AppRouter.kProfile);
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
       ),
 
       body: Padding(
@@ -31,17 +37,25 @@ class ViewAllOrders extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                Text("🏷 My Orders",style: Theme.of(context).textTheme.headlineMedium,),
+                Text(
+                  "🏷 My Orders",
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
                 Expanded(
                   child: StreamBuilder<List<MyOrder>>(
                     stream: checkoutCubit.getUserOrdersStream(),
                     builder: (context, snapshot) {
-                      if (!snapshot.hasData ||
-                          snapshot.data!.isEmpty) {
-                        return  Padding(
-                          padding: EdgeInsets.all(20),
-                          child: Text("No Orders Yet",
-                            style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),),
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Container(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Text(
+                              "No Orders Yet",
+                              style: Theme.of(context).textTheme.titleSmall
+                                  ?.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                          ),
                         );
                       }
 
@@ -49,8 +63,7 @@ class ViewAllOrders extends StatelessWidget {
 
                       return ListView.builder(
                         shrinkWrap: true,
-                        physics:
-                        const NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         itemCount: orders.length,
                         itemBuilder: (context, index) {
                           final order = orders[index];
@@ -63,7 +76,10 @@ class ViewAllOrders extends StatelessWidget {
                               InkWell(
                                 borderRadius: BorderRadius.circular(16),
                                 onTap: () {
-                                  AppRouter.router.push(AppRouter.kOrderDetails, extra: order);
+                                  AppRouter.router.push(
+                                    AppRouter.kOrderDetails,
+                                    extra: order,
+                                  );
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.all(16),
@@ -76,74 +92,158 @@ class ViewAllOrders extends StatelessWidget {
                                         spreadRadius: 1,
                                         offset: const Offset(0, 2),
                                         color: Colors.black.withOpacity(0.05),
-                                      )
+                                      ),
                                     ],
                                   ),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       // delete button
-                                      (order.status==Status.processing || order.status==Status.pending)?
-                                      IconButton(
-                                        onPressed: () {
-                                          showDialog( context: context,
-                                            barrierDismissible: false,
-                                            builder: (context) {
-                                              return Dialog(
-                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(20),
-                                                  child: Column(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    children: [
-                                                      Container(
-                                                        decoration: const BoxDecoration(
-                                                          color: Color(0xFFFAE3E3),
-                                                          shape: BoxShape.circle,
-                                                        ),
-                                                        padding: const EdgeInsets.all(15),
-                                                        child: const Icon( Icons.delete_forever, size: 45, color: Colors.redAccent),
-                                                      ),
-                                                      const SizedBox(height: 20),
-
-                                                      Text("Delete Order", style: Theme.of(context).textTheme.displayMedium,),
-                                                      const SizedBox(height: 10),
-                                                      Text( "Are you sure you want to delete your order?", textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleMedium, ),
-                                                      const SizedBox(height: 25),
-                                                      Row(
+                                      (order.status == Status.processing ||
+                                              order.status == Status.pending)
+                                          ? IconButton(
+                                            onPressed: () {
+                                              showDialog(
+                                                context: context,
+                                                barrierDismissible: false,
+                                                builder: (context) {
+                                                  return Dialog(
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            20,
+                                                          ),
+                                                    ),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                            20,
+                                                          ),
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
                                                         children: [
-                                                          Expanded(
-                                                            child: TextButton(
-                                                                onPressed: () => Navigator.pop(context),
-                                                                child: Text( "Cancel", style: Theme.of(context).textTheme.titleSmall,)
+                                                          Container(
+                                                            decoration:
+                                                                const BoxDecoration(
+                                                                  color: Color(
+                                                                    0xFFFAE3E3,
+                                                                  ),
+                                                                  shape:
+                                                                      BoxShape
+                                                                          .circle,
+                                                                ),
+                                                            padding:
+                                                                const EdgeInsets.all(
+                                                                  15,
+                                                                ),
+                                                            child: const Icon(
+                                                              Icons
+                                                                  .delete_forever,
+                                                              size: 45,
+                                                              color:
+                                                                  Colors
+                                                                      .redAccent,
                                                             ),
                                                           ),
-                                                          Expanded(
-                                                            child: ElevatedButton(
-                                                              style: ElevatedButton.styleFrom( backgroundColor: Colors.red),
-                                                              onPressed: () {
-                                                                Navigator.pop(context);
-                                                                checkoutCubit.updateOrderStatus(order.id, Status.canceled);
-                                                              },
-                                                              child: Text("Delete",
-                                                                style: TextStyle(
-                                                                    fontFamily: _fontFamily,
-                                                                    color: Colors.white,
-                                                                    fontWeight: FontWeight.w600),
+                                                          const SizedBox(
+                                                            height: 20,
+                                                          ),
+
+                                                          Text(
+                                                            "Delete Order",
+                                                            style:
+                                                                Theme.of(
+                                                                      context,
+                                                                    )
+                                                                    .textTheme
+                                                                    .displayMedium,
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Text(
+                                                            "Are you sure you want to delete your order?",
+                                                            textAlign:
+                                                                TextAlign
+                                                                    .center,
+                                                            style:
+                                                                Theme.of(
+                                                                      context,
+                                                                    )
+                                                                    .textTheme
+                                                                    .titleMedium,
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 25,
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              Expanded(
+                                                                child: TextButton(
+                                                                  onPressed:
+                                                                      () => Navigator.pop(
+                                                                        context,
+                                                                      ),
+                                                                  child: Text(
+                                                                    "Cancel",
+                                                                    style:
+                                                                        Theme.of(
+                                                                          context,
+                                                                        ).textTheme.titleSmall,
+                                                                  ),
+                                                                ),
                                                               ),
-                                                            ),
+                                                              Expanded(
+                                                                child: ElevatedButton(
+                                                                  style: ElevatedButton.styleFrom(
+                                                                    backgroundColor:
+                                                                        Colors
+                                                                            .red,
+                                                                  ),
+                                                                  onPressed: () {
+                                                                    Navigator.pop(
+                                                                      context,
+                                                                    );
+                                                                    checkoutCubit
+                                                                        .updateOrderStatus(
+                                                                          order
+                                                                              .id,
+                                                                          Status
+                                                                              .canceled,
+                                                                        );
+                                                                  },
+                                                                  child: Text(
+                                                                    "Delete",
+                                                                    style: TextStyle(
+                                                                      fontFamily:
+                                                                          _fontFamily,
+                                                                      color:
+                                                                          Colors
+                                                                              .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
                                                           ),
                                                         ],
                                                       ),
-                                                    ],
-                                                  ),
-                                                ),
+                                                    ),
+                                                  );
+                                                },
                                               );
                                             },
-                                          );
-                                        },
-                                        icon: const Icon(Icons.delete_forever, color: Colors.redAccent),
-                                      ): const SizedBox(),
+                                            icon: const Icon(
+                                              Icons.delete_forever,
+                                              color: Colors.redAccent,
+                                            ),
+                                          )
+                                          : const SizedBox(),
 
                                       const SizedBox(width: 8),
 
@@ -153,20 +253,30 @@ class ViewAllOrders extends StatelessWidget {
                                           context: context,
                                           id: order.id,
                                           date:
-                                          "${DateFormat('yyyy-MM-dd').format(date)} • ${products.length} items",
-                                          price: "\$${order.totalPrice.toStringAsFixed(2)}",
-                                          status: order.status.toString().split('.').last,
-                                          color: order.status == Status.delivered
-                                              ? const Color(0xFF087248)
-                                              : order.status == Status.shipped
-                                              ? Colors.blue
-                                              : order.status == Status.processing
-                                              ? Colors.orange
-                                              : order.status == Status.pending
-                                              ? Colors.grey
-                                              : order.status == Status.canceled
-                                              ? Colors.red
-                                              : Colors.purple,
+                                              "${DateFormat('yyyy-MM-dd').format(date)} • ${products.length} items",
+                                          price:
+                                              "\$${order.totalPrice.toStringAsFixed(2)}",
+                                          status:
+                                              order.status
+                                                  .toString()
+                                                  .split('.')
+                                                  .last,
+                                          color:
+                                              order.status == Status.delivered
+                                                  ? const Color(0xFF087248)
+                                                  : order.status ==
+                                                      Status.shipped
+                                                  ? Colors.blue
+                                                  : order.status ==
+                                                      Status.processing
+                                                  ? Colors.orange
+                                                  : order.status ==
+                                                      Status.pending
+                                                  ? Colors.grey
+                                                  : order.status ==
+                                                      Status.canceled
+                                                  ? Colors.red
+                                                  : Colors.purple,
                                         ),
                                       ),
                                     ],
@@ -176,7 +286,6 @@ class ViewAllOrders extends StatelessWidget {
                             ],
                           );
                         },
-
                       );
                     },
                   ),

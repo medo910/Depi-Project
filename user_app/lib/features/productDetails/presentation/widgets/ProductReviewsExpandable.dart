@@ -48,7 +48,7 @@ class _ProductReviewsExpandableFullState
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        late final theme=Theme.of(context);
+        late final theme = Theme.of(context);
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return Dialog(
@@ -65,19 +65,20 @@ class _ProductReviewsExpandableFullState
                   ),
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [theme.cardColor, Colors.grey.shade50], //******
-                    ),
+                    color: theme.cardColor,
+                    // gradient: LinearGradient(
+                    //   begin: Alignment.topLeft,
+                    //   end: Alignment.bottomRight,
+                    //   colors: [theme.cardColor, Colors.grey.shade50], //******
+                    // ),
                     borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
-                      ),
-                    ],
+                    // boxShadow: [
+                    //   BoxShadow(
+                    //     color: theme.cardColor,
+                    //     blurRadius: 20,
+                    //     offset: const Offset(0, 10),
+                    //   ),
+                    // ],
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -110,7 +111,7 @@ class _ProductReviewsExpandableFullState
                               ),
                             ),
                             const SizedBox(width: 12),
-                             Expanded(
+                            Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -146,7 +147,7 @@ class _ProductReviewsExpandableFullState
                         ),
                         child: Column(
                           children: [
-                             Text(
+                            Text(
                               'How would you rate this product?',
                               style: theme.textTheme.labelMedium,
                             ),
@@ -225,7 +226,7 @@ class _ProductReviewsExpandableFullState
                               borderSide: BorderSide.none,
                             ),
                             filled: true,
-                            fillColor: Colors.grey.shade50,
+                            fillColor: theme.cardColor,
                             contentPadding: const EdgeInsets.symmetric(
                               vertical: 12,
                               horizontal: 12,
@@ -260,9 +261,11 @@ class _ProductReviewsExpandableFullState
                                   width: 1.5,
                                 ),
                               ),
-                              child:  Text(
+                              child: Text(
                                 'Cancel',
-                                style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: Colors.grey,
+                                ),
                               ),
                             ),
                           ),
@@ -276,17 +279,40 @@ class _ProductReviewsExpandableFullState
                                 if (commentText.isEmpty || _selectedRate == 0) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: const Text(
-                                        'Please add rating and comment',
-                                      ),
-                                      backgroundColor: Colors.orange,
                                       behavior: SnackBarBehavior.floating,
+                                      elevation: 8,
+                                      backgroundColor: Colors.orange,
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(16),
                                       ),
-                                      margin: const EdgeInsets.all(16),
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                        vertical: 10,
+                                      ),
+                                      content: Row(
+                                        children: const [
+                                          Icon(
+                                            Icons.warning_amber_rounded,
+                                            color: Colors.white,
+                                            size: 28,
+                                          ),
+                                          SizedBox(width: 12),
+                                          Expanded(
+                                            child: Text(
+                                              "Please add rating and comment",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      duration: Duration(milliseconds: 1600),
                                     ),
                                   );
+
                                   return;
                                 }
 
@@ -316,25 +342,37 @@ class _ProductReviewsExpandableFullState
 
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: const Row(
-                                        children: [
+                                      behavior: SnackBarBehavior.floating,
+                                      elevation: 8,
+                                      backgroundColor: Colors.green,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                        vertical: 10,
+                                      ),
+                                      content: Row(
+                                        children: const [
                                           Icon(
-                                            Icons.check_circle,
+                                            Icons.check_circle_outline,
                                             color: Colors.white,
-                                            size: 20,
+                                            size: 26,
                                           ),
-                                          SizedBox(width: 10),
-                                          Text(
-                                            'Review submitted successfully!',
+                                          SizedBox(width: 12),
+                                          Expanded(
+                                            child: Text(
+                                              "Review submitted successfully!",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
-                                      backgroundColor: Colors.green,
-                                      behavior: SnackBarBehavior.floating,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      margin: const EdgeInsets.all(16),
+                                      duration: Duration(milliseconds: 1600),
                                     ),
                                   );
                                 }
@@ -350,7 +388,7 @@ class _ProductReviewsExpandableFullState
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
-                              child:  Row(
+                              child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(Icons.send_rounded, size: 16),
@@ -395,7 +433,7 @@ class _ProductReviewsExpandableFullState
 
   @override
   Widget build(BuildContext context) {
-    late final theme=Theme.of(context);
+    late final theme = Theme.of(context);
     return StreamBuilder<Product>(
       stream: ProductReviewService().getProductStream(widget.productId),
       builder: (context, snapshot) {
@@ -421,11 +459,8 @@ class _ProductReviewsExpandableFullState
         return Theme(
           data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
           child: ExpansionTile(
-            leading:  Icon(Icons.reviews, color: theme.primaryColor),
-            title:  Text(
-              'Customer Reviews',
-              style: theme.textTheme.bodyLarge,
-            ),
+            leading: Icon(Icons.reviews, color: theme.primaryColor),
+            title: Text('Customer Reviews', style: theme.textTheme.bodyLarge),
             children: [
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -442,7 +477,9 @@ class _ProductReviewsExpandableFullState
                         children: [
                           Text(
                             avg.toStringAsFixed(1),
-                            style:  theme.textTheme.displayLarge?.copyWith(fontSize: 48),
+                            style: theme.textTheme.displayLarge?.copyWith(
+                              fontSize: 48,
+                            ),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -570,10 +607,7 @@ class _ProductReviewsExpandableFullState
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              r.name,
-                              style: theme.textTheme.bodyLarge,
-                            ),
+                            Text(r.name, style: theme.textTheme.bodyLarge),
                             Text(
                               formatDate(r.date),
                               style: theme.textTheme.labelSmall,

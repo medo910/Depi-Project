@@ -94,17 +94,28 @@ class ProfileScreen extends StatelessWidget {
                           const SizedBox(height: 20),
                           Row(
                             children: [
-                              CircleAvatar(
-                                radius: 30,
-                                backgroundColor: Theme.of(context).primaryColor,
-                                child: Text(
-                                  getFirstAndLastInitial(state.name),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
+                              state.photoUrl != null &&
+                                      state.photoUrl!.isNotEmpty
+                                  ? CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage: NetworkImage(
+                                      state.photoUrl!,
+                                    ),
+                                    backgroundColor:
+                                        Theme.of(context).primaryColor,
+                                  )
+                                  : CircleAvatar(
+                                    radius: 30,
+                                    backgroundColor:
+                                        Theme.of(context).primaryColor,
+                                    child: Text(
+                                      getFirstAndLastInitial(state.name),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
                               const SizedBox(width: 15),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

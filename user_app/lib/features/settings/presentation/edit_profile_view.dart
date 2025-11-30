@@ -74,14 +74,14 @@ class _EditProfileViewState extends State<EditProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    late final theme=Theme.of(context);
+    late final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Edit Profile"),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            AppRouter.router.go(AppRouter.kHome);
+            AppRouter.router.go(AppRouter.kProfile);
           },
         ),
       ),
@@ -130,7 +130,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                             ),
                           ),
                           IconButton(
-                            icon:  Icon(
+                            icon: Icon(
                               Iconsax.add_circle_copy,
                               color: Theme.of(context).primaryColor,
                             ),
