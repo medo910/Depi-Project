@@ -28,6 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
   static const String _sortKey = 'selected_sort_value';
   static const String _minPriceKey = 'min_price_value';
   static const String _maxPriceKey = 'max_price_value';
+  TextEditingController searchController = TextEditingController();
+  String searchQuery = '';
 
   @override
   void initState() {
@@ -141,12 +143,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               icon: const Icon(Icons.search),
                             ),
                             Expanded(
-                              child: GestureDetector(
-                                child: Text(
-                                  'Search for products...',
-                                  style: theme.textTheme.titleLarge,
+                              child: TextField(
+                                controller: searchController,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Search for products...",
                                 ),
-                                onTap: () {},
+                                onChanged: (value) {
+                                  setState(() {
+                                    searchQuery = value.toLowerCase().trim();
+                                  });
+                                },
                               ),
                             ),
                             IconButton(
@@ -240,6 +247,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     filteredProducts.sort((a, b) => b.price.compareTo(a.price));
                   } else if (selectedValue == "Rating") {
                     filteredProducts.sort((a, b) => b.rate.compareTo(a.rate));
+                  }
+
+                  if (searchQuery.isNotEmpty) {
+                    filteredProducts =
+                        filteredProducts.where((product) {
+                          final name = product.name.toLowerCase();
+                          // final category = product.category.toLowerCase();
+
+                          return name.contains(searchQuery);
+                          //  || category.contains(searchQuery);
+                        }).toList();
                   }
 
                   return GridView.builder(
